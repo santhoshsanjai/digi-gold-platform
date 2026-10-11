@@ -6,7 +6,7 @@ never code.
 
 | App | Path | Stack | Status |
 | --- | --- | --- | --- |
-| Backend API (app, CRM, Console, website) | `apps/api` | FastAPI, PostgreSQL | Foundation in progress |
+| Backend API (app, CRM, Console, website) | `apps/api` | FastAPI, PostgreSQL | Foundation, gold rate, customers, ledger |
 | CRM for client staff | `apps/crm` | React + Vite | Planned |
 | Platform Console with the website CMS | `apps/console` | React + Vite | Planned |
 | Business website | `apps/website` | React + Vite, pre-rendered | Planned |

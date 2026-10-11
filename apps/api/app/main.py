@@ -2,7 +2,20 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
-from app.api import auth, console, crm_audit, crm_roles, crm_settings, crm_stores, crm_users, public
+from app.api import (
+    app_auth,
+    app_gold,
+    auth,
+    console,
+    crm_audit,
+    crm_customers,
+    crm_rates,
+    crm_roles,
+    crm_settings,
+    crm_stores,
+    crm_users,
+    public,
+)
 from app.core.config import get_settings
 from app.core.db import engine
 
@@ -21,7 +34,21 @@ app.add_middleware(
 )
 
 API_PREFIX = "/api/v1"
-for module in (auth, console, crm_settings, crm_users, crm_roles, crm_stores, crm_audit, public):
+ROUTERS = (
+    auth,
+    console,
+    crm_settings,
+    crm_users,
+    crm_roles,
+    crm_stores,
+    crm_audit,
+    crm_rates,
+    crm_customers,
+    app_auth,
+    app_gold,
+    public,
+)
+for module in ROUTERS:
     app.include_router(module.router, prefix=API_PREFIX)
 
 
