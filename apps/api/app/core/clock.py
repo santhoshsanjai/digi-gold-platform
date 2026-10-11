@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, time
 from zoneinfo import ZoneInfo
 
 from app.core.config import get_settings
@@ -17,3 +17,8 @@ def local_date(moment: datetime) -> date:
 
 def today() -> date:
     return local_now().date()
+
+
+def start_of_day(day: date) -> datetime:
+    """Midnight at the start of a local (Indian) date, as an aware datetime."""
+    return datetime.combine(day, time.min, tzinfo=_zone)

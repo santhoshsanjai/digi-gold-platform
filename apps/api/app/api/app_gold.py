@@ -12,10 +12,12 @@ from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 from sqlalchemy import func, select
 
 from app.api.common import Limit, Offset, Page
+from app.core.config import get_settings
 from app.core.deps import CurrentCustomer, Session
 from app.core.security import now
 from app.models import Customer, GoldLot, LedgerEntry, PaymentOrder, Tenant
 from app.schemas.tenant_config import Features, SchemeSettings, merged
+from app.services import otp
 from app.services.gold_math import grams_for
 from app.services.ledger import OrderClosed, settle_order
 from app.services.payments import provider_for
@@ -304,3 +306,29 @@ async def statement(
         query.order_by(LedgerEntry.created_at.desc()).limit(limit).offset(offset)
     )
     return Page(items=list(rows), total=total, limit=limit, offset=offset)
+
+
+class RedemptionCodeOut(BaseModel):
+    code: str
+    expires_at: datetime
+    grams: Decimal
+
+
+@router.post("/redemption-code", response_model=RedemptionCodeOut)
+async def redemption_code(customer: CurrentCustomer, session: Session):
+    """A short-lived code (shown as a number and a QR code) the customer gives store staff."""
+    _, scheme = await _tenant_and_scheme(session, customer)
+    if customer.gold_grams < scheme.redemption_threshold_grams:
+        return _refuse(
+            "below_threshold",
+            f"you need at least {scheme.redemption_threshold_grams} g to redeem",
+        )
+    try:
+        code = await otp.issue(session, customer.tenant_id, customer.phone, "redeem")
+    except otp.OtpError as e:
+        raise HTTPException(429, str(e)) from None
+    return RedemptionCodeOut(
+        code=code,
+        expires_at=now() + timedelta(minutes=get_settings().otp_minutes),
+        grams=customer.gold_grams,
+    )
