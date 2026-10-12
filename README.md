@@ -7,7 +7,7 @@ never code.
 | App | Path | Stack | Status |
 | --- | --- | --- | --- |
 | Backend API (app, CRM, Console, website) | `apps/api` | FastAPI, PostgreSQL | Foundation, gold rate, customers, ledger |
-| CRM for client staff | `apps/crm` | React + Vite | Planned |
+| CRM for client staff | `apps/crm` | React + Vite, Ant Design, Tailwind, RTK Query | Sign-in, rates, customers, redemptions, expiry, settings, users and roles |
 | Platform Console with the website CMS | `apps/console` | React + Vite | Planned |
 | Business website | `apps/website` | React + Vite, pre-rendered | Planned |
 | Customer mobile app | `apps/mobile` | React Native + Expo | Planned |
@@ -37,12 +37,41 @@ The temporary password is printed and emailed to the Mailpit inbox. Sign in thro
 `POST /api/v1/auth/login` without a `tenant`, set a new password with
 `POST /api/v1/auth/first-login`, then create a client with `POST /api/v1/console/tenants`.
 
+## Run the CRM locally
+
+Needs Node 22 and the API running on port 8000.
+
+```bash
+cd apps/api
+uv run python -m app.cli create-tenant --slug demo --name "Demo Jewellers" \
+  --owner-email owner@example.com --owner-name "Owner"   # prints a temporary password
+cd ../crm
+cp .env.example .env.local     # VITE_TENANT_SLUG=demo
+npm install
+npm run dev                    # http://localhost:5173
+```
+
+Sign in with the owner's email and temporary password; the CRM asks for a new password.
+One CRM build serves every client: in production the client is read from the host name
+(`demo.crm.example.com`), and its name, logo, colours and font come from its branding.
+
+When an API endpoint changes, refresh the shared types:
+
+```bash
+cd apps/api && uv run python -m app.cli export-openapi   # writes openapi.json
+cd ../crm && npm run api:types                          # writes src/api/schema.d.ts
+```
+
+CI fails if either file is out of date.
+
 ## Tests
 
 ```bash
 cd apps/api
 uv run pytest           # needs the database from docker compose (digigold_test)
 uv run ruff check . && uv run ruff format --check .
+cd ../crm
+npm run lint && npm run build
 ```
 
 ## Design documents

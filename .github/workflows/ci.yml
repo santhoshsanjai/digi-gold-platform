@@ -30,3 +30,27 @@ jobs:
       - run: uv run ruff format --check .
       - run: uv run ruff check .
       - run: uv run pytest -q
+      - name: OpenAPI schema is up to date
+        run: |
+          uv run python -m app.cli export-openapi openapi.json
+          git diff --exit-code openapi.json || (echo "Run: uv run python -m app.cli export-openapi" && exit 1)
+
+  crm:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/crm
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/crm/package-lock.json
+      - run: npm ci
+      - name: API types match the API schema
+        run: |
+          npm run api:types
+          git diff --exit-code src/api/schema.d.ts || (echo "Run: npm run api:types" && exit 1)
+      - run: npm run lint
+      - run: npm run build
