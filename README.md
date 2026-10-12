@@ -94,6 +94,21 @@ cp .env.example .env     # set EXPO_PUBLIC_TENANT_SLUG and EXPO_PUBLIC_API_URL
 npm run web              # or: npm start, then scan the QR code with Expo Go
 ```
 
+## Business website
+
+`apps/website` shows the content published in the Console: the site settings, the menu, each
+published page's sections, and today's rate (refreshed every minute). It is plain React with
+no UI library, so the bundle is small. Colours, font, logo and favicon come from the client's
+branding, so one build serves one client.
+
+```bash
+cd apps/website && cp .env.example .env   # set VITE_TENANT_SLUG
+npm run dev                               # http://localhost:5175, proxies /api and /media to the API
+npm run build                             # static files in dist/ for any static host or CDN
+```
+
+In production serve `dist/` with a fallback to `index.html`, and send `/api` and `/media` to the API.
+
 ## Website content
 
 Each client's website is content, not code. In the Console's **Website** tab you edit:

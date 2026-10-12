@@ -51,6 +51,11 @@ jobs:
         run: |
           npm run api:types
           git diff --exit-code src/api/schema.d.ts || (echo "Run: npm run api:types -w @digigold/web-common" && exit 1)
+      - name: Website API types match the API schema
+        working-directory: apps/website
+        run: |
+          npm run api:types
+          git diff --exit-code src/api/schema.d.ts || (echo "Run: npm run api:types -w @digigold/website" && exit 1)
       - run: npm run lint
       - run: npm run typecheck -w @digigold/web-common
       - run: npm run build
