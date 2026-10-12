@@ -145,6 +145,10 @@ npm run lint && npm run build  # CRM, Console and shared components
 cd apps/mobile && npm run typecheck && npm run lint
 ```
 
+## Deploying
+
+See [docs/deployment.md](docs/deployment.md) for what production needs.
+
 ## Design documents
 
 - Plan review: https://claude.ai/code/artifact/300527f5-57ad-438b-a409-4b093c2d1ef4

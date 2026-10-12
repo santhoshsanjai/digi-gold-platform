@@ -1,7 +1,10 @@
 from functools import lru_cache
 from typing import Literal
 
+from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+_DEFAULT_JWT_SECRET = "change-me-in-production-at-least-32-bytes"
 
 
 class Settings(BaseSettings):
@@ -14,7 +17,7 @@ class Settings(BaseSettings):
     db_pool_size: int = 5
     db_max_overflow: int = 5
 
-    jwt_secret: str = "change-me-in-production-at-least-32-bytes"
+    jwt_secret: str = _DEFAULT_JWT_SECRET
     jwt_algorithm: str = "HS256"
     access_token_minutes: int = 30
     refresh_token_days: int = 14
@@ -68,6 +71,15 @@ class Settings(BaseSettings):
         "http://localhost:8081",  # mobile app in the browser preview
     ]
     config_cache_seconds: int = 300
+
+    @model_validator(mode="after")
+    def _production_needs_real_secrets(self):
+        # A guessable signing secret would let anyone mint staff and customer tokens.
+        if self.env == "prod" and (
+            self.jwt_secret == _DEFAULT_JWT_SECRET or len(self.jwt_secret) < 32
+        ):
+            raise ValueError("DG_JWT_SECRET must be set to a random string of 32+ characters")
+        return self
 
 
 @lru_cache
