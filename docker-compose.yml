@@ -1,0 +1,40 @@
+# Local development: PostgreSQL, a fake email inbox, and the API.
+#   docker compose up -d db mail        # database + email inbox only
+#   docker compose up --build api       # also run the API in a container
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports: ["5432:5432"]
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./infra/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 5s
+      retries: 10
+
+  mail:
+    image: axllent/mailpit:v1.21
+    ports:
+      - "8025:8025" # web inbox at http://localhost:8025
+      - "1025:1025" # SMTP
+
+  api:
+    build: ./apps/api
+    depends_on:
+      db: { condition: service_healthy }
+    environment:
+      DG_ENV: dev
+      DG_DATABASE_URL: postgresql+asyncpg://digigold:digigold@db:5432/digigold
+      DG_EMAIL_BACKEND: smtp
+      DG_SMTP_HOST: mail
+      DG_SMTP_PORT: "1025"
+    command: >
+      sh -c "/app/.venv/bin/alembic upgrade head &&
+             /app/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    ports: ["8000:8000"]
+
+volumes:
+  db-data:
