@@ -82,6 +82,13 @@ cd ../.. && npm run api:types -w @digigold/web-common    # writes packages/web-c
 
 CI fails if either file is out of date.
 
+## Reports
+
+In the CRM, **Reports** has three tabs: collections by day, redemptions by day or by store, and
+the gold each customer holds now (valued at today's rate). Each has a date range (up to a year)
+and a CSV download that opens in Excel. The API is `GET /crm/reports/{collections,redemptions,holdings}`,
+with `?format=csv`, and needs the `reports:view` permission.
+
 ## Customer mobile app
 
 `apps/mobile` is an Expo app (iOS, Android, and web for previews). One build serves one client:

@@ -203,6 +203,78 @@
         "title": "ChangePasswordIn",
         "type": "object"
       },
+      "CollectionDay": {
+        "properties": {
+          "amount_inr": {
+            "title": "Amount Inr",
+            "type": "string"
+          },
+          "date": {
+            "format": "date",
+            "title": "Date",
+            "type": "string"
+          },
+          "grams": {
+            "title": "Grams",
+            "type": "string"
+          },
+          "payments": {
+            "title": "Payments",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "date",
+          "payments",
+          "amount_inr",
+          "grams"
+        ],
+        "title": "CollectionDay",
+        "type": "object"
+      },
+      "CollectionsOut": {
+        "properties": {
+          "days": {
+            "items": {
+              "$ref": "#/components/schemas/CollectionDay"
+            },
+            "title": "Days",
+            "type": "array"
+          },
+          "end": {
+            "format": "date",
+            "title": "End",
+            "type": "string"
+          },
+          "start": {
+            "format": "date",
+            "title": "Start",
+            "type": "string"
+          },
+          "total_amount_inr": {
+            "title": "Total Amount Inr",
+            "type": "string"
+          },
+          "total_grams": {
+            "title": "Total Grams",
+            "type": "string"
+          },
+          "total_payments": {
+            "title": "Total Payments",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start",
+          "end",
+          "total_payments",
+          "total_amount_inr",
+          "total_grams",
+          "days"
+        ],
+        "title": "CollectionsOut",
+        "type": "object"
+      },
       "Contact": {
         "additionalProperties": false,
         "properties": {
@@ -999,6 +1071,119 @@
           "type"
         ],
         "title": "HeroSection",
+        "type": "object"
+      },
+      "HoldingRow": {
+        "properties": {
+          "customer_id": {
+            "title": "Customer Id",
+            "type": "string"
+          },
+          "grams": {
+            "title": "Grams",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "next_expiry": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Expiry"
+          },
+          "open_lots": {
+            "title": "Open Lots",
+            "type": "integer"
+          },
+          "phone": {
+            "title": "Phone",
+            "type": "string"
+          },
+          "value_inr": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value Inr"
+          }
+        },
+        "required": [
+          "customer_id",
+          "name",
+          "phone",
+          "grams",
+          "value_inr",
+          "open_lots",
+          "next_expiry"
+        ],
+        "title": "HoldingRow",
+        "type": "object"
+      },
+      "HoldingsOut": {
+        "properties": {
+          "purity": {
+            "title": "Purity",
+            "type": "string"
+          },
+          "rate_per_gram": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rate Per Gram"
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/components/schemas/HoldingRow"
+            },
+            "title": "Rows",
+            "type": "array"
+          },
+          "total_customers": {
+            "title": "Total Customers",
+            "type": "integer"
+          },
+          "total_grams": {
+            "title": "Total Grams",
+            "type": "string"
+          },
+          "total_value_inr": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Value Inr"
+          }
+        },
+        "required": [
+          "rate_per_gram",
+          "purity",
+          "total_customers",
+          "total_grams",
+          "total_value_inr",
+          "rows"
+        ],
+        "title": "HoldingsOut",
         "type": "object"
       },
       "ImageTextSection": {
@@ -2630,6 +2815,86 @@
           "created_at"
         ],
         "title": "RedemptionOut",
+        "type": "object"
+      },
+      "RedemptionRow": {
+        "properties": {
+          "amount_paid_inr": {
+            "title": "Amount Paid Inr",
+            "type": "string"
+          },
+          "grams": {
+            "title": "Grams",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "redemptions": {
+            "title": "Redemptions",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "label",
+          "redemptions",
+          "grams",
+          "amount_paid_inr"
+        ],
+        "title": "RedemptionRow",
+        "type": "object"
+      },
+      "RedemptionsOut": {
+        "properties": {
+          "end": {
+            "format": "date",
+            "title": "End",
+            "type": "string"
+          },
+          "group_by": {
+            "enum": [
+              "day",
+              "store"
+            ],
+            "title": "Group By",
+            "type": "string"
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/components/schemas/RedemptionRow"
+            },
+            "title": "Rows",
+            "type": "array"
+          },
+          "start": {
+            "format": "date",
+            "title": "Start",
+            "type": "string"
+          },
+          "total_amount_paid_inr": {
+            "title": "Total Amount Paid Inr",
+            "type": "string"
+          },
+          "total_grams": {
+            "title": "Total Grams",
+            "type": "string"
+          },
+          "total_redemptions": {
+            "title": "Total Redemptions",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "start",
+          "end",
+          "group_by",
+          "total_redemptions",
+          "total_grams",
+          "total_amount_paid_inr",
+          "rows"
+        ],
+        "title": "RedemptionsOut",
         "type": "object"
       },
       "RefreshIn": {
@@ -6870,6 +7135,259 @@
         "summary": "Slip",
         "tags": [
           "crm redemptions"
+        ]
+      }
+    },
+    "/api/v1/crm/reports/collections": {
+      "get": {
+        "description": "Paid payments by day: how much came in and how many grams it bought.",
+        "operationId": "collections_api_v1_crm_reports_collections_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Start"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "End"
+            }
+          },
+          {
+            "in": "query",
+            "name": "format",
+            "required": false,
+            "schema": {
+              "default": "json",
+              "enum": [
+                "json",
+                "csv"
+              ],
+              "title": "Format",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollectionsOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Collections",
+        "tags": [
+          "crm reports"
+        ]
+      }
+    },
+    "/api/v1/crm/reports/holdings": {
+      "get": {
+        "description": "Gold each customer holds now, largest first, valued at today's rate. This is the\ngold the jeweller owes customers.",
+        "operationId": "holdings_api_v1_crm_reports_holdings_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 200,
+              "maximum": 1000,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "format",
+            "required": false,
+            "schema": {
+              "default": "json",
+              "enum": [
+                "json",
+                "csv"
+              ],
+              "title": "Format",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HoldingsOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Holdings",
+        "tags": [
+          "crm reports"
+        ]
+      }
+    },
+    "/api/v1/crm/reports/redemptions": {
+      "get": {
+        "description": "Gold redeemed in store, by day or by store.",
+        "operationId": "redemptions_api_v1_crm_reports_redemptions_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Start"
+            }
+          },
+          {
+            "in": "query",
+            "name": "end",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "End"
+            }
+          },
+          {
+            "in": "query",
+            "name": "group_by",
+            "required": false,
+            "schema": {
+              "default": "day",
+              "enum": [
+                "day",
+                "store"
+              ],
+              "title": "Group By",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "format",
+            "required": false,
+            "schema": {
+              "default": "json",
+              "enum": [
+                "json",
+                "csv"
+              ],
+              "title": "Format",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RedemptionsOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Redemptions",
+        "tags": [
+          "crm reports"
         ]
       }
     },

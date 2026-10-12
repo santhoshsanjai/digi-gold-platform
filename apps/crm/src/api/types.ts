@@ -46,3 +46,8 @@ export type RedeemIn = S['RedeemIn']
 export type RedemptionSlip = S['SlipOut']
 export type ExpiringLot = S['ExpiringLotOut']
 export type Dashboard = S['DashboardOut']
+
+export type CollectionsReport = S['CollectionsOut']
+export type RedemptionsReport = S['RedemptionsOut']
+export type HoldingsReport = S['HoldingsOut']
+export type ReportRange = { start: string; end: string }
