@@ -41,15 +41,27 @@ async def create_platform_admin(email: str, name: str) -> None:
     await engine.dispose()
 
 
+async def _reminders() -> None:
+    from app.services.expiry import send_reminders
+
+    print(await send_reminders())
+    await engine.dispose()
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(prog="app.cli")
     sub = parser.add_subparsers(dest="command", required=True)
     admin = sub.add_parser("create-platform-admin", help="create a Platform Console admin")
     admin.add_argument("--email", required=True)
     admin.add_argument("--name", required=True)
+    sub.add_parser(
+        "send-expiry-reminders", help="send today's lot expiry reminders now (also runs daily)"
+    )
     args = parser.parse_args()
     if args.command == "create-platform-admin":
         asyncio.run(create_platform_admin(args.email, args.name))
+    elif args.command == "send-expiry-reminders":
+        asyncio.run(_reminders())
 
 
 if __name__ == "__main__":

@@ -51,6 +51,10 @@ class Settings(BaseSettings):
     # Business time zone: "today" for rates and lot expiry is the Indian date.
     timezone: str = "Asia/Kolkata"
 
+    # Daily expiry reminders run inside the API at this local hour (off in tests).
+    run_scheduler: bool = True
+    reminder_hour: int = 8
+
     cors_origins: list[str] = ["http://localhost:5173", "http://localhost:5174"]
     config_cache_seconds: int = 300
 

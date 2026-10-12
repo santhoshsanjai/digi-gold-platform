@@ -25,7 +25,9 @@ def _hash(code: str, phone: str) -> str:
 
 
 async def issue(session: AsyncSession, tenant_id: UUID, phone: str, purpose: str) -> str:
-    """Create a 6-digit code, enforcing a resend gap and an hourly limit per phone."""
+    """Create a 6-digit code, enforcing an hourly limit per phone (and a resend gap for SMS).
+
+    Only the newest code is accepted, so issuing a new one replaces the previous one."""
     recent = select(CustomerOtp).where(
         CustomerOtp.tenant_id == tenant_id,
         CustomerOtp.phone == phone,
@@ -35,9 +37,10 @@ async def issue(session: AsyncSession, tenant_id: UUID, phone: str, purpose: str
     count = await session.scalar(select(func.count()).select_from(recent.subquery()))
     if count >= settings.otp_max_per_hour:
         raise OtpError("too many codes requested; try again later")
-    last = await session.scalar(recent.order_by(CustomerOtp.created_at.desc()).limit(1))
-    if last and last.created_at > now() - timedelta(seconds=settings.otp_resend_seconds):
-        raise OtpError("please wait before requesting another code")
+    if purpose == "login":  # SMS costs money; in-app redemption codes need no resend gap
+        last = await session.scalar(recent.order_by(CustomerOtp.created_at.desc()).limit(1))
+        if last and last.created_at > now() - timedelta(seconds=settings.otp_resend_seconds):
+            raise OtpError("please wait before requesting another code")
 
     code = f"{secrets.randbelow(1_000_000):06d}"
     session.add(

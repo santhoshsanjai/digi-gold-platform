@@ -67,6 +67,9 @@ class GoldLot(IdMixin, Base):
     # open -> redeemed | refunded
     status: Mapped[str] = mapped_column(String(10), default="open")
     closed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    redemption_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey("redemptions.id", ondelete="RESTRICT")
+    )
     last_reminded_on: Mapped[date | None] = mapped_column(Date)
 
 
@@ -93,4 +96,24 @@ class LedgerEntry(IdMixin, Base):
     created_by: Mapped[UUID | None] = mapped_column(
         ForeignKey("staff_users.id", ondelete="SET NULL")
     )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class Redemption(IdMixin, Base):
+    """A store visit where the customer's whole balance is used for jewellery."""
+
+    __tablename__ = "redemptions"
+
+    tenant_id: Mapped[UUID] = mapped_column(ForeignKey("tenants.id", ondelete="CASCADE"))
+    customer_id: Mapped[UUID] = mapped_column(ForeignKey("customers.id", ondelete="RESTRICT"))
+    store_id: Mapped[UUID | None] = mapped_column(ForeignKey("stores.id", ondelete="SET NULL"))
+    staff_user_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey("staff_users.id", ondelete="SET NULL")
+    )
+    slip_number: Mapped[str] = mapped_column(String(30))
+    grams: Mapped[Decimal] = mapped_column(Numeric(14, 4))
+    amount_paid_inr: Mapped[Decimal] = mapped_column(Numeric(14, 2))
+    lots_count: Mapped[int]
+    purity: Mapped[str] = mapped_column(String(3))
+    making_charge_discount_pct: Mapped[Decimal] = mapped_column(Numeric(5, 2))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
