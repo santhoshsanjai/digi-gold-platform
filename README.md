@@ -111,10 +111,11 @@ branding, so one build serves one client.
 ```bash
 cd apps/website && cp .env.example .env   # set VITE_TENANT_SLUG
 npm run dev                               # http://localhost:5175, proxies /api and /media to the API
-npm run build                             # static files in dist/ for any static host or CDN
+npm run build                             # the plain app in dist/
+npm run build:static                      # production: also one HTML file per page, for search engines
 ```
 
-In production serve `dist/` with a fallback to `index.html`, and send `/api` and `/media` to the API.
+In production serve `dist/` (see apps/website/README.md for the host settings), and send `/api` and `/media` to the API.
 
 ## Website content
 

@@ -9,7 +9,9 @@
     "lint": "eslint .",
     "typecheck": "tsc -b",
     "preview": "vite preview",
-    "api:types": "npx -y openapi-typescript@7.13.0 ../api/openapi.json -o src/api/schema.d.ts"
+    "api:types": "npx -y openapi-typescript@7.13.0 ../api/openapi.json -o src/api/schema.d.ts",
+    "build:ssr": "vite build --ssr src/entry-server.tsx --outDir dist-server",
+    "build:static": "npm run build && npm run build:ssr && node scripts/prerender.mjs"
   },
   "dependencies": {
     "react": "^19.2.8",
