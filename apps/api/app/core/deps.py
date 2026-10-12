@@ -12,7 +12,10 @@ from app.core.db import bypass_tenant_scope, get_session, scope_to_tenant
 from app.core.security import ACCESS, decode_jwt
 from app.models import Customer, Role, StaffUser, Tenant
 
-Session = Annotated[AsyncSession, Depends(get_session)]
+# scope="function" ends the transaction (commit or rollback) before the response is sent. By
+# default FastAPI does it afterwards, so a client that reads right after a write could miss it,
+# and a failed commit would still have answered 200.
+Session = Annotated[AsyncSession, Depends(get_session, scope="function")]
 _bearer = HTTPBearer(auto_error=False)
 
 

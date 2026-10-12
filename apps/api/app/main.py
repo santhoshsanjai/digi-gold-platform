@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import os
 from contextlib import asynccontextmanager, suppress
 
@@ -30,6 +31,10 @@ from app.core.db import engine
 from app.services.expiry import run_daily
 
 settings = get_settings()
+
+# Uvicorn only configures its own loggers; this makes the app's logs (reminders, outgoing
+# email and SMS in development) show up too.
+logging.basicConfig(level=logging.INFO, format="%(levelname)s:     %(name)s: %(message)s")
 
 
 @asynccontextmanager
