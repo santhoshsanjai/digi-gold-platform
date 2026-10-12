@@ -1,10 +1,12 @@
 import type {
+  CollectionsReport,
   CurrentRates,
   Customer,
   CustomerDetail,
   Dashboard,
   ExpiringLot,
   GoldRate,
+  HoldingsReport,
   Page,
   PageParams,
   Payment,
@@ -13,7 +15,9 @@ import type {
   RateIn,
   RedeemIn,
   Redemption,
+  RedemptionsReport,
   RedemptionSlip,
+  ReportRange,
 } from '../../api/types.ts'
 import { apiSlice } from './apiSlice.ts'
 
@@ -70,6 +74,28 @@ export const goldApi = apiSlice.injectEndpoints({
       query: (id) => `/crm/redemptions/${id}/slip`,
     }),
 
+    collectionsReport: build.query<CollectionsReport, ReportRange>({
+      query: (params) => ({ url: '/crm/reports/collections', params }),
+    }),
+    redemptionsReport: build.query<
+      RedemptionsReport,
+      ReportRange & { group_by: 'day' | 'store' }
+    >({
+      query: (params) => ({ url: '/crm/reports/redemptions', params }),
+    }),
+    holdingsReport: build.query<HoldingsReport, void>({
+      query: () => '/crm/reports/holdings',
+    }),
+    /** A report as CSV text, fetched with the same sign-in as the screens. */
+    reportCsv: build.query<string, { report: string; params: Record<string, string> }>({
+      query: ({ report, params }) => ({
+        url: `/crm/reports/${report}`,
+        params: { ...params, format: 'csv' },
+        responseHandler: (r) => r.text(),
+      }),
+      keepUnusedDataFor: 0,
+    }),
+
     expiringLots: build.query<
       Page<ExpiringLot>,
       PageParams & { state: 'expired' | 'expiring'; within_days?: number }
@@ -100,6 +126,10 @@ export const {
   useRedeemMutation,
   useRedemptionsQuery,
   useRedemptionSlipQuery,
+  useCollectionsReportQuery,
+  useRedemptionsReportQuery,
+  useHoldingsReportQuery,
+  useLazyReportCsvQuery,
   useExpiringLotsQuery,
   useRefundLotMutation,
 } = goldApi

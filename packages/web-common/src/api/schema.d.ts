@@ -846,6 +846,67 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/crm/reports/collections": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Collections
+         * @description Paid payments by day: how much came in and how many grams it bought.
+         */
+        get: operations["collections_api_v1_crm_reports_collections_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/crm/reports/holdings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Holdings
+         * @description Gold each customer holds now, largest first, valued at today's rate. This is the
+         *     gold the jeweller owes customers.
+         */
+        get: operations["holdings_api_v1_crm_reports_holdings_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/crm/reports/redemptions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Redemptions
+         * @description Gold redeemed in store, by day or by store.
+         */
+        get: operations["redemptions_api_v1_crm_reports_redemptions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/crm/roles": {
         parameters: {
             query?: never;
@@ -1186,6 +1247,41 @@ export interface components {
             current_password: string;
             /** New Password */
             new_password: string;
+        };
+        /** CollectionDay */
+        CollectionDay: {
+            /** Amount Inr */
+            amount_inr: string;
+            /**
+             * Date
+             * Format: date
+             */
+            date: string;
+            /** Grams */
+            grams: string;
+            /** Payments */
+            payments: number;
+        };
+        /** CollectionsOut */
+        CollectionsOut: {
+            /** Days */
+            days: components["schemas"]["CollectionDay"][];
+            /**
+             * End
+             * Format: date
+             */
+            end: string;
+            /**
+             * Start
+             * Format: date
+             */
+            start: string;
+            /** Total Amount Inr */
+            total_amount_inr: string;
+            /** Total Grams */
+            total_grams: string;
+            /** Total Payments */
+            total_payments: number;
         };
         /** Contact */
         Contact: {
@@ -1613,6 +1709,38 @@ export interface components {
              * @enum {string}
              */
             type: "hero";
+        };
+        /** HoldingRow */
+        HoldingRow: {
+            /** Customer Id */
+            customer_id: string;
+            /** Grams */
+            grams: string;
+            /** Name */
+            name: string;
+            /** Next Expiry */
+            next_expiry: string | null;
+            /** Open Lots */
+            open_lots: number;
+            /** Phone */
+            phone: string;
+            /** Value Inr */
+            value_inr: string | null;
+        };
+        /** HoldingsOut */
+        HoldingsOut: {
+            /** Purity */
+            purity: string;
+            /** Rate Per Gram */
+            rate_per_gram: string | null;
+            /** Rows */
+            rows: components["schemas"]["HoldingRow"][];
+            /** Total Customers */
+            total_customers: number;
+            /** Total Grams */
+            total_grams: string;
+            /** Total Value Inr */
+            total_value_inr: string | null;
         };
         /** ImageTextSection */
         ImageTextSection: {
@@ -2261,6 +2389,43 @@ export interface components {
             staff_user_id: string | null;
             /** Store Id */
             store_id: string | null;
+        };
+        /** RedemptionRow */
+        RedemptionRow: {
+            /** Amount Paid Inr */
+            amount_paid_inr: string;
+            /** Grams */
+            grams: string;
+            /** Label */
+            label: string;
+            /** Redemptions */
+            redemptions: number;
+        };
+        /** RedemptionsOut */
+        RedemptionsOut: {
+            /**
+             * End
+             * Format: date
+             */
+            end: string;
+            /**
+             * Group By
+             * @enum {string}
+             */
+            group_by: "day" | "store";
+            /** Rows */
+            rows: components["schemas"]["RedemptionRow"][];
+            /**
+             * Start
+             * Format: date
+             */
+            start: string;
+            /** Total Amount Paid Inr */
+            total_amount_paid_inr: string;
+            /** Total Grams */
+            total_grams: string;
+            /** Total Redemptions */
+            total_redemptions: number;
         };
         /** RefreshIn */
         RefreshIn: {
@@ -4641,6 +4806,105 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SlipOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    collections_api_v1_crm_reports_collections_get: {
+        parameters: {
+            query?: {
+                start?: string | null;
+                end?: string | null;
+                format?: "json" | "csv";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CollectionsOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    holdings_api_v1_crm_reports_holdings_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                format?: "json" | "csv";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HoldingsOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    redemptions_api_v1_crm_reports_redemptions_get: {
+        parameters: {
+            query?: {
+                start?: string | null;
+                end?: string | null;
+                group_by?: "day" | "store";
+                format?: "json" | "csv";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RedemptionsOut"];
                 };
             };
             /** @description Validation Error */
