@@ -2,9 +2,20 @@ import { useEffect, useState } from 'react'
 
 export type Loaded<T> = { status: 'loading' } | { status: 'error'; error: unknown } | { status: 'ready'; data: T }
 
-/** Runs `load` when `key` changes (and every `every` ms, if given). Aborts the request on cleanup. */
-export function useAsync<T>(load: (signal: AbortSignal) => Promise<T>, key: string, every?: number): Loaded<T> {
-  const [state, setState] = useState<{ key: string; value: Loaded<T> }>({ key, value: { status: 'loading' } })
+/**
+ * Runs `load` when `key` changes (and every `every` ms, if given). Aborts the request on cleanup.
+ * `initial` (pre-rendered data) shows at once; the request still runs to bring it up to date.
+ */
+export function useAsync<T>(
+  load: (signal: AbortSignal) => Promise<T>,
+  key: string,
+  every?: number,
+  initial?: T,
+): Loaded<T> {
+  const [state, setState] = useState<{ key: string; value: Loaded<T> }>({
+    key,
+    value: initial ? { status: 'ready', data: initial } : { status: 'loading' },
+  })
   useEffect(() => {
     const ctl = new AbortController()
     const run = () =>
@@ -24,5 +35,6 @@ export function useAsync<T>(load: (signal: AbortSignal) => Promise<T>, key: stri
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key, every])
   // A different key means a different request: show loading until it answers.
-  return state.key === key ? state.value : { status: 'loading' }
+  if (state.key === key) return state.value
+  return initial ? { status: 'ready', data: initial } : { status: 'loading' }
 }

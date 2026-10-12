@@ -4,11 +4,13 @@ import { api, NotFound } from './api/client'
 import { Layout } from './Layout'
 import { PageView } from './PageView'
 import { applyBranding } from './theme'
+import { usePreload } from './preload'
 import { useAsync } from './useAsync'
 
 export default function App() {
-  const config = useAsync((s) => api.config(s), 'config')
-  const site = useAsync((s) => api.site(s), 'site')
+  const pre = usePreload()
+  const config = useAsync((s) => api.config(s), 'config', undefined, pre?.config)
+  const site = useAsync((s) => api.site(s), 'site', undefined, pre?.site)
 
   useEffect(() => {
     if (config.status === 'ready') applyBranding(config.data.branding)

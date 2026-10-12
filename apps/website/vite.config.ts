@@ -11,5 +11,6 @@ export default defineConfig(({ mode }) => {
       // In development the API runs separately; proxying keeps requests same-origin.
       proxy: { '/api': target, '/media': target },
     },
+    preview: { port: 4175, proxy: { '/api': target, '/media': target } },
   }
 })

@@ -19,5 +19,25 @@ What it reads: `GET /public/tenants/{slug}/config`, `/site`, `/pages/{page}` and
 Drafts are never served. A page's title and description go into the tab title and the
 search description. Rich text arrives already cleaned by the API.
 
-Pages are rendered in the browser. Pre-rendering each page to static HTML (better for
-search engines and first paint) is a later step.
+## Static pages for search engines
+
+`npm run build` makes the plain app (what CI builds). For production use `npm run build:static`,
+which also writes one HTML file per published page with its content, title and description
+already in it, plus `robots.txt` and (with `SITE_URL`) `sitemap.xml`. The browser then takes over
+and refreshes the content, so a visitor never sees stale text for long.
+
+| Variable | Meaning |
+| --- | --- |
+| `PRERENDER_API_URL` | The API to read published content from at build time (default `http://localhost:8000/api/v1`) |
+| `SITE_URL` | The public address, for `sitemap.xml` and canonical links, for example `https://www.example.com` |
+
+Publishing in the Console does not change these files by itself: rebuild (or run
+`node scripts/prerender.mjs` again after a build) to update them.
+
+Host settings: serve `/page` from `page.html`, and send unknown addresses to `404.html`. With nginx:
+
+```nginx
+location / { try_files $uri $uri.html $uri/index.html /404.html; }
+```
+
+Netlify, Cloudflare Pages and similar hosts do this on their own.

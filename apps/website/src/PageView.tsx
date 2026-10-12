@@ -2,12 +2,15 @@ import { useParams } from 'react-router-dom'
 import { api, NotFound, type Site } from './api/client'
 import { useHead } from './head'
 import { SectionView } from './sections'
+import { usePreload } from './preload'
 import { useAsync } from './useAsync'
 
 export function PageView({ slug: fixed, site }: { slug?: string; site: Site }) {
   const params = useParams()
   const slug = fixed ?? params.slug ?? 'home'
-  const page = useAsync((s) => api.page(slug, s), `page:${slug}`)
+  const pre = usePreload()
+  const first = pre?.page?.slug === slug ? pre.page : undefined
+  const page = useAsync((s) => api.page(slug, s), `page:${slug}`, undefined, first)
   const data = page.status === 'ready' ? page.data : null
   const siteName = site.settings.site_title || site.name
 
