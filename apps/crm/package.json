@@ -8,11 +8,11 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "typecheck": "tsc -b",
-    "preview": "vite preview",
-    "api:types": "npx -y openapi-typescript@7.13.0 ../api/openapi.json -o src/api/schema.d.ts"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@ant-design/icons": "^6.3.4",
+    "@digigold/web-common": "*",
     "@reduxjs/toolkit": "^2.12.0",
     "@tailwindcss/vite": "^4.3.3",
     "antd": "^6.6.1",

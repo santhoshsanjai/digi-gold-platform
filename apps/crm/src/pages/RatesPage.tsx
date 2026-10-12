@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Alert, Button, Form, Input, Modal, Segmented, Skeleton, Table } from 'antd'
 import { toast } from 'sonner'
-import { PageHeader } from '../components/common/PageHeader.tsx'
-import { Card } from '../components/ui/Card.tsx'
-import { Badge } from '../components/ui/Badge.tsx'
-import InputContainer from '../shared-components/InputContainer.tsx'
+import { PageHeader } from '@digigold/web-common/components/PageHeader.tsx'
+import { Card } from '@digigold/web-common/components/ui/Card.tsx'
+import { Badge } from '@digigold/web-common/components/ui/Badge.tsx'
+import InputContainer from '@digigold/web-common/shared-components/InputContainer.tsx'
 import { useAuth } from '../providers/authContext.ts'
 import {
   useCurrentRatesQuery,
@@ -13,9 +13,9 @@ import {
   useSetBuyingPausedMutation,
 } from '../store/api/goldApi.ts'
 import type { GoldRate, Purity } from '../api/types.ts'
-import { usePagination } from '../hooks/usePagination.ts'
-import { errorBody, errorMessage, errorStatus } from '../utils/errors.ts'
-import { formatDateTime, formatInr, formatPct } from '../utils/format.ts'
+import { usePagination } from '@digigold/web-common/hooks/usePagination.ts'
+import { errorBody, errorMessage, errorStatus } from '@digigold/web-common/utils/errors.ts'
+import { formatDateTime, formatInr, formatPct } from '@digigold/web-common/utils/format.ts'
 
 const PURITIES: Purity[] = ['22K', '24K']
 

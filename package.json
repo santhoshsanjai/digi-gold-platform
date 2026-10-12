@@ -1,0 +1,13 @@
+{
+  "name": "digi-gold-platform",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/crm",
+    "apps/console"
+  ],
+  "scripts": {
+    "lint": "npm run lint --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present"
+  }
+}

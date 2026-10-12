@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { Segmented, Table } from 'antd'
 import { Link } from 'react-router-dom'
-import { PageHeader } from '../components/common/PageHeader.tsx'
-import { StatusBadge } from '../components/common/StatusBadge.tsx'
-import { Card } from '../components/ui/Card.tsx'
+import { PageHeader } from '@digigold/web-common/components/PageHeader.tsx'
+import { StatusBadge } from '@digigold/web-common/components/StatusBadge.tsx'
+import { Card } from '@digigold/web-common/components/ui/Card.tsx'
 import { usePaymentsQuery } from '../store/api/goldApi.ts'
 import type { Payment, PaymentStatus } from '../api/types.ts'
-import { usePagination } from '../hooks/usePagination.ts'
-import { formatDateTime, formatGrams, formatInr } from '../utils/format.ts'
+import { usePagination } from '@digigold/web-common/hooks/usePagination.ts'
+import { formatDateTime, formatGrams, formatInr } from '@digigold/web-common/utils/format.ts'
 
 type Filter = PaymentStatus | 'all'
 

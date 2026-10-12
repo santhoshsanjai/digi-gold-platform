@@ -2,9 +2,9 @@ import { useEffect } from 'react'
 import { Alert, Button, Form, Skeleton, Table, Tabs } from 'antd'
 import dayjs, { type Dayjs } from 'dayjs'
 import { toast } from 'sonner'
-import { PageHeader } from '../components/common/PageHeader.tsx'
-import { Card } from '../components/ui/Card.tsx'
-import InputContainer from '../shared-components/InputContainer.tsx'
+import { PageHeader } from '@digigold/web-common/components/PageHeader.tsx'
+import { Card } from '@digigold/web-common/components/ui/Card.tsx'
+import InputContainer from '@digigold/web-common/shared-components/InputContainer.tsx'
 import { useAuth } from '../providers/authContext.ts'
 import {
   useAuditLogQuery,
@@ -12,9 +12,9 @@ import {
   useSchemeSettingsQuery,
 } from '../store/api/adminApi.ts'
 import type { AuditEntry, Purity, SchemeSettings, SchemeSettingsIn } from '../api/types.ts'
-import { usePagination } from '../hooks/usePagination.ts'
-import { errorMessage } from '../utils/errors.ts'
-import { formatDateTime } from '../utils/format.ts'
+import { usePagination } from '@digigold/web-common/hooks/usePagination.ts'
+import { errorMessage } from '@digigold/web-common/utils/errors.ts'
+import { formatDateTime } from '@digigold/web-common/utils/format.ts'
 
 const MAX_VALIDITY_DAYS = 365
 

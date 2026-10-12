@@ -2,11 +2,11 @@ import { useState } from 'react'
 import { Button, Form, Input, Modal, Popconfirm, Space, Table, Tooltip } from 'antd'
 import { Search } from 'lucide-react'
 import { toast } from 'sonner'
-import { PageHeader } from '../components/common/PageHeader.tsx'
-import { StatusBadge } from '../components/common/StatusBadge.tsx'
-import { Card } from '../components/ui/Card.tsx'
-import { Badge } from '../components/ui/Badge.tsx'
-import InputContainer from '../shared-components/InputContainer.tsx'
+import { PageHeader } from '@digigold/web-common/components/PageHeader.tsx'
+import { StatusBadge } from '@digigold/web-common/components/StatusBadge.tsx'
+import { Card } from '@digigold/web-common/components/ui/Card.tsx'
+import { Badge } from '@digigold/web-common/components/ui/Badge.tsx'
+import InputContainer from '@digigold/web-common/shared-components/InputContainer.tsx'
 import { useAuth } from '../providers/authContext.ts'
 import {
   useCreateUserMutation,
@@ -17,10 +17,10 @@ import {
   useUsersQuery,
 } from '../store/api/adminApi.ts'
 import type { StaffUser } from '../api/types.ts'
-import { useDebounced } from '../hooks/useDebounced.ts'
-import { usePagination } from '../hooks/usePagination.ts'
-import { errorMessage } from '../utils/errors.ts'
-import { formatDateTime } from '../utils/format.ts'
+import { useDebounced } from '@digigold/web-common/hooks/useDebounced.ts'
+import { usePagination } from '@digigold/web-common/hooks/usePagination.ts'
+import { errorMessage } from '@digigold/web-common/utils/errors.ts'
+import { formatDateTime } from '@digigold/web-common/utils/format.ts'
 
 interface UserForm {
   name: string

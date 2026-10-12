@@ -1,11 +1,11 @@
 import { Alert, Button, Form, Result } from 'antd'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useState } from 'react'
-import InputContainer from '../../shared-components/InputContainer.tsx'
+import InputContainer from '@digigold/web-common/shared-components/InputContainer.tsx'
 import { useAuth } from '../../providers/authContext.ts'
 import { useResetPasswordMutation } from '../../store/api/authApi.ts'
-import { errorMessage } from '../../utils/errors.ts'
-import { confirmPasswordRules, passwordRules } from '../../utils/validation.ts'
+import { errorMessage } from '@digigold/web-common/utils/errors.ts'
+import { confirmPasswordRules, passwordRules } from '@digigold/web-common/utils/validation.ts'
 
 export default function ResetPasswordPage() {
   const [params] = useSearchParams()

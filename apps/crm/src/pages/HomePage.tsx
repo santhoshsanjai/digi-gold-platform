@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react'
 import { Navigate } from 'react-router-dom'
-import { FullPageSpinner } from '../components/common/FullPageSpinner.tsx'
+import { FullPageSpinner } from '@digigold/web-common/components/FullPageSpinner.tsx'
 import { useAuth } from '../providers/authContext.ts'
 
 const DashboardPage = lazy(() => import('./DashboardPage.tsx'))

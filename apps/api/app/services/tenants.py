@@ -3,8 +3,10 @@ from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.permissions import DEFAULT_ROLES, OWNER_ROLE
-from app.models import Role, StaffUser, Tenant
+from app.core.security import now
+from app.models import Role, SitePage, StaffUser, Tenant
 from app.schemas.tenant_config import Branding, Features, SchemeSettings
+from app.schemas.website import PageContent
 from app.services import audit
 from app.services.users import create_staff_user
 
@@ -47,6 +49,16 @@ async def create_tenant(
             owner_role = role
     await session.flush()
 
+    session.add(
+        SitePage(
+            tenant_id=tenant.id,
+            slug="home",
+            title="Home",
+            draft=starter_home_page(name).model_dump(mode="json"),
+            draft_changed_at=now(),
+        )
+    )
+
     owner, password = await create_staff_user(
         session, tenant_id=tenant.id, email=owner_email, name=owner_name, role_id=owner_role.id
     )
@@ -60,3 +72,37 @@ async def create_tenant(
         changes={"slug": slug, "name": name},
     )
     return tenant, owner, password
+
+
+def starter_home_page(name: str) -> PageContent:
+    """A draft home page every new client starts from; edited and published in the Console."""
+    return PageContent.model_validate(
+        {
+            "sections": [
+                {
+                    "id": "hero",
+                    "type": "hero",
+                    "heading": f"Save in gold with {name}",
+                    "subheading": "Buy gold from ₹100 at today's rate and redeem it at our store.",
+                    "cta_label": "Get the app",
+                    "cta_url": "#app",
+                },
+                {"id": "rate", "type": "gold_rate", "heading": "Today's gold rate"},
+                {
+                    "id": "how",
+                    "type": "steps",
+                    "heading": "How it works",
+                    "items": [
+                        {"title": "Pay any amount", "text": "Start from ₹100, whenever you like."},
+                        {
+                            "title": "Get gold in grams",
+                            "text": "Each payment buys gold at the day's rate.",
+                        },
+                        {"title": "Redeem in store", "text": "Turn your balance into jewellery."},
+                    ],
+                },
+                {"id": "faq", "type": "faq", "heading": "Questions", "items": []},
+                {"id": "contact", "type": "contact", "heading": "Visit us"},
+            ]
+        }
+    )

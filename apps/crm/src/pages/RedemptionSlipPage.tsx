@@ -1,12 +1,12 @@
 import { Alert, Button, Skeleton } from 'antd'
 import { Printer } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
-import { PageHeader } from '../components/common/PageHeader.tsx'
+import { PageHeader } from '@digigold/web-common/components/PageHeader.tsx'
 import { BrandMark } from '../components/common/BrandMark.tsx'
-import { Card } from '../components/ui/Card.tsx'
+import { Card } from '@digigold/web-common/components/ui/Card.tsx'
 import { useRedemptionSlipQuery } from '../store/api/goldApi.ts'
-import { errorMessage } from '../utils/errors.ts'
-import { formatDateTime, formatGrams, formatInr, formatPct } from '../utils/format.ts'
+import { errorMessage } from '@digigold/web-common/utils/errors.ts'
+import { formatDateTime, formatGrams, formatInr, formatPct } from '@digigold/web-common/utils/format.ts'
 
 /** A printable slip the customer takes to the counter; the jeweller bills from it. */
 export default function RedemptionSlipPage() {

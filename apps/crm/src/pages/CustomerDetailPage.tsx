@@ -1,9 +1,9 @@
 import { Alert, Descriptions, Skeleton, Table, Tabs } from 'antd'
 import { Link, useParams } from 'react-router-dom'
-import { PageHeader } from '../components/common/PageHeader.tsx'
-import { StatusBadge } from '../components/common/StatusBadge.tsx'
-import { Card } from '../components/ui/Card.tsx'
-import { StatCard } from '../components/ui/StatCard.tsx'
+import { PageHeader } from '@digigold/web-common/components/PageHeader.tsx'
+import { StatusBadge } from '@digigold/web-common/components/StatusBadge.tsx'
+import { Card } from '@digigold/web-common/components/ui/Card.tsx'
+import { StatCard } from '@digigold/web-common/components/ui/StatCard.tsx'
 import { useAuth } from '../providers/authContext.ts'
 import {
   useCustomerQuery,
@@ -11,8 +11,8 @@ import {
   useRedemptionsQuery,
 } from '../store/api/goldApi.ts'
 import type { LedgerEntry, Lot, Payment, Redemption } from '../api/types.ts'
-import { errorMessage } from '../utils/errors.ts'
-import { formatDate, formatDateTime, formatGrams, formatInr } from '../utils/format.ts'
+import { errorMessage } from '@digigold/web-common/utils/errors.ts'
+import { formatDate, formatDateTime, formatGrams, formatInr } from '@digigold/web-common/utils/format.ts'
 
 const ENTRY_LABELS: Record<string, string> = {
   credit: 'Bought',

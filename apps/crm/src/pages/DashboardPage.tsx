@@ -1,14 +1,14 @@
 import { Alert, Skeleton } from 'antd'
 import { AlarmClock, Coins, IndianRupee, Users } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { PageHeader } from '../components/common/PageHeader.tsx'
-import { StatCard } from '../components/ui/StatCard.tsx'
-import { Card } from '../components/ui/Card.tsx'
-import { Badge } from '../components/ui/Badge.tsx'
+import { PageHeader } from '@digigold/web-common/components/PageHeader.tsx'
+import { StatCard } from '@digigold/web-common/components/ui/StatCard.tsx'
+import { Card } from '@digigold/web-common/components/ui/Card.tsx'
+import { Badge } from '@digigold/web-common/components/ui/Badge.tsx'
 import { useAuth } from '../providers/authContext.ts'
 import { useDashboardQuery } from '../store/api/goldApi.ts'
-import { errorMessage } from '../utils/errors.ts'
-import { formatGrams, formatInr } from '../utils/format.ts'
+import { errorMessage } from '@digigold/web-common/utils/errors.ts'
+import { formatGrams, formatInr } from '@digigold/web-common/utils/format.ts'
 
 export default function DashboardPage() {
   const { data, isLoading, error } = useDashboardQuery(undefined, { pollingInterval: 60_000 })

@@ -1,13 +1,13 @@
 import { Button, Descriptions, Form } from 'antd'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
-import { Card } from '../components/ui/Card.tsx'
-import { PageHeader } from '../components/common/PageHeader.tsx'
-import InputContainer from '../shared-components/InputContainer.tsx'
+import { Card } from '@digigold/web-common/components/ui/Card.tsx'
+import { PageHeader } from '@digigold/web-common/components/PageHeader.tsx'
+import InputContainer from '@digigold/web-common/shared-components/InputContainer.tsx'
 import { useAuth } from '../providers/authContext.ts'
 import { useChangePasswordMutation } from '../store/api/authApi.ts'
-import { errorMessage } from '../utils/errors.ts'
-import { confirmPasswordRules, passwordRules } from '../utils/validation.ts'
+import { errorMessage } from '@digigold/web-common/utils/errors.ts'
+import { confirmPasswordRules, passwordRules } from '@digigold/web-common/utils/validation.ts'
 
 interface ChangeForm {
   current_password: string

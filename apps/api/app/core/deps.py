@@ -10,10 +10,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import bypass_tenant_scope, get_session, scope_to_tenant
 from app.core.security import ACCESS, decode_jwt
-from app.models import Customer, Role, StaffUser
+from app.models import Customer, Role, StaffUser, Tenant
 
 Session = Annotated[AsyncSession, Depends(get_session)]
 _bearer = HTTPBearer(auto_error=False)
+
+
+async def tenant_active(session: AsyncSession, tenant_id: UUID | None) -> bool:
+    """A suspended client's staff and customers lose access, including sessions already open."""
+    if tenant_id is None:
+        return True
+    return await session.scalar(select(Tenant.status).where(Tenant.id == tenant_id)) == "active"
 
 
 def unauthorized(detail: str = "not authenticated") -> HTTPException:
@@ -67,6 +74,8 @@ async def current_staff(
     user, perms = row
     if not user.is_active or user.must_change_password or user.tenant_id != tenant_id:
         raise unauthorized("account is not usable")
+    if not await tenant_active(session, tenant_id):
+        raise unauthorized("account is not usable")
     return Staff(user=user, permissions=frozenset(perms or ()))
 
 
@@ -110,7 +119,7 @@ async def current_customer(
         raise unauthorized("invalid or expired token") from None
     await scope_to_tenant(session, tenant_id)
     customer = await session.get(Customer, customer_id)
-    if customer is None or not customer.is_active:
+    if customer is None or not customer.is_active or not await tenant_active(session, tenant_id):
         raise unauthorized("account is not usable")
     return customer
 

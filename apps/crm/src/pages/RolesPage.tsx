@@ -2,9 +2,9 @@ import { useMemo, useState } from 'react'
 import { Button, Checkbox, Form, Modal, Popconfirm, Space, Table } from 'antd'
 import { Lock } from 'lucide-react'
 import { toast } from 'sonner'
-import { PageHeader } from '../components/common/PageHeader.tsx'
-import { Card } from '../components/ui/Card.tsx'
-import InputContainer from '../shared-components/InputContainer.tsx'
+import { PageHeader } from '@digigold/web-common/components/PageHeader.tsx'
+import { Card } from '@digigold/web-common/components/ui/Card.tsx'
+import InputContainer from '@digigold/web-common/shared-components/InputContainer.tsx'
 import { useAuth } from '../providers/authContext.ts'
 import {
   useCreateRoleMutation,
@@ -14,7 +14,7 @@ import {
   useUpdateRoleMutation,
 } from '../store/api/adminApi.ts'
 import type { Role } from '../api/types.ts'
-import { errorMessage } from '../utils/errors.ts'
+import { errorMessage } from '@digigold/web-common/utils/errors.ts'
 
 interface RoleForm {
   name: string

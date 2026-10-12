@@ -1,6 +1,6 @@
 import { Result } from 'antd'
 import { Link } from 'react-router-dom'
-import { PageHeader } from '../components/common/PageHeader.tsx'
+import { PageHeader } from '@digigold/web-common/components/PageHeader.tsx'
 import { useAuth } from '../providers/authContext.ts'
 
 /** Placeholder until the reporting endpoints exist; links to what is available today. */
