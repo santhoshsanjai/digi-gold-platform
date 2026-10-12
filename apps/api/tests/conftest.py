@@ -15,7 +15,7 @@ from httpx import ASGITransport, AsyncClient  # noqa: E402
 from sqlalchemy import text  # noqa: E402
 
 from alembic import command  # noqa: E402
-from app.core import email  # noqa: E402
+from app.core import email, sms  # noqa: E402
 from app.core.db import SessionLocal, bypass_tenant_scope, engine  # noqa: E402
 from app.core.security import hash_password  # noqa: E402
 from app.main import app  # noqa: E402
@@ -25,7 +25,10 @@ from app.services.users import create_staff_user  # noqa: E402
 API = "/api/v1"
 ADMIN_EMAIL = "admin@platform.example.com"
 ADMIN_PASSWORD = "Admin-pass-123"
-TABLES = "audit_logs, auth_tokens, staff_users, roles, stores, tenants"
+TABLES = (
+    "ledger_entries, gold_lots, payment_orders, customer_tokens, customer_otps, customers, "
+    "gold_rates, audit_logs, auth_tokens, staff_users, roles, stores, tenants"
+)
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -42,6 +45,7 @@ async def clean_db():
     async with engine.begin() as conn:
         await conn.execute(text(f"TRUNCATE {TABLES} CASCADE"))
     email.outbox.clear()
+    sms.outbox.clear()
     config_cache.clear()
 
 
@@ -124,3 +128,28 @@ async def sign_in_first_time(client, tenant: str, email_: str, new_password="Str
 async def owner_headers(client, admin_headers):
     await create_tenant(client, admin_headers)
     return await sign_in_first_time(client, "sri-gold", "owner@sri.example.com")
+
+
+async def publish_rate(client, headers, rate="10000", purity="22K", confirm=False):
+    r = await client.post(
+        f"{API}/crm/rates",
+        json={"purity": purity, "rate_per_gram": rate, "confirm_large_change": confirm},
+        headers=headers,
+    )
+    return r
+
+
+def last_otp(phone: str) -> str:
+    msg = next(m for m in reversed(sms.outbox) if m.to == phone)
+    return msg.body.split()[0]
+
+
+async def customer_sign_in(client, tenant="sri-gold", phone="9876543210"):
+    r = await client.post(f"{API}/app/auth/otp", json={"tenant": tenant, "phone": phone})
+    assert r.status_code == 202, r.text
+    r = await client.post(
+        f"{API}/app/auth/verify",
+        json={"tenant": tenant, "phone": phone, "code": last_otp("+91" + phone[-10:])},
+    )
+    assert r.status_code == 200, r.text
+    return bearer(r.json()["access_token"])

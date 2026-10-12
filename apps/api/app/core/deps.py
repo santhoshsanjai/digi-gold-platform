@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import bypass_tenant_scope, get_session, scope_to_tenant
 from app.core.security import ACCESS, decode_jwt
-from app.models import Role, StaffUser
+from app.models import Customer, Role, StaffUser
 
 Session = Annotated[AsyncSession, Depends(get_session)]
 _bearer = HTTPBearer(auto_error=False)
@@ -91,3 +91,28 @@ async def platform_admin(staff: CurrentStaff) -> Staff:
 
 
 PlatformAdmin = Annotated[Staff, Depends(platform_admin)]
+
+
+CUSTOMER = "customer"
+
+
+async def current_customer(
+    session: Session,
+    creds: Annotated[HTTPAuthorizationCredentials | None, Depends(_bearer)],
+) -> Customer:
+    """Authenticate a mobile-app customer and scope the transaction to their jeweller."""
+    if creds is None:
+        raise unauthorized()
+    try:
+        claims = decode_jwt(creds.credentials, CUSTOMER)
+        customer_id, tenant_id = UUID(claims["sub"]), UUID(claims["tid"])
+    except (jwt.InvalidTokenError, KeyError, ValueError, TypeError):
+        raise unauthorized("invalid or expired token") from None
+    await scope_to_tenant(session, tenant_id)
+    customer = await session.get(Customer, customer_id)
+    if customer is None or not customer.is_active:
+        raise unauthorized("account is not usable")
+    return customer
+
+
+CurrentCustomer = Annotated[Customer, Depends(current_customer)]

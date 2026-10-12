@@ -41,6 +41,9 @@ class Features(_Strict):
     gifting: bool = False
     referrals: bool = False
     partner_digital_gold: bool = False
+    # Test payments: a mock checkout with success, failure and pending buttons.
+    # Switched off once the client's Razorpay account is connected.
+    test_payments: bool = True
 
 
 class SchemeSettings(_Strict):

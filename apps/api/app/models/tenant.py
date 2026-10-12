@@ -20,6 +20,8 @@ class Tenant(IdMixin, TimestampMixin, Base):
     features: Mapped[dict] = mapped_column(JSONB, default=dict)
     settings: Mapped[dict] = mapped_column(JSONB, default=dict)
     config_version: Mapped[int] = mapped_column(default=1)
+    # Staff can stop all buying instantly (for example after a wrong rate).
+    buying_paused: Mapped[bool] = mapped_column(default=False)
 
 
 class Store(IdMixin, TimestampMixin, Base):

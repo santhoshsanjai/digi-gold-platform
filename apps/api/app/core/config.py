@@ -38,6 +38,19 @@ class Settings(BaseSettings):
     crm_base_url: str = "http://localhost:5173"
     console_base_url: str = "http://localhost:5174"
 
+    # Customer app sign-in by OTP.
+    customer_access_minutes: int = 60
+    customer_refresh_days: int = 90
+    otp_minutes: int = 5
+    otp_max_attempts: int = 5
+    otp_resend_seconds: int = 30
+    otp_max_per_hour: int = 5
+    # "console" keeps SMS in memory and logs them; a real SMS provider is added later.
+    sms_backend: Literal["console"] = "console"
+
+    # Business time zone: "today" for rates and lot expiry is the Indian date.
+    timezone: str = "Asia/Kolkata"
+
     cors_origins: list[str] = ["http://localhost:5173", "http://localhost:5174"]
     config_cache_seconds: int = 300
 
