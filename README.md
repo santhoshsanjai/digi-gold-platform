@@ -6,9 +6,10 @@ never code.
 
 | App | Path | Stack | Status |
 | --- | --- | --- | --- |
-| Backend API (app, CRM, Console, website) | `apps/api` | FastAPI, PostgreSQL | Foundation, gold rate, customers, ledger |
+| Backend API (app, CRM, Console, website) | `apps/api` | FastAPI, PostgreSQL | Foundation, gold rate, customers, ledger, website content |
+| Shared web components and API types | `packages/web-common` | React, TypeScript | Used by the CRM and Console |
 | CRM for client staff | `apps/crm` | React + Vite, Ant Design, Tailwind, RTK Query | Sign-in, rates, customers, redemptions, expiry, settings, users and roles |
-| Platform Console with the website CMS | `apps/console` | React + Vite | Planned |
+| Platform Console with the website CMS | `apps/console` | React + Vite, Ant Design, Tailwind, RTK Query | Clients, branding, features, website pages, images |
 | Business website | `apps/website` | React + Vite, pre-rendered | Planned |
 | Customer mobile app | `apps/mobile` | React Native + Expo | Planned |
 
@@ -37,9 +38,27 @@ The temporary password is printed and emailed to the Mailpit inbox. Sign in thro
 `POST /api/v1/auth/login` without a `tenant`, set a new password with
 `POST /api/v1/auth/first-login`, then create a client with `POST /api/v1/console/tenants`.
 
-## Run the CRM locally
+## Run the web apps locally
 
-Needs Node 22 and the API running on port 8000.
+Needs Node 22 and the API running on port 8000. The web apps are npm workspaces, so one
+install at the repository root covers all of them.
+
+```bash
+npm install                    # at the repository root
+```
+
+**Platform Console** (you, the platform owner): create clients, set their branding and
+features, and edit their websites.
+
+```bash
+cd apps/console
+cp .env.example .env.local
+npm run dev                    # http://localhost:5174
+```
+
+Sign in with the platform admin's email and temporary password; it asks for a new one.
+
+**CRM** (each client's staff):
 
 ```bash
 cd apps/api
@@ -47,22 +66,38 @@ uv run python -m app.cli create-tenant --slug demo --name "Demo Jewellers" \
   --owner-email owner@example.com --owner-name "Owner"   # prints a temporary password
 cd ../crm
 cp .env.example .env.local     # VITE_TENANT_SLUG=demo
-npm install
 npm run dev                    # http://localhost:5173
 ```
 
-Sign in with the owner's email and temporary password; the CRM asks for a new password.
-One CRM build serves every client: in production the client is read from the host name
-(`demo.crm.example.com`), and its name, logo, colours and font come from its branding.
+Clients created in the Console work the same way: the owner gets the temporary password by
+email. One CRM build serves every client: in production the client is read from the host
+name (`demo.crm.example.com`), and its name, logo, colours and font come from its branding.
 
 When an API endpoint changes, refresh the shared types:
 
 ```bash
 cd apps/api && uv run python -m app.cli export-openapi   # writes openapi.json
-cd ../crm && npm run api:types                          # writes src/api/schema.d.ts
+cd ../.. && npm run api:types -w @digigold/web-common    # writes packages/web-common/src/api/schema.d.ts
 ```
 
 CI fails if either file is out of date.
+
+## Website content
+
+Each client's website is content, not code. In the Console's **Website** tab you edit:
+
+- **Site settings** (title, contact details, social and app links), live as soon as saved.
+- **Pages**, each a list of sections: banner, text, picture and text, highlights, steps,
+  today's gold rate, questions and answers, gallery, call to action and contact. Edits
+  are a draft until you press **Publish**. Every new client starts with a draft home page.
+
+Images are uploaded in the **Images** tab or from any image field. The API checks each
+file's bytes (PNG, JPEG, GIF, WebP or ICO, up to `DG_MEDIA_MAX_MB`, 5 MB by default),
+stores it under `DG_MEDIA_DIR` and serves it at `/media`. Rich text is cleaned on save,
+keeping only formatting tags and safe links.
+
+The website reads published content from `GET /public/tenants/{slug}/site`,
+`/public/tenants/{slug}/pages/{page}` and `/public/tenants/{slug}/rate`.
 
 ## Tests
 
@@ -70,8 +105,8 @@ CI fails if either file is out of date.
 cd apps/api
 uv run pytest           # needs the database from docker compose (digigold_test)
 uv run ruff check . && uv run ruff format --check .
-cd ../crm
-npm run lint && npm run build
+cd ../..
+npm run lint && npm run build  # CRM, Console and shared components
 ```
 
 ## Design documents

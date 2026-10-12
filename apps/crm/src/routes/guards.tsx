@@ -1,7 +1,7 @@
 import React from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
 import { Result } from 'antd'
-import { FullPageSpinner } from '../components/common/FullPageSpinner.tsx'
+import { FullPageSpinner } from '@digigold/web-common/components/FullPageSpinner.tsx'
 import { useAuth } from '../providers/authContext.ts'
 
 /** Sends signed-out visitors to the login page and back here afterwards. */

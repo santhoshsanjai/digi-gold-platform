@@ -1,6 +1,25 @@
 {
   "components": {
     "schemas": {
+      "AppLinks": {
+        "additionalProperties": false,
+        "properties": {
+          "android": {
+            "default": "",
+            "maxLength": 500,
+            "title": "Android",
+            "type": "string"
+          },
+          "ios": {
+            "default": "",
+            "maxLength": 500,
+            "title": "Ios",
+            "type": "string"
+          }
+        },
+        "title": "AppLinks",
+        "type": "object"
+      },
       "AuditOut": {
         "properties": {
           "action": {
@@ -53,6 +72,20 @@
           "created_at"
         ],
         "title": "AuditOut",
+        "type": "object"
+      },
+      "Body_upload_media_api_v1_console_tenants__tenant_id__media_post": {
+        "properties": {
+          "file": {
+            "contentMediaType": "application/octet-stream",
+            "title": "File",
+            "type": "string"
+          }
+        },
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_media_api_v1_console_tenants__tenant_id__media_post",
         "type": "object"
       },
       "Branding": {
@@ -168,6 +201,131 @@
           "current_password"
         ],
         "title": "ChangePasswordIn",
+        "type": "object"
+      },
+      "Contact": {
+        "additionalProperties": false,
+        "properties": {
+          "address": {
+            "default": "",
+            "maxLength": 2000,
+            "title": "Address",
+            "type": "string"
+          },
+          "email": {
+            "default": "",
+            "maxLength": 254,
+            "title": "Email",
+            "type": "string"
+          },
+          "hours": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Hours",
+            "type": "string"
+          },
+          "map_url": {
+            "default": "",
+            "maxLength": 500,
+            "title": "Map Url",
+            "type": "string"
+          },
+          "phone": {
+            "default": "",
+            "maxLength": 30,
+            "title": "Phone",
+            "type": "string"
+          },
+          "whatsapp": {
+            "default": "",
+            "maxLength": 30,
+            "title": "Whatsapp",
+            "type": "string"
+          }
+        },
+        "title": "Contact",
+        "type": "object"
+      },
+      "ContactSection": {
+        "additionalProperties": false,
+        "description": "Shows the contact details from the site settings, with an optional map.",
+        "properties": {
+          "heading": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Heading",
+            "type": "string"
+          },
+          "id": {
+            "description": "Stable key set by the editor",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Id",
+            "type": "string"
+          },
+          "show_map": {
+            "default": true,
+            "title": "Show Map",
+            "type": "boolean"
+          },
+          "type": {
+            "const": "contact",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "title": "ContactSection",
+        "type": "object"
+      },
+      "CtaSection": {
+        "additionalProperties": false,
+        "properties": {
+          "button_label": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Button Label",
+            "type": "string"
+          },
+          "button_url": {
+            "default": "",
+            "maxLength": 500,
+            "title": "Button Url",
+            "type": "string"
+          },
+          "heading": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Heading",
+            "type": "string"
+          },
+          "id": {
+            "description": "Stable key set by the editor",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Id",
+            "type": "string"
+          },
+          "text": {
+            "default": "",
+            "maxLength": 2000,
+            "title": "Text",
+            "type": "string"
+          },
+          "type": {
+            "const": "cta",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "title": "CtaSection",
         "type": "object"
       },
       "CurrentRatesOut": {
@@ -506,6 +664,64 @@
         "title": "ExpiringLotOut",
         "type": "object"
       },
+      "Faq": {
+        "additionalProperties": false,
+        "properties": {
+          "answer": {
+            "maxLength": 2000,
+            "title": "Answer",
+            "type": "string"
+          },
+          "question": {
+            "maxLength": 200,
+            "title": "Question",
+            "type": "string"
+          }
+        },
+        "required": [
+          "question",
+          "answer"
+        ],
+        "title": "Faq",
+        "type": "object"
+      },
+      "FaqSection": {
+        "additionalProperties": false,
+        "properties": {
+          "heading": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Heading",
+            "type": "string"
+          },
+          "id": {
+            "description": "Stable key set by the editor",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Id",
+            "type": "string"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Faq"
+            },
+            "maxItems": 30,
+            "title": "Items",
+            "type": "array"
+          },
+          "type": {
+            "const": "faq",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "title": "FaqSection",
+        "type": "object"
+      },
       "Features": {
         "additionalProperties": false,
         "description": "Feature flags, switched per tenant in the Platform Console.",
@@ -542,6 +758,43 @@
           }
         },
         "title": "Features",
+        "type": "object"
+      },
+      "FeaturesSection": {
+        "additionalProperties": false,
+        "properties": {
+          "heading": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Heading",
+            "type": "string"
+          },
+          "id": {
+            "description": "Stable key set by the editor",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Id",
+            "type": "string"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Item"
+            },
+            "maxItems": 12,
+            "title": "Items",
+            "type": "array"
+          },
+          "type": {
+            "const": "features",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "title": "FeaturesSection",
         "type": "object"
       },
       "FirstLoginIn": {
@@ -588,6 +841,100 @@
         "title": "ForgotIn",
         "type": "object"
       },
+      "GalleryImage": {
+        "additionalProperties": false,
+        "properties": {
+          "caption": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Caption",
+            "type": "string"
+          },
+          "url": {
+            "maxLength": 500,
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "title": "GalleryImage",
+        "type": "object"
+      },
+      "GallerySection": {
+        "additionalProperties": false,
+        "properties": {
+          "heading": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Heading",
+            "type": "string"
+          },
+          "id": {
+            "description": "Stable key set by the editor",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Id",
+            "type": "string"
+          },
+          "images": {
+            "items": {
+              "$ref": "#/components/schemas/GalleryImage"
+            },
+            "maxItems": 24,
+            "title": "Images",
+            "type": "array"
+          },
+          "type": {
+            "const": "gallery",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "title": "GallerySection",
+        "type": "object"
+      },
+      "GoldRateSection": {
+        "additionalProperties": false,
+        "description": "Shows today's published rate, read live from the API.",
+        "properties": {
+          "heading": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Heading",
+            "type": "string"
+          },
+          "id": {
+            "description": "Stable key set by the editor",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Id",
+            "type": "string"
+          },
+          "note": {
+            "default": "",
+            "maxLength": 2000,
+            "title": "Note",
+            "type": "string"
+          },
+          "type": {
+            "const": "gold_rate",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "title": "GoldRateSection",
+        "type": "object"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -599,6 +946,134 @@
           }
         },
         "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "HeroSection": {
+        "additionalProperties": false,
+        "properties": {
+          "cta_label": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Cta Label",
+            "type": "string"
+          },
+          "cta_url": {
+            "default": "",
+            "maxLength": 500,
+            "title": "Cta Url",
+            "type": "string"
+          },
+          "heading": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Heading",
+            "type": "string"
+          },
+          "id": {
+            "description": "Stable key set by the editor",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Id",
+            "type": "string"
+          },
+          "image_url": {
+            "default": "",
+            "maxLength": 500,
+            "title": "Image Url",
+            "type": "string"
+          },
+          "subheading": {
+            "default": "",
+            "maxLength": 2000,
+            "title": "Subheading",
+            "type": "string"
+          },
+          "type": {
+            "const": "hero",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "title": "HeroSection",
+        "type": "object"
+      },
+      "ImageTextSection": {
+        "additionalProperties": false,
+        "properties": {
+          "body_html": {
+            "default": "",
+            "maxLength": 20000,
+            "title": "Body Html",
+            "type": "string"
+          },
+          "heading": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Heading",
+            "type": "string"
+          },
+          "id": {
+            "description": "Stable key set by the editor",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Id",
+            "type": "string"
+          },
+          "image_side": {
+            "default": "right",
+            "enum": [
+              "left",
+              "right"
+            ],
+            "title": "Image Side",
+            "type": "string"
+          },
+          "image_url": {
+            "default": "",
+            "maxLength": 500,
+            "title": "Image Url",
+            "type": "string"
+          },
+          "type": {
+            "const": "image_text",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "title": "ImageTextSection",
+        "type": "object"
+      },
+      "Item": {
+        "additionalProperties": false,
+        "properties": {
+          "icon": {
+            "default": "",
+            "maxLength": 40,
+            "title": "Icon",
+            "type": "string"
+          },
+          "text": {
+            "default": "",
+            "maxLength": 2000,
+            "title": "Text",
+            "type": "string"
+          },
+          "title": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "title": "Item",
         "type": "object"
       },
       "LedgerOut": {
@@ -743,6 +1218,46 @@
         "title": "LotOut",
         "type": "object"
       },
+      "MediaOut": {
+        "properties": {
+          "content_type": {
+            "title": "Content Type",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "filename": {
+            "title": "Filename",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "size_bytes": {
+            "title": "Size Bytes",
+            "type": "integer"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "url",
+          "filename",
+          "content_type",
+          "size_bytes",
+          "created_at"
+        ],
+        "title": "MediaOut",
+        "type": "object"
+      },
       "MenuItemOut": {
         "properties": {
           "icon": {
@@ -769,6 +1284,24 @@
           "icon"
         ],
         "title": "MenuItemOut",
+        "type": "object"
+      },
+      "NavItem": {
+        "properties": {
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "title"
+        ],
+        "title": "NavItem",
         "type": "object"
       },
       "OrderIn": {
@@ -885,6 +1418,369 @@
           "created_at"
         ],
         "title": "OrderOut",
+        "type": "object"
+      },
+      "PageContent": {
+        "additionalProperties": false,
+        "properties": {
+          "sections": {
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "contact": "#/components/schemas/ContactSection",
+                  "cta": "#/components/schemas/CtaSection",
+                  "faq": "#/components/schemas/FaqSection",
+                  "features": "#/components/schemas/FeaturesSection",
+                  "gallery": "#/components/schemas/GallerySection",
+                  "gold_rate": "#/components/schemas/GoldRateSection",
+                  "hero": "#/components/schemas/HeroSection",
+                  "image_text": "#/components/schemas/ImageTextSection",
+                  "rich_text": "#/components/schemas/RichTextSection",
+                  "steps": "#/components/schemas/StepsSection"
+                },
+                "propertyName": "type"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/HeroSection"
+                },
+                {
+                  "$ref": "#/components/schemas/RichTextSection"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageTextSection"
+                },
+                {
+                  "$ref": "#/components/schemas/FeaturesSection"
+                },
+                {
+                  "$ref": "#/components/schemas/StepsSection"
+                },
+                {
+                  "$ref": "#/components/schemas/GoldRateSection"
+                },
+                {
+                  "$ref": "#/components/schemas/FaqSection"
+                },
+                {
+                  "$ref": "#/components/schemas/GallerySection"
+                },
+                {
+                  "$ref": "#/components/schemas/CtaSection"
+                },
+                {
+                  "$ref": "#/components/schemas/ContactSection"
+                }
+              ]
+            },
+            "maxItems": 40,
+            "title": "Sections",
+            "type": "array"
+          }
+        },
+        "title": "PageContent",
+        "type": "object"
+      },
+      "PageCreate": {
+        "properties": {
+          "nav_order": {
+            "default": 0,
+            "maximum": 1000.0,
+            "minimum": 0.0,
+            "title": "Nav Order",
+            "type": "integer"
+          },
+          "seo_description": {
+            "default": "",
+            "maxLength": 300,
+            "title": "Seo Description",
+            "type": "string"
+          },
+          "seo_title": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Seo Title",
+            "type": "string"
+          },
+          "show_in_nav": {
+            "default": true,
+            "title": "Show In Nav",
+            "type": "boolean"
+          },
+          "slug": {
+            "pattern": "^(?:home|[a-z0-9](?:[a-z0-9-]{0,78}[a-z0-9])?)$",
+            "title": "Slug",
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "slug"
+        ],
+        "title": "PageCreate",
+        "type": "object"
+      },
+      "PageOut": {
+        "properties": {
+          "content": {
+            "$ref": "#/components/schemas/PageContent"
+          },
+          "draft_changed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Draft Changed At"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "nav_order": {
+            "title": "Nav Order",
+            "type": "integer"
+          },
+          "published_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Published At"
+          },
+          "published_content": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PageContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "seo_description": {
+            "title": "Seo Description",
+            "type": "string"
+          },
+          "seo_title": {
+            "title": "Seo Title",
+            "type": "string"
+          },
+          "show_in_nav": {
+            "title": "Show In Nav",
+            "type": "boolean"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "status": {
+            "default": "",
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "title",
+          "show_in_nav",
+          "nav_order",
+          "published_at",
+          "draft_changed_at",
+          "updated_at",
+          "seo_title",
+          "seo_description",
+          "content",
+          "published_content"
+        ],
+        "title": "PageOut",
+        "type": "object"
+      },
+      "PageSummary": {
+        "properties": {
+          "draft_changed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Draft Changed At"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "nav_order": {
+            "title": "Nav Order",
+            "type": "integer"
+          },
+          "published_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Published At"
+          },
+          "show_in_nav": {
+            "title": "Show In Nav",
+            "type": "boolean"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "status": {
+            "default": "",
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "title",
+          "show_in_nav",
+          "nav_order",
+          "published_at",
+          "draft_changed_at",
+          "updated_at"
+        ],
+        "title": "PageSummary",
+        "type": "object"
+      },
+      "PageUpdate": {
+        "description": "Fields left out keep their value. Saving content changes the draft only.",
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PageContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "nav_order": {
+            "anyOf": [
+              {
+                "maximum": 1000.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nav Order"
+          },
+          "seo_description": {
+            "anyOf": [
+              {
+                "maxLength": 300,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seo Description"
+          },
+          "seo_title": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seo Title"
+          },
+          "show_in_nav": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Show In Nav"
+          },
+          "slug": {
+            "anyOf": [
+              {
+                "pattern": "^(?:home|[a-z0-9](?:[a-z0-9-]{0,78}[a-z0-9])?)$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slug"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "title": "PageUpdate",
         "type": "object"
       },
       "Page_AuditOut_": {
@@ -1009,6 +1905,37 @@
           "offset"
         ],
         "title": "Page[LedgerOut]",
+        "type": "object"
+      },
+      "Page_MediaOut_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/MediaOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset"
+        ],
+        "title": "Page[MediaOut]",
         "type": "object"
       },
       "Page_PaymentOut_": {
@@ -1380,6 +2307,87 @@
         "title": "PublicConfig",
         "type": "object"
       },
+      "PublicPage": {
+        "properties": {
+          "content": {
+            "$ref": "#/components/schemas/PageContent"
+          },
+          "published_at": {
+            "format": "date-time",
+            "title": "Published At",
+            "type": "string"
+          },
+          "seo_description": {
+            "title": "Seo Description",
+            "type": "string"
+          },
+          "seo_title": {
+            "title": "Seo Title",
+            "type": "string"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "title",
+          "seo_title",
+          "seo_description",
+          "content",
+          "published_at"
+        ],
+        "title": "PublicPage",
+        "type": "object"
+      },
+      "PublicRate": {
+        "properties": {
+          "buying_open": {
+            "title": "Buying Open",
+            "type": "boolean"
+          },
+          "purity": {
+            "title": "Purity",
+            "type": "string"
+          },
+          "rate_per_gram": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rate Per Gram"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          }
+        },
+        "required": [
+          "purity",
+          "rate_per_gram",
+          "updated_at",
+          "buying_open"
+        ],
+        "title": "PublicRate",
+        "type": "object"
+      },
       "PublicScheme": {
         "properties": {
           "lot_validity_days": {
@@ -1416,6 +2424,39 @@
           "price_lock_minutes"
         ],
         "title": "PublicScheme",
+        "type": "object"
+      },
+      "PublicSite": {
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "nav": {
+            "items": {
+              "$ref": "#/components/schemas/NavItem"
+            },
+            "title": "Nav",
+            "type": "array"
+          },
+          "pages": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Pages",
+            "type": "array"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/WebsiteSettings"
+          }
+        },
+        "required": [
+          "name",
+          "settings",
+          "nav",
+          "pages"
+        ],
+        "title": "PublicSite",
         "type": "object"
       },
       "RateIn": {
@@ -1637,6 +2678,41 @@
           "token"
         ],
         "title": "ResetIn",
+        "type": "object"
+      },
+      "RichTextSection": {
+        "additionalProperties": false,
+        "properties": {
+          "body_html": {
+            "default": "",
+            "maxLength": 20000,
+            "title": "Body Html",
+            "type": "string"
+          },
+          "heading": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Heading",
+            "type": "string"
+          },
+          "id": {
+            "description": "Stable key set by the editor",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Id",
+            "type": "string"
+          },
+          "type": {
+            "const": "rich_text",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "title": "RichTextSection",
         "type": "object"
       },
       "RoleIn": {
@@ -1991,6 +3067,22 @@
         "title": "SchemeSettings",
         "type": "object"
       },
+      "SectionTypesOut": {
+        "properties": {
+          "types": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Types",
+            "type": "array"
+          }
+        },
+        "required": [
+          "types"
+        ],
+        "title": "SectionTypesOut",
+        "type": "object"
+      },
       "SlipOut": {
         "description": "Everything the CRM prints on the redemption slip.",
         "properties": {
@@ -2027,6 +3119,74 @@
           "staff_name"
         ],
         "title": "SlipOut",
+        "type": "object"
+      },
+      "Social": {
+        "additionalProperties": false,
+        "properties": {
+          "facebook": {
+            "default": "",
+            "maxLength": 500,
+            "title": "Facebook",
+            "type": "string"
+          },
+          "instagram": {
+            "default": "",
+            "maxLength": 500,
+            "title": "Instagram",
+            "type": "string"
+          },
+          "x": {
+            "default": "",
+            "maxLength": 500,
+            "title": "X",
+            "type": "string"
+          },
+          "youtube": {
+            "default": "",
+            "maxLength": 500,
+            "title": "Youtube",
+            "type": "string"
+          }
+        },
+        "title": "Social",
+        "type": "object"
+      },
+      "StepsSection": {
+        "additionalProperties": false,
+        "properties": {
+          "heading": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Heading",
+            "type": "string"
+          },
+          "id": {
+            "description": "Stable key set by the editor",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Id",
+            "type": "string"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Item"
+            },
+            "maxItems": 8,
+            "title": "Items",
+            "type": "array"
+          },
+          "type": {
+            "const": "steps",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "title": "StepsSection",
         "type": "object"
       },
       "StoreIn": {
@@ -2570,6 +3730,47 @@
           "code"
         ],
         "title": "VerifyIn",
+        "type": "object"
+      },
+      "WebsiteSettings": {
+        "additionalProperties": false,
+        "description": "Site-wide content: shown on every page, applied as soon as it is saved.",
+        "properties": {
+          "app_links": {
+            "$ref": "#/components/schemas/AppLinks"
+          },
+          "contact": {
+            "$ref": "#/components/schemas/Contact"
+          },
+          "footer_text": {
+            "default": "",
+            "maxLength": 2000,
+            "title": "Footer Text",
+            "type": "string"
+          },
+          "seo_description": {
+            "default": "",
+            "maxLength": 300,
+            "title": "Seo Description",
+            "type": "string"
+          },
+          "site_title": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Site Title",
+            "type": "string"
+          },
+          "social": {
+            "$ref": "#/components/schemas/Social"
+          },
+          "tagline": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Tagline",
+            "type": "string"
+          }
+        },
+        "title": "WebsiteSettings",
         "type": "object"
       },
       "app__api__app_gold__MeOut": {
@@ -4077,6 +5278,734 @@
         ]
       }
     },
+    "/api/v1/console/tenants/{tenant_id}/media": {
+      "get": {
+        "operationId": "list_media_api_v1_console_tenants__tenant_id__media_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tenant_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Tenant Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 40,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_MediaOut_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Media",
+        "tags": [
+          "platform console: website"
+        ]
+      },
+      "post": {
+        "operationId": "upload_media_api_v1_console_tenants__tenant_id__media_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tenant_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Tenant Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_media_api_v1_console_tenants__tenant_id__media_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Upload Media",
+        "tags": [
+          "platform console: website"
+        ]
+      }
+    },
+    "/api/v1/console/tenants/{tenant_id}/media/{media_id}": {
+      "delete": {
+        "description": "Removes the file. Pages still pointing at it show a broken image until edited.",
+        "operationId": "delete_media_api_v1_console_tenants__tenant_id__media__media_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tenant_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Tenant Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "media_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Media Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Delete Media",
+        "tags": [
+          "platform console: website"
+        ]
+      }
+    },
+    "/api/v1/console/tenants/{tenant_id}/pages": {
+      "get": {
+        "operationId": "list_pages_api_v1_console_tenants__tenant_id__pages_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tenant_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Tenant Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PageSummary"
+                  },
+                  "title": "Response List Pages Api V1 Console Tenants  Tenant Id  Pages Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Pages",
+        "tags": [
+          "platform console: website"
+        ]
+      },
+      "post": {
+        "operationId": "create_page_api_v1_console_tenants__tenant_id__pages_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tenant_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Tenant Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PageCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Create Page",
+        "tags": [
+          "platform console: website"
+        ]
+      }
+    },
+    "/api/v1/console/tenants/{tenant_id}/pages/{page_id}": {
+      "delete": {
+        "operationId": "delete_page_api_v1_console_tenants__tenant_id__pages__page_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tenant_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Tenant Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "page_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Page Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Delete Page",
+        "tags": [
+          "platform console: website"
+        ]
+      },
+      "get": {
+        "operationId": "get_page_api_v1_console_tenants__tenant_id__pages__page_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tenant_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Tenant Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "page_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Page Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Page",
+        "tags": [
+          "platform console: website"
+        ]
+      },
+      "patch": {
+        "operationId": "update_page_api_v1_console_tenants__tenant_id__pages__page_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tenant_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Tenant Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "page_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Page Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PageUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Update Page",
+        "tags": [
+          "platform console: website"
+        ]
+      }
+    },
+    "/api/v1/console/tenants/{tenant_id}/pages/{page_id}/publish": {
+      "post": {
+        "operationId": "publish_page_api_v1_console_tenants__tenant_id__pages__page_id__publish_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tenant_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Tenant Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "page_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Page Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Publish Page",
+        "tags": [
+          "platform console: website"
+        ]
+      }
+    },
+    "/api/v1/console/tenants/{tenant_id}/pages/{page_id}/unpublish": {
+      "post": {
+        "operationId": "unpublish_page_api_v1_console_tenants__tenant_id__pages__page_id__unpublish_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tenant_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Tenant Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "page_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Page Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Unpublish Page",
+        "tags": [
+          "platform console: website"
+        ]
+      }
+    },
+    "/api/v1/console/tenants/{tenant_id}/website": {
+      "get": {
+        "operationId": "get_website_api_v1_console_tenants__tenant_id__website_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tenant_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Tenant Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebsiteSettings"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Website",
+        "tags": [
+          "platform console: website"
+        ]
+      },
+      "put": {
+        "operationId": "save_website_api_v1_console_tenants__tenant_id__website_put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tenant_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Tenant Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebsiteSettings"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebsiteSettings"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Save Website",
+        "tags": [
+          "platform console: website"
+        ]
+      }
+    },
+    "/api/v1/console/tenants/{tenant_id}/website/section-types": {
+      "get": {
+        "operationId": "section_types_api_v1_console_tenants__tenant_id__website_section_types_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tenant_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Tenant Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SectionTypesOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Section Types",
+        "tags": [
+          "platform console: website"
+        ]
+      }
+    },
     "/api/v1/crm/audit-logs": {
       "get": {
         "operationId": "list_audit_api_v1_crm_audit_logs_get",
@@ -5576,6 +7505,144 @@
           }
         },
         "summary": "Tenant Config",
+        "tags": [
+          "public"
+        ]
+      }
+    },
+    "/api/v1/public/tenants/{slug}/pages/{page_slug}": {
+      "get": {
+        "description": "A published page. Drafts are never served here.",
+        "operationId": "website_page_api_v1_public_tenants__slug__pages__page_slug__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "title": "Slug",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "page_slug",
+            "required": true,
+            "schema": {
+              "title": "Page Slug",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Website Page",
+        "tags": [
+          "public"
+        ]
+      }
+    },
+    "/api/v1/public/tenants/{slug}/rate": {
+      "get": {
+        "description": "Today's rate for the website's gold rate section. Not cached server-side: rates\nchange during the day, and this is one indexed read.",
+        "operationId": "todays_rate_api_v1_public_tenants__slug__rate_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "title": "Slug",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicRate"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Todays Rate",
+        "tags": [
+          "public"
+        ]
+      }
+    },
+    "/api/v1/public/tenants/{slug}/site": {
+      "get": {
+        "description": "Site-wide content and the menu, for the website's layout and pre-rendering.",
+        "operationId": "website_api_v1_public_tenants__slug__site_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "title": "Slug",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicSite"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Website",
         "tags": [
           "public"
         ]

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { ConfigProvider, Result, Spin, theme as antdTheme } from 'antd'
 import { usePublicConfigQuery } from '../store/api/authApi.ts'
-import { errorStatus } from '../utils/errors.ts'
+import { errorStatus } from '@digigold/web-common/utils/errors.ts'
 import { ThemeContext, type Brand, type ThemeMode } from './themeContext.ts'
 
 const MODE_KEY = 'dg.crm.theme'

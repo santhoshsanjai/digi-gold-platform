@@ -5,18 +5,20 @@ and RTK Query, following the team's React setup.
 
 ```
 src/
-  api/                generated API types (schema.d.ts) and short aliases (types.ts)
+  api/types.ts        short names for the generated API types
   config/tenant.ts    which client this build is serving (host name or VITE_TENANT_SLUG)
   store/              Redux store; api/ holds RTK Query endpoints per area
   providers/          theme (client branding, dark mode) and auth (session, permissions)
   routes/             router, sign-in and permission guards
   layouts/            signed-in shell with the role-based side menu; sign-in shell
   pages/              one file per screen, loaded on demand
-  components/ui       Card, StatCard, Badge
-  components/common   PageHeader, Can, BrandMark, StatusBadge, ErrorBoundary
-  shared-components/  InputContainer and the App* inputs used in every form
-  hooks/, utils/      pagination, debouncing, formatting, error messages, validation
+  components/common   Can, BrandMark
 ```
+
+Components the Console also uses live in `packages/web-common` and are imported as
+`@digigold/web-common/...`: InputContainer and the App* inputs, Card, StatCard, Badge,
+PageHeader, StatusBadge, ErrorBoundary, the pagination and debounce hooks, formatting,
+error messages, validation and the generated API types.
 
 **Nothing about a client is hard-coded.** Name, logo, favicon, colours and font come from
 `GET /public/tenants/{slug}/config`. Tailwind's `primary-*` shades and Ant Design's

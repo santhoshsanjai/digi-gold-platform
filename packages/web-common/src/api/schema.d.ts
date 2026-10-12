@@ -456,6 +456,150 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/console/tenants/{tenant_id}/media": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Media */
+        get: operations["list_media_api_v1_console_tenants__tenant_id__media_get"];
+        put?: never;
+        /** Upload Media */
+        post: operations["upload_media_api_v1_console_tenants__tenant_id__media_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/console/tenants/{tenant_id}/media/{media_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Delete Media
+         * @description Removes the file. Pages still pointing at it show a broken image until edited.
+         */
+        delete: operations["delete_media_api_v1_console_tenants__tenant_id__media__media_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/console/tenants/{tenant_id}/pages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Pages */
+        get: operations["list_pages_api_v1_console_tenants__tenant_id__pages_get"];
+        put?: never;
+        /** Create Page */
+        post: operations["create_page_api_v1_console_tenants__tenant_id__pages_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/console/tenants/{tenant_id}/pages/{page_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Page */
+        get: operations["get_page_api_v1_console_tenants__tenant_id__pages__page_id__get"];
+        put?: never;
+        post?: never;
+        /** Delete Page */
+        delete: operations["delete_page_api_v1_console_tenants__tenant_id__pages__page_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Page */
+        patch: operations["update_page_api_v1_console_tenants__tenant_id__pages__page_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/console/tenants/{tenant_id}/pages/{page_id}/publish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Publish Page */
+        post: operations["publish_page_api_v1_console_tenants__tenant_id__pages__page_id__publish_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/console/tenants/{tenant_id}/pages/{page_id}/unpublish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Unpublish Page */
+        post: operations["unpublish_page_api_v1_console_tenants__tenant_id__pages__page_id__unpublish_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/console/tenants/{tenant_id}/website": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Website */
+        get: operations["get_website_api_v1_console_tenants__tenant_id__website_get"];
+        /** Save Website */
+        put: operations["save_website_api_v1_console_tenants__tenant_id__website_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/console/tenants/{tenant_id}/website/section-types": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Section Types */
+        get: operations["section_types_api_v1_console_tenants__tenant_id__website_section_types_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/crm/audit-logs": {
         parameters: {
             query?: never;
@@ -866,10 +1010,84 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/public/tenants/{slug}/pages/{page_slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Website Page
+         * @description A published page. Drafts are never served here.
+         */
+        get: operations["website_page_api_v1_public_tenants__slug__pages__page_slug__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/tenants/{slug}/rate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Todays Rate
+         * @description Today's rate for the website's gold rate section. Not cached server-side: rates
+         *     change during the day, and this is one indexed read.
+         */
+        get: operations["todays_rate_api_v1_public_tenants__slug__rate_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/public/tenants/{slug}/site": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Website
+         * @description Site-wide content and the menu, for the website's layout and pre-rendering.
+         */
+        get: operations["website_api_v1_public_tenants__slug__site_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AppLinks */
+        AppLinks: {
+            /**
+             * Android
+             * @default
+             */
+            android: string;
+            /**
+             * Ios
+             * @default
+             */
+            ios: string;
+        };
         /** AuditOut */
         AuditOut: {
             /** Action */
@@ -894,6 +1112,11 @@ export interface components {
              * Format: uuid
              */
             id: string;
+        };
+        /** Body_upload_media_api_v1_console_tenants__tenant_id__media_post */
+        Body_upload_media_api_v1_console_tenants__tenant_id__media_post: {
+            /** File */
+            file: string;
         };
         /**
          * Branding
@@ -963,6 +1186,98 @@ export interface components {
             current_password: string;
             /** New Password */
             new_password: string;
+        };
+        /** Contact */
+        Contact: {
+            /**
+             * Address
+             * @default
+             */
+            address: string;
+            /**
+             * Email
+             * @default
+             */
+            email: string;
+            /**
+             * Hours
+             * @default
+             */
+            hours: string;
+            /**
+             * Map Url
+             * @default
+             */
+            map_url: string;
+            /**
+             * Phone
+             * @default
+             */
+            phone: string;
+            /**
+             * Whatsapp
+             * @default
+             */
+            whatsapp: string;
+        };
+        /**
+         * ContactSection
+         * @description Shows the contact details from the site settings, with an optional map.
+         */
+        ContactSection: {
+            /**
+             * Heading
+             * @default
+             */
+            heading: string;
+            /**
+             * Id
+             * @description Stable key set by the editor
+             */
+            id: string;
+            /**
+             * Show Map
+             * @default true
+             */
+            show_map: boolean;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "contact";
+        };
+        /** CtaSection */
+        CtaSection: {
+            /**
+             * Button Label
+             * @default
+             */
+            button_label: string;
+            /**
+             * Button Url
+             * @default
+             */
+            button_url: string;
+            /**
+             * Heading
+             * @default
+             */
+            heading: string;
+            /**
+             * Id
+             * @description Stable key set by the editor
+             */
+            id: string;
+            /**
+             * Text
+             * @default
+             */
+            text: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "cta";
         };
         /** CurrentRatesOut */
         CurrentRatesOut: {
@@ -1100,6 +1415,33 @@ export interface components {
              */
             paid_at: string;
         };
+        /** Faq */
+        Faq: {
+            /** Answer */
+            answer: string;
+            /** Question */
+            question: string;
+        };
+        /** FaqSection */
+        FaqSection: {
+            /**
+             * Heading
+             * @default
+             */
+            heading: string;
+            /**
+             * Id
+             * @description Stable key set by the editor
+             */
+            id: string;
+            /** Items */
+            items?: components["schemas"]["Faq"][];
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "faq";
+        };
         /**
          * Features
          * @description Feature flags, switched per tenant in the Platform Console.
@@ -1136,6 +1478,26 @@ export interface components {
              */
             test_payments: boolean;
         };
+        /** FeaturesSection */
+        FeaturesSection: {
+            /**
+             * Heading
+             * @default
+             */
+            heading: string;
+            /**
+             * Id
+             * @description Stable key set by the editor
+             */
+            id: string;
+            /** Items */
+            items?: components["schemas"]["Item"][];
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "features";
+        };
         /** FirstLoginIn */
         FirstLoginIn: {
             /** New Password */
@@ -1153,10 +1515,156 @@ export interface components {
             /** Tenant */
             tenant?: string | null;
         };
+        /** GalleryImage */
+        GalleryImage: {
+            /**
+             * Caption
+             * @default
+             */
+            caption: string;
+            /** Url */
+            url: string;
+        };
+        /** GallerySection */
+        GallerySection: {
+            /**
+             * Heading
+             * @default
+             */
+            heading: string;
+            /**
+             * Id
+             * @description Stable key set by the editor
+             */
+            id: string;
+            /** Images */
+            images?: components["schemas"]["GalleryImage"][];
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "gallery";
+        };
+        /**
+         * GoldRateSection
+         * @description Shows today's published rate, read live from the API.
+         */
+        GoldRateSection: {
+            /**
+             * Heading
+             * @default
+             */
+            heading: string;
+            /**
+             * Id
+             * @description Stable key set by the editor
+             */
+            id: string;
+            /**
+             * Note
+             * @default
+             */
+            note: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "gold_rate";
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** HeroSection */
+        HeroSection: {
+            /**
+             * Cta Label
+             * @default
+             */
+            cta_label: string;
+            /**
+             * Cta Url
+             * @default
+             */
+            cta_url: string;
+            /**
+             * Heading
+             * @default
+             */
+            heading: string;
+            /**
+             * Id
+             * @description Stable key set by the editor
+             */
+            id: string;
+            /**
+             * Image Url
+             * @default
+             */
+            image_url: string;
+            /**
+             * Subheading
+             * @default
+             */
+            subheading: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "hero";
+        };
+        /** ImageTextSection */
+        ImageTextSection: {
+            /**
+             * Body Html
+             * @default
+             */
+            body_html: string;
+            /**
+             * Heading
+             * @default
+             */
+            heading: string;
+            /**
+             * Id
+             * @description Stable key set by the editor
+             */
+            id: string;
+            /**
+             * Image Side
+             * @default right
+             * @enum {string}
+             */
+            image_side: "left" | "right";
+            /**
+             * Image Url
+             * @default
+             */
+            image_url: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "image_text";
+        };
+        /** Item */
+        Item: {
+            /**
+             * Icon
+             * @default
+             */
+            icon: string;
+            /**
+             * Text
+             * @default
+             */
+            text: string;
+            /**
+             * Title
+             * @default
+             */
+            title: string;
         };
         /** LedgerOut */
         LedgerOut: {
@@ -1229,6 +1737,27 @@ export interface components {
             /** Status */
             status: string;
         };
+        /** MediaOut */
+        MediaOut: {
+            /** Content Type */
+            content_type: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Filename */
+            filename: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Size Bytes */
+            size_bytes: number;
+            /** Url */
+            url: string;
+        };
         /** MenuItemOut */
         MenuItemOut: {
             /** Icon */
@@ -1239,6 +1768,13 @@ export interface components {
             label: string;
             /** Path */
             path: string;
+        };
+        /** NavItem */
+        NavItem: {
+            /** Slug */
+            slug: string;
+            /** Title */
+            title: string;
         };
         /** OrderIn */
         OrderIn: {
@@ -1288,6 +1824,123 @@ export interface components {
             /** Status */
             status: string;
         };
+        /** PageContent */
+        PageContent: {
+            /** Sections */
+            sections?: (components["schemas"]["HeroSection"] | components["schemas"]["RichTextSection"] | components["schemas"]["ImageTextSection"] | components["schemas"]["FeaturesSection"] | components["schemas"]["StepsSection"] | components["schemas"]["GoldRateSection"] | components["schemas"]["FaqSection"] | components["schemas"]["GallerySection"] | components["schemas"]["CtaSection"] | components["schemas"]["ContactSection"])[];
+        };
+        /** PageCreate */
+        PageCreate: {
+            /**
+             * Nav Order
+             * @default 0
+             */
+            nav_order: number;
+            /**
+             * Seo Description
+             * @default
+             */
+            seo_description: string;
+            /**
+             * Seo Title
+             * @default
+             */
+            seo_title: string;
+            /**
+             * Show In Nav
+             * @default true
+             */
+            show_in_nav: boolean;
+            /** Slug */
+            slug: string;
+            /** Title */
+            title: string;
+        };
+        /** PageOut */
+        PageOut: {
+            content: components["schemas"]["PageContent"];
+            /** Draft Changed At */
+            draft_changed_at: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Nav Order */
+            nav_order: number;
+            /** Published At */
+            published_at: string | null;
+            published_content: components["schemas"]["PageContent"] | null;
+            /** Seo Description */
+            seo_description: string;
+            /** Seo Title */
+            seo_title: string;
+            /** Show In Nav */
+            show_in_nav: boolean;
+            /** Slug */
+            slug: string;
+            /**
+             * Status
+             * @default
+             */
+            status: string;
+            /** Title */
+            title: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** PageSummary */
+        PageSummary: {
+            /** Draft Changed At */
+            draft_changed_at: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Nav Order */
+            nav_order: number;
+            /** Published At */
+            published_at: string | null;
+            /** Show In Nav */
+            show_in_nav: boolean;
+            /** Slug */
+            slug: string;
+            /**
+             * Status
+             * @default
+             */
+            status: string;
+            /** Title */
+            title: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /**
+         * PageUpdate
+         * @description Fields left out keep their value. Saving content changes the draft only.
+         */
+        PageUpdate: {
+            content?: components["schemas"]["PageContent"] | null;
+            /** Nav Order */
+            nav_order?: number | null;
+            /** Seo Description */
+            seo_description?: string | null;
+            /** Seo Title */
+            seo_title?: string | null;
+            /** Show In Nav */
+            show_in_nav?: boolean | null;
+            /** Slug */
+            slug?: string | null;
+            /** Title */
+            title?: string | null;
+        };
         /** Page[AuditOut] */
         Page_AuditOut_: {
             /** Items */
@@ -1325,6 +1978,17 @@ export interface components {
         Page_LedgerOut_: {
             /** Items */
             items: components["schemas"]["LedgerOut"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+            /** Total */
+            total: number;
+        };
+        /** Page[MediaOut] */
+        Page_MediaOut_: {
+            /** Items */
+            items: components["schemas"]["MediaOut"][];
             /** Limit */
             limit: number;
             /** Offset */
@@ -1475,6 +2139,34 @@ export interface components {
             /** Version */
             version: number;
         };
+        /** PublicPage */
+        PublicPage: {
+            content: components["schemas"]["PageContent"];
+            /**
+             * Published At
+             * Format: date-time
+             */
+            published_at: string;
+            /** Seo Description */
+            seo_description: string;
+            /** Seo Title */
+            seo_title: string;
+            /** Slug */
+            slug: string;
+            /** Title */
+            title: string;
+        };
+        /** PublicRate */
+        PublicRate: {
+            /** Buying Open */
+            buying_open: boolean;
+            /** Purity */
+            purity: string;
+            /** Rate Per Gram */
+            rate_per_gram: string | null;
+            /** Updated At */
+            updated_at: string | null;
+        };
         /** PublicScheme */
         PublicScheme: {
             /** Lot Validity Days */
@@ -1489,6 +2181,16 @@ export interface components {
             purity: string;
             /** Redemption Threshold Grams */
             redemption_threshold_grams: string;
+        };
+        /** PublicSite */
+        PublicSite: {
+            /** Name */
+            name: string;
+            /** Nav */
+            nav: components["schemas"]["NavItem"][];
+            /** Pages */
+            pages: string[];
+            settings: components["schemas"]["WebsiteSettings"];
         };
         /** RateIn */
         RateIn: {
@@ -1579,6 +2281,29 @@ export interface components {
             new_password: string;
             /** Token */
             token: string;
+        };
+        /** RichTextSection */
+        RichTextSection: {
+            /**
+             * Body Html
+             * @default
+             */
+            body_html: string;
+            /**
+             * Heading
+             * @default
+             */
+            heading: string;
+            /**
+             * Id
+             * @description Stable key set by the editor
+             */
+            id: string;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "rich_text";
         };
         /** RoleIn */
         RoleIn: {
@@ -1772,6 +2497,11 @@ export interface components {
              */
             settlement_hold_days: number;
         };
+        /** SectionTypesOut */
+        SectionTypesOut: {
+            /** Types */
+            types: string[];
+        };
         /**
          * SlipOut
          * @description Everything the CRM prints on the redemption slip.
@@ -1788,6 +2518,49 @@ export interface components {
             staff_name: string;
             /** Store Name */
             store_name: string;
+        };
+        /** Social */
+        Social: {
+            /**
+             * Facebook
+             * @default
+             */
+            facebook: string;
+            /**
+             * Instagram
+             * @default
+             */
+            instagram: string;
+            /**
+             * X
+             * @default
+             */
+            x: string;
+            /**
+             * Youtube
+             * @default
+             */
+            youtube: string;
+        };
+        /** StepsSection */
+        StepsSection: {
+            /**
+             * Heading
+             * @default
+             */
+            heading: string;
+            /**
+             * Id
+             * @description Stable key set by the editor
+             */
+            id: string;
+            /** Items */
+            items?: components["schemas"]["Item"][];
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "steps";
         };
         /** StoreIn */
         StoreIn: {
@@ -1989,6 +2762,35 @@ export interface components {
             phone: string;
             /** Tenant */
             tenant: string;
+        };
+        /**
+         * WebsiteSettings
+         * @description Site-wide content: shown on every page, applied as soon as it is saved.
+         */
+        WebsiteSettings: {
+            app_links?: components["schemas"]["AppLinks"];
+            contact?: components["schemas"]["Contact"];
+            /**
+             * Footer Text
+             * @default
+             */
+            footer_text: string;
+            /**
+             * Seo Description
+             * @default
+             */
+            seo_description: string;
+            /**
+             * Site Title
+             * @default
+             */
+            site_title: string;
+            social?: components["schemas"]["Social"];
+            /**
+             * Tagline
+             * @default
+             */
+            tagline: string;
         };
         /** MeOut */
         app__api__app_gold__MeOut: {
@@ -2967,6 +3769,430 @@ export interface operations {
             };
         };
     };
+    list_media_api_v1_console_tenants__tenant_id__media_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path: {
+                tenant_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_MediaOut_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    upload_media_api_v1_console_tenants__tenant_id__media_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tenant_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_upload_media_api_v1_console_tenants__tenant_id__media_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MediaOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_media_api_v1_console_tenants__tenant_id__media__media_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tenant_id: string;
+                media_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_pages_api_v1_console_tenants__tenant_id__pages_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tenant_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PageSummary"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_page_api_v1_console_tenants__tenant_id__pages_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tenant_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PageCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_page_api_v1_console_tenants__tenant_id__pages__page_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tenant_id: string;
+                page_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_page_api_v1_console_tenants__tenant_id__pages__page_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tenant_id: string;
+                page_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_page_api_v1_console_tenants__tenant_id__pages__page_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tenant_id: string;
+                page_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PageUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    publish_page_api_v1_console_tenants__tenant_id__pages__page_id__publish_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tenant_id: string;
+                page_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    unpublish_page_api_v1_console_tenants__tenant_id__pages__page_id__unpublish_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tenant_id: string;
+                page_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_website_api_v1_console_tenants__tenant_id__website_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tenant_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebsiteSettings"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    save_website_api_v1_console_tenants__tenant_id__website_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tenant_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WebsiteSettings"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebsiteSettings"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    section_types_api_v1_console_tenants__tenant_id__website_section_types_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tenant_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SectionTypesOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     list_audit_api_v1_crm_audit_logs_get: {
         parameters: {
             query?: {
@@ -3834,6 +5060,100 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PublicConfig"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    website_page_api_v1_public_tenants__slug__pages__page_slug__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+                page_slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicPage"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    todays_rate_api_v1_public_tenants__slug__rate_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicRate"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    website_api_v1_public_tenants__slug__site_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicSite"];
                 };
             };
             /** @description Validation Error */

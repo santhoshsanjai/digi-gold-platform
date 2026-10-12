@@ -18,3 +18,6 @@ dist/
 !.env.example
 *.log
 .DS_Store
+
+# Uploaded images in local development
+apps/api/media/

@@ -1,4 +1,5 @@
 import os
+import tempfile
 
 os.environ.update(
     DG_ENV="test",
@@ -7,6 +8,7 @@ os.environ.update(
         "postgresql+asyncpg://digigold:digigold@localhost:5432/digigold_test",
     ),
     DG_EMAIL_BACKEND="console",
+    DG_MEDIA_DIR=tempfile.mkdtemp(prefix="digigold-media-"),
 )
 
 import pytest  # noqa: E402
@@ -19,15 +21,16 @@ from app.core import email, sms  # noqa: E402
 from app.core.db import SessionLocal, bypass_tenant_scope, engine  # noqa: E402
 from app.core.security import hash_password  # noqa: E402
 from app.main import app  # noqa: E402
-from app.services import config_cache  # noqa: E402
+from app.services import config_cache, site_cache  # noqa: E402
 from app.services.users import create_staff_user  # noqa: E402
 
 API = "/api/v1"
 ADMIN_EMAIL = "admin@platform.example.com"
 ADMIN_PASSWORD = "Admin-pass-123"
 TABLES = (
-    "ledger_entries, gold_lots, payment_orders, customer_tokens, customer_otps, customers, "
-    "gold_rates, audit_logs, auth_tokens, staff_users, roles, stores, tenants"
+    "site_pages, media_assets, ledger_entries, gold_lots, payment_orders, customer_tokens, "
+    "customer_otps, customers, gold_rates, audit_logs, auth_tokens, staff_users, roles, "
+    "stores, tenants"
 )
 
 
@@ -47,6 +50,7 @@ async def clean_db():
     email.outbox.clear()
     sms.outbox.clear()
     config_cache.clear()
+    site_cache.clear()
 
 
 @pytest.fixture

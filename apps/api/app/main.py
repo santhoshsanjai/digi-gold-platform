@@ -1,8 +1,10 @@
 import asyncio
+import os
 from contextlib import asynccontextmanager, suppress
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy import text
 
 from app.api import (
@@ -10,6 +12,7 @@ from app.api import (
     app_gold,
     auth,
     console,
+    console_site,
     crm_audit,
     crm_customers,
     crm_dashboard,
@@ -56,9 +59,27 @@ app.add_middleware(
 )
 
 API_PREFIX = "/api/v1"
+
+
+@app.middleware("http")
+async def open_public_reads(request: Request, call_next):
+    """Client websites live on their own domains, so public reads and images allow any
+    origin. They carry no credentials; everything else keeps the CORS list above."""
+    response = await call_next(request)
+    path = request.url.path
+    if request.method == "GET" and (
+        path.startswith(f"{API_PREFIX}/public/") or path.startswith(settings.media_url_path)
+    ):
+        response.headers["Access-Control-Allow-Origin"] = "*"
+    if path.startswith(settings.media_url_path):
+        response.headers["X-Content-Type-Options"] = "nosniff"
+    return response
+
+
 ROUTERS = (
     auth,
     console,
+    console_site,
     crm_settings,
     crm_users,
     crm_roles,
@@ -75,6 +96,10 @@ ROUTERS = (
 )
 for module in ROUTERS:
     app.include_router(module.router, prefix=API_PREFIX)
+
+# Uploaded images, while they live on local disk. Behind a CDN or bucket this mount is unused.
+os.makedirs(settings.media_dir, exist_ok=True)
+app.mount(settings.media_url_path, StaticFiles(directory=settings.media_dir), name="media")
 
 
 @app.get("/health", include_in_schema=False)

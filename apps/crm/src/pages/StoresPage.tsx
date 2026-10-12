@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { Button, Form, Modal, Table } from 'antd'
 import { toast } from 'sonner'
-import { PageHeader } from '../components/common/PageHeader.tsx'
-import { StatusBadge } from '../components/common/StatusBadge.tsx'
-import { Card } from '../components/ui/Card.tsx'
-import InputContainer from '../shared-components/InputContainer.tsx'
+import { PageHeader } from '@digigold/web-common/components/PageHeader.tsx'
+import { StatusBadge } from '@digigold/web-common/components/StatusBadge.tsx'
+import { Card } from '@digigold/web-common/components/ui/Card.tsx'
+import InputContainer from '@digigold/web-common/shared-components/InputContainer.tsx'
 import { useAuth } from '../providers/authContext.ts'
 import {
   useCreateStoreMutation,
@@ -12,7 +12,7 @@ import {
   useUpdateStoreMutation,
 } from '../store/api/adminApi.ts'
 import type { Store } from '../api/types.ts'
-import { errorMessage } from '../utils/errors.ts'
+import { errorMessage } from '@digigold/web-common/utils/errors.ts'
 
 interface StoreForm {
   name: string

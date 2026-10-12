@@ -13,7 +13,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import get_settings
 from app.core.db import bypass_tenant_scope, scope_to_tenant
-from app.core.deps import CurrentStaff, Session
+from app.core.deps import CurrentStaff, Session, tenant_active
 from app.core.email import reset_link_email, send_email
 from app.core.permissions import menu_for
 from app.core.security import (
@@ -244,6 +244,8 @@ async def refresh(body: RefreshIn, session: Session):
         return _error(401, "invalid or expired refresh token")
     user = await session.get(StaffUser, token.user_id)
     if user is None or not user.is_active or user.must_change_password:
+        return _error(401, "invalid or expired refresh token")
+    if not await tenant_active(session, user.tenant_id):
         return _error(401, "invalid or expired refresh token")
     token.used_at = now()
     return await _issue_tokens(session, user)

@@ -1,5 +1,5 @@
 import { RouterProvider } from 'react-router-dom'
-import { ErrorBoundary } from './components/common/ErrorBoundary.tsx'
+import { ErrorBoundary } from '@digigold/web-common/components/ErrorBoundary.tsx'
 import { AppProviders } from './providers/AppProviders.tsx'
 import { appRouter } from './routes/appRouter.tsx'
 

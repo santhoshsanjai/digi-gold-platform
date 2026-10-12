@@ -1,5 +1,5 @@
 /** Short names for the API's types. schema.d.ts is generated: run `npm run api:types`. */
-import type { components } from './schema'
+import type { components } from '@digigold/web-common/api/schema'
 
 type S = components['schemas']
 

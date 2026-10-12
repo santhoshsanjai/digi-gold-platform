@@ -35,22 +35,22 @@ jobs:
           uv run python -m app.cli export-openapi openapi.json
           git diff --exit-code openapi.json || (echo "Run: uv run python -m app.cli export-openapi" && exit 1)
 
-  crm:
+  web:
+    # The CRM, the Platform Console and the components they share (packages/web-common).
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/crm
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: apps/crm/package-lock.json
+          cache-dependency-path: package-lock.json
       - run: npm ci
       - name: API types match the API schema
+        working-directory: packages/web-common
         run: |
           npm run api:types
-          git diff --exit-code src/api/schema.d.ts || (echo "Run: npm run api:types" && exit 1)
+          git diff --exit-code src/api/schema.d.ts || (echo "Run: npm run api:types -w @digigold/web-common" && exit 1)
       - run: npm run lint
+      - run: npm run typecheck -w @digigold/web-common
       - run: npm run build

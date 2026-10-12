@@ -55,6 +55,13 @@ class Settings(BaseSettings):
     run_scheduler: bool = True
     reminder_hour: int = 8
 
+    # Uploaded images. Stored on local disk under media_dir and served at media_url_path;
+    # set media_base_url to a CDN or bucket URL when files are moved to object storage.
+    media_dir: str = "media"
+    media_url_path: str = "/media"
+    media_base_url: str = ""
+    media_max_mb: int = 5
+
     cors_origins: list[str] = ["http://localhost:5173", "http://localhost:5174"]
     config_cache_seconds: int = 300
 

@@ -1,9 +1,9 @@
 import { Alert, Button, Form } from 'antd'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
-import InputContainer from '../../shared-components/InputContainer.tsx'
+import InputContainer from '@digigold/web-common/shared-components/InputContainer.tsx'
 import { useForgotPasswordMutation } from '../../store/api/authApi.ts'
-import { errorMessage } from '../../utils/errors.ts'
+import { errorMessage } from '@digigold/web-common/utils/errors.ts'
 
 export default function ForgotPasswordPage() {
   const [forgot, { isLoading }] = useForgotPasswordMutation()

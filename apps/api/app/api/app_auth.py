@@ -10,7 +10,7 @@ from sqlalchemy import select, update
 
 from app.core.config import get_settings
 from app.core.db import bypass_tenant_scope, scope_to_tenant
-from app.core.deps import CUSTOMER, Session
+from app.core.deps import CUSTOMER, Session, tenant_active
 from app.core.security import create_jwt, hash_token, new_opaque_token, now
 from app.core.sms import Sms, send_sms
 from app.models import Customer, CustomerToken, Tenant
@@ -135,7 +135,11 @@ async def refresh(body: RefreshIn, session: Session):
         await _revoke_all(session, token.customer_id)
         return JSONResponse(status_code=401, content={"detail": "invalid or expired refresh token"})
     customer = await session.get(Customer, token.customer_id)
-    if customer is None or not customer.is_active:
+    if (
+        customer is None
+        or not customer.is_active
+        or not await tenant_active(session, customer.tenant_id)
+    ):
         return JSONResponse(status_code=401, content={"detail": "invalid or expired refresh token"})
     token.used_at = now()
     return await _issue(session, customer)

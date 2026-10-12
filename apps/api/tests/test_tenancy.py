@@ -2,7 +2,7 @@ from sqlalchemy import select
 
 from app.core.db import SessionLocal, scope_to_tenant
 from app.models import Role, Tenant
-from tests.conftest import API, create_tenant, sign_in_first_time
+from tests.conftest import API, create_tenant, customer_sign_in, sign_in_first_time
 
 
 async def _two_tenants(client, admin_headers):
@@ -87,3 +87,32 @@ async def test_suspended_tenant_cannot_sign_in(client, admin_headers):
         json={"tenant": "sri-gold", "email": "owner@sri.example.com", "password": "Strong-pass-1"},
     )
     assert r.status_code == 401
+
+
+async def test_suspending_ends_open_sessions(client, admin_headers):
+    tenant = await create_tenant(client, admin_headers)
+    staff = await sign_in_first_time(client, "sri-gold", "owner@sri.example.com")
+    customer = await customer_sign_in(client)
+    r = await client.post(
+        f"{API}/auth/login",
+        json={"tenant": "sri-gold", "email": "owner@sri.example.com", "password": "Strong-pass-1"},
+    )
+    refresh_token = r.json()["refresh_token"]
+
+    async def set_status(value):
+        r = await client.patch(
+            f"{API}/console/tenants/{tenant['id']}", json={"status": value}, headers=admin_headers
+        )
+        assert r.status_code == 200
+
+    await set_status("suspended")
+    assert (await client.get(f"{API}/auth/me", headers=staff)).status_code == 401
+    assert (await client.get(f"{API}/app/me", headers=customer)).status_code == 401
+    r = await client.post(f"{API}/auth/refresh", json={"refresh_token": refresh_token})
+    assert r.status_code == 401
+    # The platform admin is not tied to a client and keeps working.
+    assert (await client.get(f"{API}/auth/me", headers=admin_headers)).status_code == 200
+
+    await set_status("active")
+    assert (await client.get(f"{API}/auth/me", headers=staff)).status_code == 200
+    assert (await client.get(f"{API}/app/me", headers=customer)).status_code == 200

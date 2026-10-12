@@ -1,4 +1,6 @@
 @import "tailwindcss";
+/* Shared components live in a workspace package; scan them for class names too. */
+@source "../../../packages/web-common/src";
 
 /* Dark mode follows the toggle (the .dark class on <html>), not only the OS setting. */
 @custom-variant dark (&:where(.dark, .dark *));

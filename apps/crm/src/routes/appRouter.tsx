@@ -1,6 +1,6 @@
 import { lazy, Suspense, type ComponentType } from 'react'
 import { createBrowserRouter } from 'react-router-dom'
-import { FullPageSpinner } from '../components/common/FullPageSpinner.tsx'
+import { FullPageSpinner } from '@digigold/web-common/components/FullPageSpinner.tsx'
 import { AuthLayout } from '../layouts/AuthLayout.tsx'
 import { MainLayout } from '../layouts/MainLayout.tsx'
 import { NotFoundPage } from '../pages/NotFoundPage.tsx'
