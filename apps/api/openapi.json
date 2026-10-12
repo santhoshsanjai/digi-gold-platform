@@ -1,0 +1,5585 @@
+{
+  "components": {
+    "schemas": {
+      "AuditOut": {
+        "properties": {
+          "action": {
+            "title": "Action",
+            "type": "string"
+          },
+          "actor_user_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actor User Id"
+          },
+          "changes": {
+            "additionalProperties": true,
+            "title": "Changes",
+            "type": "object"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "entity_id": {
+            "title": "Entity Id",
+            "type": "string"
+          },
+          "entity_type": {
+            "title": "Entity Type",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "actor_user_id",
+          "action",
+          "entity_type",
+          "entity_id",
+          "changes",
+          "created_at"
+        ],
+        "title": "AuditOut",
+        "type": "object"
+      },
+      "Branding": {
+        "additionalProperties": false,
+        "description": "Set by the platform owner in the Platform Console.",
+        "properties": {
+          "background_color": {
+            "default": "#FFFFFF",
+            "pattern": "^#[0-9A-Fa-f]{6}$",
+            "title": "Background Color",
+            "type": "string"
+          },
+          "display_name": {
+            "default": "",
+            "maxLength": 100,
+            "title": "Display Name",
+            "type": "string"
+          },
+          "favicon_url": {
+            "default": "",
+            "maxLength": 500,
+            "title": "Favicon Url",
+            "type": "string"
+          },
+          "font_family": {
+            "default": "Inter",
+            "maxLength": 60,
+            "title": "Font Family",
+            "type": "string"
+          },
+          "logo_url": {
+            "default": "",
+            "maxLength": 500,
+            "title": "Logo Url",
+            "type": "string"
+          },
+          "primary_color": {
+            "default": "#B8860B",
+            "pattern": "^#[0-9A-Fa-f]{6}$",
+            "title": "Primary Color",
+            "type": "string"
+          },
+          "secondary_color": {
+            "default": "#1F2937",
+            "pattern": "^#[0-9A-Fa-f]{6}$",
+            "title": "Secondary Color",
+            "type": "string"
+          },
+          "support_email": {
+            "default": "",
+            "maxLength": 254,
+            "title": "Support Email",
+            "type": "string"
+          },
+          "support_phone": {
+            "default": "",
+            "maxLength": 20,
+            "title": "Support Phone",
+            "type": "string"
+          }
+        },
+        "title": "Branding",
+        "type": "object"
+      },
+      "CatalogueOut": {
+        "properties": {
+          "actions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Actions",
+            "type": "array"
+          },
+          "menu": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Menu",
+            "type": "array"
+          },
+          "modules": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Modules",
+            "type": "array"
+          }
+        },
+        "required": [
+          "modules",
+          "actions",
+          "menu"
+        ],
+        "title": "CatalogueOut",
+        "type": "object"
+      },
+      "ChangePasswordIn": {
+        "properties": {
+          "current_password": {
+            "maxLength": 128,
+            "title": "Current Password",
+            "type": "string"
+          },
+          "new_password": {
+            "maxLength": 128,
+            "title": "New Password",
+            "type": "string"
+          }
+        },
+        "required": [
+          "new_password",
+          "current_password"
+        ],
+        "title": "ChangePasswordIn",
+        "type": "object"
+      },
+      "CurrentRatesOut": {
+        "properties": {
+          "buying_open": {
+            "title": "Buying Open",
+            "type": "boolean"
+          },
+          "buying_paused": {
+            "title": "Buying Paused",
+            "type": "boolean"
+          },
+          "rates": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/app__api__crm_rates__RateOut"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "title": "Rates",
+            "type": "object"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "scheme_purity": {
+            "title": "Scheme Purity",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scheme_purity",
+          "rates",
+          "buying_open",
+          "buying_paused",
+          "reason"
+        ],
+        "title": "CurrentRatesOut",
+        "type": "object"
+      },
+      "CustomerDetailOut": {
+        "properties": {
+          "customer": {
+            "$ref": "#/components/schemas/CustomerOut"
+          },
+          "open_lots": {
+            "items": {
+              "$ref": "#/components/schemas/LotOut"
+            },
+            "title": "Open Lots",
+            "type": "array"
+          },
+          "recent_entries": {
+            "items": {
+              "$ref": "#/components/schemas/LedgerOut"
+            },
+            "title": "Recent Entries",
+            "type": "array"
+          }
+        },
+        "required": [
+          "customer",
+          "open_lots",
+          "recent_entries"
+        ],
+        "title": "CustomerDetailOut",
+        "type": "object"
+      },
+      "CustomerOut": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "gold_grams": {
+            "title": "Gold Grams",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "is_active": {
+            "title": "Is Active",
+            "type": "boolean"
+          },
+          "last_login_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Login At"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "pan": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pan"
+          },
+          "pan_verified": {
+            "title": "Pan Verified",
+            "type": "boolean"
+          },
+          "phone": {
+            "title": "Phone",
+            "type": "string"
+          },
+          "rupee_balance_inr": {
+            "title": "Rupee Balance Inr",
+            "type": "string"
+          },
+          "total_paid_inr": {
+            "title": "Total Paid Inr",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "phone",
+          "name",
+          "email",
+          "pan",
+          "pan_verified",
+          "is_active",
+          "gold_grams",
+          "rupee_balance_inr",
+          "total_paid_inr",
+          "last_login_at",
+          "created_at"
+        ],
+        "title": "CustomerOut",
+        "type": "object"
+      },
+      "CustomerTokensOut": {
+        "properties": {
+          "access_token": {
+            "title": "Access Token",
+            "type": "string"
+          },
+          "expires_in": {
+            "title": "Expires In",
+            "type": "integer"
+          },
+          "is_new_customer": {
+            "default": false,
+            "title": "Is New Customer",
+            "type": "boolean"
+          },
+          "refresh_token": {
+            "title": "Refresh Token",
+            "type": "string"
+          },
+          "token_type": {
+            "const": "bearer",
+            "default": "bearer",
+            "title": "Token Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token",
+          "refresh_token",
+          "expires_in"
+        ],
+        "title": "CustomerTokensOut",
+        "type": "object"
+      },
+      "DashboardOut": {
+        "properties": {
+          "buying_open": {
+            "title": "Buying Open",
+            "type": "boolean"
+          },
+          "buying_reason": {
+            "title": "Buying Reason",
+            "type": "string"
+          },
+          "collections_today_inr": {
+            "title": "Collections Today Inr",
+            "type": "string"
+          },
+          "customers": {
+            "title": "Customers",
+            "type": "integer"
+          },
+          "lots_expired": {
+            "title": "Lots Expired",
+            "type": "integer"
+          },
+          "lots_expiring_30_days": {
+            "title": "Lots Expiring 30 Days",
+            "type": "integer"
+          },
+          "outstanding_grams": {
+            "title": "Outstanding Grams",
+            "type": "string"
+          },
+          "outstanding_value_inr": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outstanding Value Inr"
+          },
+          "payments_today": {
+            "title": "Payments Today",
+            "type": "integer"
+          },
+          "purity": {
+            "title": "Purity",
+            "type": "string"
+          },
+          "rate_per_gram": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rate Per Gram"
+          }
+        },
+        "required": [
+          "customers",
+          "outstanding_grams",
+          "outstanding_value_inr",
+          "rate_per_gram",
+          "purity",
+          "buying_open",
+          "buying_reason",
+          "collections_today_inr",
+          "payments_today",
+          "lots_expiring_30_days",
+          "lots_expired"
+        ],
+        "title": "DashboardOut",
+        "type": "object"
+      },
+      "ExpiringLotOut": {
+        "properties": {
+          "amount_inr": {
+            "title": "Amount Inr",
+            "type": "string"
+          },
+          "customer_id": {
+            "format": "uuid",
+            "title": "Customer Id",
+            "type": "string"
+          },
+          "customer_name": {
+            "title": "Customer Name",
+            "type": "string"
+          },
+          "customer_phone": {
+            "title": "Customer Phone",
+            "type": "string"
+          },
+          "days_left": {
+            "title": "Days Left",
+            "type": "integer"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "grams": {
+            "title": "Grams",
+            "type": "string"
+          },
+          "last_reminded_on": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Reminded On"
+          },
+          "lot_id": {
+            "format": "uuid",
+            "title": "Lot Id",
+            "type": "string"
+          },
+          "paid_at": {
+            "format": "date-time",
+            "title": "Paid At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "lot_id",
+          "customer_id",
+          "customer_name",
+          "customer_phone",
+          "grams",
+          "amount_inr",
+          "paid_at",
+          "expires_at",
+          "days_left",
+          "last_reminded_on"
+        ],
+        "title": "ExpiringLotOut",
+        "type": "object"
+      },
+      "Features": {
+        "additionalProperties": false,
+        "description": "Feature flags, switched per tenant in the Platform Console.",
+        "properties": {
+          "autopay_plans": {
+            "default": false,
+            "title": "Autopay Plans",
+            "type": "boolean"
+          },
+          "gifting": {
+            "default": false,
+            "title": "Gifting",
+            "type": "boolean"
+          },
+          "partner_digital_gold": {
+            "default": false,
+            "title": "Partner Digital Gold",
+            "type": "boolean"
+          },
+          "referrals": {
+            "default": false,
+            "title": "Referrals",
+            "type": "boolean"
+          },
+          "savings_scheme": {
+            "default": true,
+            "title": "Savings Scheme",
+            "type": "boolean"
+          },
+          "test_payments": {
+            "default": true,
+            "title": "Test Payments",
+            "type": "boolean"
+          }
+        },
+        "title": "Features",
+        "type": "object"
+      },
+      "FirstLoginIn": {
+        "properties": {
+          "new_password": {
+            "maxLength": 128,
+            "title": "New Password",
+            "type": "string"
+          },
+          "password_change_token": {
+            "title": "Password Change Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "new_password",
+          "password_change_token"
+        ],
+        "title": "FirstLoginIn",
+        "type": "object"
+      },
+      "ForgotIn": {
+        "properties": {
+          "email": {
+            "format": "email",
+            "title": "Email",
+            "type": "string"
+          },
+          "tenant": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tenant"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "title": "ForgotIn",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "LedgerOut": {
+        "properties": {
+          "amount_inr": {
+            "title": "Amount Inr",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "grams": {
+            "title": "Grams",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "lot_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lot Id"
+          },
+          "note": {
+            "title": "Note",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "grams",
+          "amount_inr",
+          "lot_id",
+          "note",
+          "created_at"
+        ],
+        "title": "LedgerOut",
+        "type": "object"
+      },
+      "LoginIn": {
+        "properties": {
+          "email": {
+            "format": "email",
+            "title": "Email",
+            "type": "string"
+          },
+          "password": {
+            "maxLength": 128,
+            "title": "Password",
+            "type": "string"
+          },
+          "tenant": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Client slug; omit for Platform Console admins",
+            "title": "Tenant"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ],
+        "title": "LoginIn",
+        "type": "object"
+      },
+      "LotOut": {
+        "properties": {
+          "amount_inr": {
+            "title": "Amount Inr",
+            "type": "string"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "grams": {
+            "title": "Grams",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "paid_at": {
+            "format": "date-time",
+            "title": "Paid At",
+            "type": "string"
+          },
+          "purity": {
+            "title": "Purity",
+            "type": "string"
+          },
+          "rate_per_gram": {
+            "title": "Rate Per Gram",
+            "type": "string"
+          },
+          "redeemable_at": {
+            "format": "date-time",
+            "title": "Redeemable At",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "grams",
+          "amount_inr",
+          "rate_per_gram",
+          "purity",
+          "paid_at",
+          "redeemable_at",
+          "expires_at",
+          "status"
+        ],
+        "title": "LotOut",
+        "type": "object"
+      },
+      "MenuItemOut": {
+        "properties": {
+          "icon": {
+            "title": "Icon",
+            "type": "string"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "path": {
+            "title": "Path",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "path",
+          "icon"
+        ],
+        "title": "MenuItemOut",
+        "type": "object"
+      },
+      "OrderIn": {
+        "properties": {
+          "amount_inr": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Amount Inr"
+          }
+        },
+        "required": [
+          "amount_inr"
+        ],
+        "title": "OrderIn",
+        "type": "object"
+      },
+      "OrderOut": {
+        "properties": {
+          "amount_inr": {
+            "title": "Amount Inr",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "credited_grams": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Credited Grams"
+          },
+          "failure_reason": {
+            "title": "Failure Reason",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "lock_expires_at": {
+            "format": "date-time",
+            "title": "Lock Expires At",
+            "type": "string"
+          },
+          "paid_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Paid At"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "provider_order_id": {
+            "title": "Provider Order Id",
+            "type": "string"
+          },
+          "purity": {
+            "title": "Purity",
+            "type": "string"
+          },
+          "quoted_grams": {
+            "title": "Quoted Grams",
+            "type": "string"
+          },
+          "rate_per_gram": {
+            "title": "Rate Per Gram",
+            "type": "string"
+          },
+          "repriced": {
+            "default": false,
+            "title": "Repriced",
+            "type": "boolean"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "amount_inr",
+          "purity",
+          "rate_per_gram",
+          "quoted_grams",
+          "lock_expires_at",
+          "status",
+          "provider",
+          "provider_order_id",
+          "failure_reason",
+          "paid_at",
+          "created_at"
+        ],
+        "title": "OrderOut",
+        "type": "object"
+      },
+      "Page_AuditOut_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/AuditOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset"
+        ],
+        "title": "Page[AuditOut]",
+        "type": "object"
+      },
+      "Page_CustomerOut_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CustomerOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset"
+        ],
+        "title": "Page[CustomerOut]",
+        "type": "object"
+      },
+      "Page_ExpiringLotOut_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ExpiringLotOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset"
+        ],
+        "title": "Page[ExpiringLotOut]",
+        "type": "object"
+      },
+      "Page_LedgerOut_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/LedgerOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset"
+        ],
+        "title": "Page[LedgerOut]",
+        "type": "object"
+      },
+      "Page_PaymentOut_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PaymentOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset"
+        ],
+        "title": "Page[PaymentOut]",
+        "type": "object"
+      },
+      "Page_RateOut_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/app__api__crm_rates__RateOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset"
+        ],
+        "title": "Page[RateOut]",
+        "type": "object"
+      },
+      "Page_RedemptionOut_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RedemptionOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset"
+        ],
+        "title": "Page[RedemptionOut]",
+        "type": "object"
+      },
+      "Page_TenantOut_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/TenantOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset"
+        ],
+        "title": "Page[TenantOut]",
+        "type": "object"
+      },
+      "Page_UserOut_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/UserOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total",
+          "limit",
+          "offset"
+        ],
+        "title": "Page[UserOut]",
+        "type": "object"
+      },
+      "PanIn": {
+        "properties": {
+          "pan": {
+            "title": "Pan",
+            "type": "string"
+          }
+        },
+        "required": [
+          "pan"
+        ],
+        "title": "PanIn",
+        "type": "object"
+      },
+      "PasswordChangeRequiredOut": {
+        "properties": {
+          "password_change_token": {
+            "title": "Password Change Token",
+            "type": "string"
+          },
+          "status": {
+            "const": "password_change_required",
+            "default": "password_change_required",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "password_change_token"
+        ],
+        "title": "PasswordChangeRequiredOut",
+        "type": "object"
+      },
+      "PauseIn": {
+        "properties": {
+          "paused": {
+            "title": "Paused",
+            "type": "boolean"
+          },
+          "reason": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Reason",
+            "type": "string"
+          }
+        },
+        "required": [
+          "paused"
+        ],
+        "title": "PauseIn",
+        "type": "object"
+      },
+      "PaymentOut": {
+        "properties": {
+          "amount_inr": {
+            "title": "Amount Inr",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "customer_id": {
+            "format": "uuid",
+            "title": "Customer Id",
+            "type": "string"
+          },
+          "failure_reason": {
+            "title": "Failure Reason",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "paid_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Paid At"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "provider_payment_id": {
+            "title": "Provider Payment Id",
+            "type": "string"
+          },
+          "purity": {
+            "title": "Purity",
+            "type": "string"
+          },
+          "quoted_grams": {
+            "title": "Quoted Grams",
+            "type": "string"
+          },
+          "rate_per_gram": {
+            "title": "Rate Per Gram",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "customer_id",
+          "amount_inr",
+          "purity",
+          "rate_per_gram",
+          "quoted_grams",
+          "status",
+          "provider",
+          "provider_payment_id",
+          "failure_reason",
+          "paid_at",
+          "created_at"
+        ],
+        "title": "PaymentOut",
+        "type": "object"
+      },
+      "PhoneIn": {
+        "properties": {
+          "phone": {
+            "title": "Phone",
+            "type": "string"
+          },
+          "tenant": {
+            "title": "Tenant",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tenant",
+          "phone"
+        ],
+        "title": "PhoneIn",
+        "type": "object"
+      },
+      "ProfileIn": {
+        "properties": {
+          "email": {
+            "anyOf": [
+              {
+                "format": "email",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          }
+        },
+        "title": "ProfileIn",
+        "type": "object"
+      },
+      "PublicConfig": {
+        "properties": {
+          "branding": {
+            "$ref": "#/components/schemas/Branding"
+          },
+          "features": {
+            "$ref": "#/components/schemas/Features"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "scheme": {
+            "$ref": "#/components/schemas/PublicScheme"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "version",
+          "branding",
+          "features",
+          "scheme"
+        ],
+        "title": "PublicConfig",
+        "type": "object"
+      },
+      "PublicScheme": {
+        "properties": {
+          "lot_validity_days": {
+            "title": "Lot Validity Days",
+            "type": "integer"
+          },
+          "max_payment_inr": {
+            "title": "Max Payment Inr",
+            "type": "string"
+          },
+          "min_payment_inr": {
+            "title": "Min Payment Inr",
+            "type": "string"
+          },
+          "price_lock_minutes": {
+            "title": "Price Lock Minutes",
+            "type": "integer"
+          },
+          "purity": {
+            "title": "Purity",
+            "type": "string"
+          },
+          "redemption_threshold_grams": {
+            "title": "Redemption Threshold Grams",
+            "type": "string"
+          }
+        },
+        "required": [
+          "purity",
+          "min_payment_inr",
+          "max_payment_inr",
+          "redemption_threshold_grams",
+          "lot_validity_days",
+          "price_lock_minutes"
+        ],
+        "title": "PublicScheme",
+        "type": "object"
+      },
+      "RateIn": {
+        "properties": {
+          "confirm_large_change": {
+            "default": false,
+            "title": "Confirm Large Change",
+            "type": "boolean"
+          },
+          "purity": {
+            "enum": [
+              "22K",
+              "24K"
+            ],
+            "title": "Purity",
+            "type": "string"
+          },
+          "rate_per_gram": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "maximum": 1000000.0,
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Rate Per Gram"
+          }
+        },
+        "required": [
+          "purity",
+          "rate_per_gram"
+        ],
+        "title": "RateIn",
+        "type": "object"
+      },
+      "RedeemIn": {
+        "properties": {
+          "code": {
+            "pattern": "^\\d{6}$",
+            "title": "Code",
+            "type": "string"
+          },
+          "phone": {
+            "title": "Phone",
+            "type": "string"
+          },
+          "store_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Store Id"
+          }
+        },
+        "required": [
+          "phone",
+          "code"
+        ],
+        "title": "RedeemIn",
+        "type": "object"
+      },
+      "RedemptionCodeOut": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "title": "Expires At",
+            "type": "string"
+          },
+          "grams": {
+            "title": "Grams",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "expires_at",
+          "grams"
+        ],
+        "title": "RedemptionCodeOut",
+        "type": "object"
+      },
+      "RedemptionOut": {
+        "properties": {
+          "amount_paid_inr": {
+            "title": "Amount Paid Inr",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "customer_id": {
+            "format": "uuid",
+            "title": "Customer Id",
+            "type": "string"
+          },
+          "grams": {
+            "title": "Grams",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "lots_count": {
+            "title": "Lots Count",
+            "type": "integer"
+          },
+          "making_charge_discount_pct": {
+            "title": "Making Charge Discount Pct",
+            "type": "string"
+          },
+          "purity": {
+            "title": "Purity",
+            "type": "string"
+          },
+          "slip_number": {
+            "title": "Slip Number",
+            "type": "string"
+          },
+          "staff_user_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Staff User Id"
+          },
+          "store_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Store Id"
+          }
+        },
+        "required": [
+          "id",
+          "slip_number",
+          "customer_id",
+          "store_id",
+          "staff_user_id",
+          "grams",
+          "amount_paid_inr",
+          "lots_count",
+          "purity",
+          "making_charge_discount_pct",
+          "created_at"
+        ],
+        "title": "RedemptionOut",
+        "type": "object"
+      },
+      "RefreshIn": {
+        "properties": {
+          "refresh_token": {
+            "title": "Refresh Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "refresh_token"
+        ],
+        "title": "RefreshIn",
+        "type": "object"
+      },
+      "RefundIn": {
+        "properties": {
+          "note": {
+            "description": "How the money was returned",
+            "maxLength": 300,
+            "minLength": 3,
+            "title": "Note",
+            "type": "string"
+          }
+        },
+        "required": [
+          "note"
+        ],
+        "title": "RefundIn",
+        "type": "object"
+      },
+      "ResetIn": {
+        "properties": {
+          "new_password": {
+            "maxLength": 128,
+            "title": "New Password",
+            "type": "string"
+          },
+          "token": {
+            "title": "Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "new_password",
+          "token"
+        ],
+        "title": "ResetIn",
+        "type": "object"
+      },
+      "RoleIn": {
+        "properties": {
+          "description": {
+            "default": "",
+            "maxLength": 300,
+            "title": "Description",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "permissions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Permissions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "name",
+          "permissions"
+        ],
+        "title": "RoleIn",
+        "type": "object"
+      },
+      "RoleOut": {
+        "properties": {
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "is_system": {
+            "title": "Is System",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "permissions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Permissions",
+            "type": "array"
+          },
+          "user_count": {
+            "default": 0,
+            "title": "User Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "permissions",
+          "is_system"
+        ],
+        "title": "RoleOut",
+        "type": "object"
+      },
+      "RoleUpdate": {
+        "properties": {
+          "description": {
+            "anyOf": [
+              {
+                "maxLength": 300,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 100,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "permissions": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Permissions"
+          }
+        },
+        "title": "RoleUpdate",
+        "type": "object"
+      },
+      "SchemeSettings-Input": {
+        "additionalProperties": false,
+        "description": "Business rules the client edits on the CRM settings page.",
+        "properties": {
+          "daily_rate_deadline": {
+            "default": "11:00:00",
+            "format": "time",
+            "title": "Daily Rate Deadline",
+            "type": "string"
+          },
+          "lot_validity_days": {
+            "default": 365,
+            "maximum": 365.0,
+            "minimum": 1.0,
+            "title": "Lot Validity Days",
+            "type": "integer"
+          },
+          "making_charge_discount_pct": {
+            "anyOf": [
+              {
+                "maximum": 100.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "default": "0",
+            "title": "Making Charge Discount Pct"
+          },
+          "manual_refund_enabled": {
+            "default": false,
+            "title": "Manual Refund Enabled",
+            "type": "boolean"
+          },
+          "max_payment_inr": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "default": "50000",
+            "title": "Max Payment Inr"
+          },
+          "min_payment_inr": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "default": "100",
+            "title": "Min Payment Inr"
+          },
+          "pan_required_above_inr": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "default": "200000",
+            "title": "Pan Required Above Inr"
+          },
+          "price_lock_minutes": {
+            "default": 5,
+            "maximum": 30.0,
+            "minimum": 1.0,
+            "title": "Price Lock Minutes",
+            "type": "integer"
+          },
+          "purity": {
+            "default": "22K",
+            "enum": [
+              "22K",
+              "24K"
+            ],
+            "title": "Purity",
+            "type": "string"
+          },
+          "rate_change_confirm_pct": {
+            "anyOf": [
+              {
+                "maximum": 100.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "default": "3",
+            "title": "Rate Change Confirm Pct"
+          },
+          "redemption_threshold_grams": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "default": "1",
+            "title": "Redemption Threshold Grams"
+          },
+          "reminder_days_before_expiry": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Reminder Days Before Expiry",
+            "type": "array"
+          },
+          "reminder_every_days_after_expiry": {
+            "default": 7,
+            "maximum": 30.0,
+            "minimum": 1.0,
+            "title": "Reminder Every Days After Expiry",
+            "type": "integer"
+          },
+          "settlement_hold_days": {
+            "default": 2,
+            "maximum": 7.0,
+            "minimum": 0.0,
+            "title": "Settlement Hold Days",
+            "type": "integer"
+          }
+        },
+        "title": "SchemeSettings",
+        "type": "object"
+      },
+      "SchemeSettings-Output": {
+        "additionalProperties": false,
+        "description": "Business rules the client edits on the CRM settings page.",
+        "properties": {
+          "daily_rate_deadline": {
+            "default": "11:00:00",
+            "format": "time",
+            "title": "Daily Rate Deadline",
+            "type": "string"
+          },
+          "lot_validity_days": {
+            "default": 365,
+            "maximum": 365.0,
+            "minimum": 1.0,
+            "title": "Lot Validity Days",
+            "type": "integer"
+          },
+          "making_charge_discount_pct": {
+            "default": "0",
+            "title": "Making Charge Discount Pct",
+            "type": "string"
+          },
+          "manual_refund_enabled": {
+            "default": false,
+            "title": "Manual Refund Enabled",
+            "type": "boolean"
+          },
+          "max_payment_inr": {
+            "default": "50000",
+            "title": "Max Payment Inr",
+            "type": "string"
+          },
+          "min_payment_inr": {
+            "default": "100",
+            "title": "Min Payment Inr",
+            "type": "string"
+          },
+          "pan_required_above_inr": {
+            "default": "200000",
+            "title": "Pan Required Above Inr",
+            "type": "string"
+          },
+          "price_lock_minutes": {
+            "default": 5,
+            "maximum": 30.0,
+            "minimum": 1.0,
+            "title": "Price Lock Minutes",
+            "type": "integer"
+          },
+          "purity": {
+            "default": "22K",
+            "enum": [
+              "22K",
+              "24K"
+            ],
+            "title": "Purity",
+            "type": "string"
+          },
+          "rate_change_confirm_pct": {
+            "default": "3",
+            "title": "Rate Change Confirm Pct",
+            "type": "string"
+          },
+          "redemption_threshold_grams": {
+            "default": "1",
+            "title": "Redemption Threshold Grams",
+            "type": "string"
+          },
+          "reminder_days_before_expiry": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Reminder Days Before Expiry",
+            "type": "array"
+          },
+          "reminder_every_days_after_expiry": {
+            "default": 7,
+            "maximum": 30.0,
+            "minimum": 1.0,
+            "title": "Reminder Every Days After Expiry",
+            "type": "integer"
+          },
+          "settlement_hold_days": {
+            "default": 2,
+            "maximum": 7.0,
+            "minimum": 0.0,
+            "title": "Settlement Hold Days",
+            "type": "integer"
+          }
+        },
+        "title": "SchemeSettings",
+        "type": "object"
+      },
+      "SlipOut": {
+        "description": "Everything the CRM prints on the redemption slip.",
+        "properties": {
+          "customer_name": {
+            "title": "Customer Name",
+            "type": "string"
+          },
+          "customer_phone": {
+            "title": "Customer Phone",
+            "type": "string"
+          },
+          "jeweller_name": {
+            "title": "Jeweller Name",
+            "type": "string"
+          },
+          "redemption": {
+            "$ref": "#/components/schemas/RedemptionOut"
+          },
+          "staff_name": {
+            "title": "Staff Name",
+            "type": "string"
+          },
+          "store_name": {
+            "title": "Store Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "redemption",
+          "jeweller_name",
+          "customer_name",
+          "customer_phone",
+          "store_name",
+          "staff_name"
+        ],
+        "title": "SlipOut",
+        "type": "object"
+      },
+      "StoreIn": {
+        "properties": {
+          "address": {
+            "default": "",
+            "maxLength": 500,
+            "title": "Address",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "phone": {
+            "default": "",
+            "maxLength": 20,
+            "title": "Phone",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "StoreIn",
+        "type": "object"
+      },
+      "StoreOut": {
+        "properties": {
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "is_active": {
+            "title": "Is Active",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "phone": {
+            "title": "Phone",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "address",
+          "phone",
+          "is_active"
+        ],
+        "title": "StoreOut",
+        "type": "object"
+      },
+      "StoreUpdate": {
+        "properties": {
+          "address": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Address"
+          },
+          "is_active": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Active"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "maxLength": 20,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          }
+        },
+        "title": "StoreUpdate",
+        "type": "object"
+      },
+      "TenantCreate": {
+        "properties": {
+          "name": {
+            "maxLength": 200,
+            "minLength": 2,
+            "title": "Name",
+            "type": "string"
+          },
+          "owner_email": {
+            "format": "email",
+            "title": "Owner Email",
+            "type": "string"
+          },
+          "owner_name": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Owner Name",
+            "type": "string"
+          },
+          "slug": {
+            "pattern": "^[a-z0-9](?:[a-z0-9-]{1,61}[a-z0-9])$",
+            "title": "Slug",
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "owner_email",
+          "owner_name"
+        ],
+        "title": "TenantCreate",
+        "type": "object"
+      },
+      "TenantOut": {
+        "properties": {
+          "branding": {
+            "$ref": "#/components/schemas/Branding"
+          },
+          "config_version": {
+            "title": "Config Version",
+            "type": "integer"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "features": {
+            "$ref": "#/components/schemas/Features"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "status",
+          "branding",
+          "features",
+          "config_version",
+          "created_at"
+        ],
+        "title": "TenantOut",
+        "type": "object"
+      },
+      "TenantUpdate": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 2,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "enum": [
+                  "active",
+                  "suspended"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          }
+        },
+        "title": "TenantUpdate",
+        "type": "object"
+      },
+      "TestOutcomeIn": {
+        "properties": {
+          "outcome": {
+            "enum": [
+              "success",
+              "failure",
+              "pending"
+            ],
+            "title": "Outcome",
+            "type": "string"
+          }
+        },
+        "required": [
+          "outcome"
+        ],
+        "title": "TestOutcomeIn",
+        "type": "object"
+      },
+      "TokensOut": {
+        "properties": {
+          "access_token": {
+            "title": "Access Token",
+            "type": "string"
+          },
+          "expires_in": {
+            "title": "Expires In",
+            "type": "integer"
+          },
+          "refresh_token": {
+            "title": "Refresh Token",
+            "type": "string"
+          },
+          "status": {
+            "const": "ok",
+            "default": "ok",
+            "title": "Status",
+            "type": "string"
+          },
+          "token_type": {
+            "const": "bearer",
+            "default": "bearer",
+            "title": "Token Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token",
+          "refresh_token",
+          "expires_in"
+        ],
+        "title": "TokensOut",
+        "type": "object"
+      },
+      "UserCreate": {
+        "properties": {
+          "email": {
+            "format": "email",
+            "title": "Email",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "phone": {
+            "default": "",
+            "maxLength": 20,
+            "title": "Phone",
+            "type": "string"
+          },
+          "role_id": {
+            "format": "uuid",
+            "title": "Role Id",
+            "type": "string"
+          },
+          "store_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Store Id"
+          }
+        },
+        "required": [
+          "email",
+          "name",
+          "role_id"
+        ],
+        "title": "UserCreate",
+        "type": "object"
+      },
+      "UserOut": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "is_active": {
+            "title": "Is Active",
+            "type": "boolean"
+          },
+          "last_login_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Login At"
+          },
+          "must_change_password": {
+            "title": "Must Change Password",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "phone": {
+            "title": "Phone",
+            "type": "string"
+          },
+          "role_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Role Id"
+          },
+          "store_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Store Id"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "name",
+          "phone",
+          "role_id",
+          "store_id",
+          "is_active",
+          "must_change_password",
+          "last_login_at",
+          "created_at"
+        ],
+        "title": "UserOut",
+        "type": "object"
+      },
+      "UserUpdate": {
+        "properties": {
+          "is_active": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Active"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "maxLength": 20,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "role_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Role Id"
+          },
+          "store_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Store Id"
+          }
+        },
+        "title": "UserUpdate",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      },
+      "VerifyIn": {
+        "properties": {
+          "code": {
+            "pattern": "^\\d{6}$",
+            "title": "Code",
+            "type": "string"
+          },
+          "phone": {
+            "title": "Phone",
+            "type": "string"
+          },
+          "tenant": {
+            "title": "Tenant",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tenant",
+          "phone",
+          "code"
+        ],
+        "title": "VerifyIn",
+        "type": "object"
+      },
+      "app__api__app_gold__MeOut": {
+        "properties": {
+          "can_redeem": {
+            "title": "Can Redeem",
+            "type": "boolean"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "gold_grams": {
+            "title": "Gold Grams",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "next_expiry_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Expiry At"
+          },
+          "open_lots": {
+            "title": "Open Lots",
+            "type": "integer"
+          },
+          "pan_provided": {
+            "title": "Pan Provided",
+            "type": "boolean"
+          },
+          "phone": {
+            "title": "Phone",
+            "type": "string"
+          },
+          "redemption_threshold_grams": {
+            "title": "Redemption Threshold Grams",
+            "type": "string"
+          },
+          "rupee_balance_inr": {
+            "title": "Rupee Balance Inr",
+            "type": "string"
+          },
+          "total_paid_inr": {
+            "title": "Total Paid Inr",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "phone",
+          "name",
+          "email",
+          "pan_provided",
+          "gold_grams",
+          "rupee_balance_inr",
+          "total_paid_inr",
+          "open_lots",
+          "next_expiry_at",
+          "redemption_threshold_grams",
+          "can_redeem"
+        ],
+        "title": "MeOut",
+        "type": "object"
+      },
+      "app__api__app_gold__RateOut": {
+        "properties": {
+          "buying_open": {
+            "title": "Buying Open",
+            "type": "boolean"
+          },
+          "max_payment_inr": {
+            "title": "Max Payment Inr",
+            "type": "string"
+          },
+          "min_payment_inr": {
+            "title": "Min Payment Inr",
+            "type": "string"
+          },
+          "price_lock_minutes": {
+            "title": "Price Lock Minutes",
+            "type": "integer"
+          },
+          "purity": {
+            "title": "Purity",
+            "type": "string"
+          },
+          "rate_per_gram": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rate Per Gram"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "test_payments": {
+            "title": "Test Payments",
+            "type": "boolean"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          }
+        },
+        "required": [
+          "purity",
+          "rate_per_gram",
+          "updated_at",
+          "buying_open",
+          "reason",
+          "min_payment_inr",
+          "max_payment_inr",
+          "price_lock_minutes",
+          "test_payments"
+        ],
+        "title": "RateOut",
+        "type": "object"
+      },
+      "app__api__auth__MeOut": {
+        "properties": {
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "is_platform_admin": {
+            "title": "Is Platform Admin",
+            "type": "boolean"
+          },
+          "menu": {
+            "items": {
+              "$ref": "#/components/schemas/MenuItemOut"
+            },
+            "title": "Menu",
+            "type": "array"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "permissions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Permissions",
+            "type": "array"
+          },
+          "tenant_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tenant Id"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "tenant_id",
+          "is_platform_admin",
+          "permissions",
+          "menu"
+        ],
+        "title": "MeOut",
+        "type": "object"
+      },
+      "app__api__crm_rates__RateOut": {
+        "properties": {
+          "change_pct": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Change Pct"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "entered_by": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Entered By"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "large_change_confirmed": {
+            "title": "Large Change Confirmed",
+            "type": "boolean"
+          },
+          "purity": {
+            "title": "Purity",
+            "type": "string"
+          },
+          "rate_per_gram": {
+            "title": "Rate Per Gram",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "purity",
+          "rate_per_gram",
+          "change_pct",
+          "large_change_confirmed",
+          "entered_by",
+          "created_at"
+        ],
+        "title": "RateOut",
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "title": "Digi Gold Platform API",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/v1/app/auth/logout": {
+      "post": {
+        "operationId": "logout_api_v1_app_auth_logout_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Logout",
+        "tags": [
+          "app auth"
+        ]
+      }
+    },
+    "/api/v1/app/auth/otp": {
+      "post": {
+        "operationId": "request_code_api_v1_app_auth_otp_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PhoneIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Request Code",
+        "tags": [
+          "app auth"
+        ]
+      }
+    },
+    "/api/v1/app/auth/refresh": {
+      "post": {
+        "operationId": "refresh_api_v1_app_auth_refresh_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerTokensOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Refresh",
+        "tags": [
+          "app auth"
+        ]
+      }
+    },
+    "/api/v1/app/auth/verify": {
+      "post": {
+        "description": "Sign in, creating the customer on their first successful code.",
+        "operationId": "verify_code_api_v1_app_auth_verify_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerTokensOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Verify Code",
+        "tags": [
+          "app auth"
+        ]
+      }
+    },
+    "/api/v1/app/ledger": {
+      "get": {
+        "operationId": "statement_api_v1_app_ledger_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_LedgerOut_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Statement",
+        "tags": [
+          "app"
+        ]
+      }
+    },
+    "/api/v1/app/lots": {
+      "get": {
+        "operationId": "lots_api_v1_app_lots_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "open",
+                    "redeemed",
+                    "refunded"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": "open",
+              "title": "Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/LotOut"
+                  },
+                  "title": "Response Lots Api V1 App Lots Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Lots",
+        "tags": [
+          "app"
+        ]
+      }
+    },
+    "/api/v1/app/me": {
+      "get": {
+        "operationId": "me_api_v1_app_me_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/app__api__app_gold__MeOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Me",
+        "tags": [
+          "app"
+        ]
+      },
+      "patch": {
+        "operationId": "update_profile_api_v1_app_me_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfileIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Update Profile",
+        "tags": [
+          "app"
+        ]
+      }
+    },
+    "/api/v1/app/me/pan": {
+      "post": {
+        "description": "PAN is stored now and verified with a KYC provider later.",
+        "operationId": "save_pan_api_v1_app_me_pan_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PanIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Save Pan",
+        "tags": [
+          "app"
+        ]
+      }
+    },
+    "/api/v1/app/orders": {
+      "post": {
+        "description": "Quote grams for an amount and lock the rate for a few minutes.",
+        "operationId": "create_order_api_v1_app_orders_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Create Order",
+        "tags": [
+          "app"
+        ]
+      }
+    },
+    "/api/v1/app/orders/{order_id}": {
+      "get": {
+        "operationId": "get_order_api_v1_app_orders__order_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "order_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Order Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Order",
+        "tags": [
+          "app"
+        ]
+      }
+    },
+    "/api/v1/app/orders/{order_id}/test-outcome": {
+      "post": {
+        "description": "Test payments only: the mock checkout's success, failure and pending buttons.",
+        "operationId": "test_outcome_api_v1_app_orders__order_id__test_outcome_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "order_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Order Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestOutcomeIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Test Outcome",
+        "tags": [
+          "app"
+        ]
+      }
+    },
+    "/api/v1/app/rate": {
+      "get": {
+        "operationId": "rate_api_v1_app_rate_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/app__api__app_gold__RateOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Rate",
+        "tags": [
+          "app"
+        ]
+      }
+    },
+    "/api/v1/app/redemption-code": {
+      "post": {
+        "description": "A short-lived code (shown as a number and a QR code) the customer gives store staff.",
+        "operationId": "redemption_code_api_v1_app_redemption_code_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RedemptionCodeOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Redemption Code",
+        "tags": [
+          "app"
+        ]
+      }
+    },
+    "/api/v1/auth/change-password": {
+      "post": {
+        "operationId": "change_password_api_v1_auth_change_password_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Change Password",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/first-login": {
+      "post": {
+        "description": "Set a permanent password after signing in with a temporary one; signs the user in.",
+        "operationId": "complete_first_login_api_v1_auth_first_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FirstLoginIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokensOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Complete First Login",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/forgot-password": {
+      "post": {
+        "description": "Always answers 202 so the response never reveals whether an account exists.",
+        "operationId": "forgot_password_api_v1_auth_forgot_password_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForgotIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Forgot Password",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "operationId": "login_api_v1_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/TokensOut"
+                    },
+                    {
+                      "$ref": "#/components/schemas/PasswordChangeRequiredOut"
+                    }
+                  ],
+                  "title": "Response Login Api V1 Auth Login Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          },
+          "423": {
+            "description": "Locked"
+          }
+        },
+        "summary": "Login",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/logout": {
+      "post": {
+        "operationId": "logout_api_v1_auth_logout_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Logout",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/me": {
+      "get": {
+        "description": "The signed-in user, their permissions and the side menu their role allows.",
+        "operationId": "me_api_v1_auth_me_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/app__api__auth__MeOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Me",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/refresh": {
+      "post": {
+        "operationId": "refresh_api_v1_auth_refresh_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokensOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Refresh",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/auth/reset-password": {
+      "post": {
+        "operationId": "reset_password_api_v1_auth_reset_password_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Reset Password",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/v1/console/tenants": {
+      "get": {
+        "operationId": "list_tenants_api_v1_console_tenants_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_TenantOut_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Tenants",
+        "tags": [
+          "platform console"
+        ]
+      },
+      "post": {
+        "operationId": "create_api_v1_console_tenants_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TenantCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Create",
+        "tags": [
+          "platform console"
+        ]
+      }
+    },
+    "/api/v1/console/tenants/{tenant_id}": {
+      "get": {
+        "operationId": "get_tenant_api_v1_console_tenants__tenant_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tenant_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Tenant Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Tenant",
+        "tags": [
+          "platform console"
+        ]
+      },
+      "patch": {
+        "operationId": "update_tenant_api_v1_console_tenants__tenant_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tenant_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Tenant Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TenantUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Update Tenant",
+        "tags": [
+          "platform console"
+        ]
+      }
+    },
+    "/api/v1/console/tenants/{tenant_id}/branding": {
+      "put": {
+        "operationId": "set_branding_api_v1_console_tenants__tenant_id__branding_put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tenant_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Tenant Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Branding"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Set Branding",
+        "tags": [
+          "platform console"
+        ]
+      }
+    },
+    "/api/v1/console/tenants/{tenant_id}/features": {
+      "put": {
+        "operationId": "set_features_api_v1_console_tenants__tenant_id__features_put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tenant_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Tenant Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Features"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Set Features",
+        "tags": [
+          "platform console"
+        ]
+      }
+    },
+    "/api/v1/crm/audit-logs": {
+      "get": {
+        "operationId": "list_audit_api_v1_crm_audit_logs_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "entity_type",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Entity Type"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_AuditOut_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Audit",
+        "tags": [
+          "crm audit"
+        ]
+      }
+    },
+    "/api/v1/crm/customers": {
+      "get": {
+        "description": "Search by phone (any part) or name.",
+        "operationId": "list_customers_api_v1_crm_customers_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_CustomerOut_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Customers",
+        "tags": [
+          "crm customers"
+        ]
+      }
+    },
+    "/api/v1/crm/customers/{customer_id}": {
+      "get": {
+        "operationId": "customer_detail_api_v1_crm_customers__customer_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "customer_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Customer Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerDetailOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Customer Detail",
+        "tags": [
+          "crm customers"
+        ]
+      }
+    },
+    "/api/v1/crm/dashboard": {
+      "get": {
+        "description": "Outstanding grams are what the jeweller owes customers; their value at today's rate\nshows the exposure to gold price changes.",
+        "operationId": "dashboard_api_v1_crm_dashboard_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Dashboard",
+        "tags": [
+          "crm dashboard"
+        ]
+      }
+    },
+    "/api/v1/crm/expiry": {
+      "get": {
+        "description": "Expired lots (oldest first), or lots expiring within the next N days.",
+        "operationId": "expiring_lots_api_v1_crm_expiry_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "state",
+            "required": false,
+            "schema": {
+              "default": "expired",
+              "enum": [
+                "expired",
+                "expiring"
+              ],
+              "title": "State",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "within_days",
+            "required": false,
+            "schema": {
+              "default": 30,
+              "title": "Within Days",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_ExpiringLotOut_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Expiring Lots",
+        "tags": [
+          "crm expiry"
+        ]
+      }
+    },
+    "/api/v1/crm/lots/{lot_id}/refund": {
+      "post": {
+        "description": "Record a refund already paid to the customer. Off unless the client turns it on.",
+        "operationId": "refund_api_v1_crm_lots__lot_id__refund_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lot_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Lot Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefundIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Refund",
+        "tags": [
+          "crm expiry"
+        ]
+      }
+    },
+    "/api/v1/crm/payments": {
+      "get": {
+        "operationId": "list_payments_api_v1_crm_payments_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "created",
+                    "pending",
+                    "paid",
+                    "failed"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "customer_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Customer Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_PaymentOut_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Payments",
+        "tags": [
+          "crm customers"
+        ]
+      }
+    },
+    "/api/v1/crm/permissions": {
+      "get": {
+        "description": "Everything the role editor needs to draw its permission grid.",
+        "operationId": "permission_catalogue_api_v1_crm_permissions_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatalogueOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Permission Catalogue",
+        "tags": [
+          "crm roles"
+        ]
+      }
+    },
+    "/api/v1/crm/rates": {
+      "get": {
+        "operationId": "rate_history_api_v1_crm_rates_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "purity",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "22K",
+                    "24K"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Purity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 30,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_RateOut_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Rate History",
+        "tags": [
+          "crm gold rate"
+        ]
+      },
+      "post": {
+        "description": "Publish a new rate. A change larger than the configured percentage is refused\nunless confirm_large_change is sent, so a typo cannot sell gold at the wrong price.",
+        "operationId": "publish_rate_api_v1_crm_rates_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RateIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/app__api__crm_rates__RateOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Publish Rate",
+        "tags": [
+          "crm gold rate"
+        ]
+      }
+    },
+    "/api/v1/crm/rates/current": {
+      "get": {
+        "operationId": "current_rates_api_v1_crm_rates_current_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentRatesOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Current Rates",
+        "tags": [
+          "crm gold rate"
+        ]
+      }
+    },
+    "/api/v1/crm/rates/pause": {
+      "post": {
+        "description": "Stop or restart all buying in the app at once.",
+        "operationId": "pause_buying_api_v1_crm_rates_pause_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PauseIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrentRatesOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Pause Buying",
+        "tags": [
+          "crm gold rate"
+        ]
+      }
+    },
+    "/api/v1/crm/redemptions": {
+      "get": {
+        "operationId": "list_redemptions_api_v1_crm_redemptions_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "customer_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Customer Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_RedemptionOut_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Redemptions",
+        "tags": [
+          "crm redemptions"
+        ]
+      },
+      "post": {
+        "operationId": "redeem_api_v1_crm_redemptions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RedeemIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RedemptionOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Redeem",
+        "tags": [
+          "crm redemptions"
+        ]
+      }
+    },
+    "/api/v1/crm/redemptions/{redemption_id}/slip": {
+      "get": {
+        "operationId": "slip_api_v1_crm_redemptions__redemption_id__slip_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "redemption_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Redemption Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SlipOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Slip",
+        "tags": [
+          "crm redemptions"
+        ]
+      }
+    },
+    "/api/v1/crm/roles": {
+      "get": {
+        "operationId": "list_roles_api_v1_crm_roles_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/RoleOut"
+                  },
+                  "title": "Response List Roles Api V1 Crm Roles Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Roles",
+        "tags": [
+          "crm roles"
+        ]
+      },
+      "post": {
+        "operationId": "create_role_api_v1_crm_roles_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoleIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoleOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Create Role",
+        "tags": [
+          "crm roles"
+        ]
+      }
+    },
+    "/api/v1/crm/roles/{role_id}": {
+      "delete": {
+        "operationId": "delete_role_api_v1_crm_roles__role_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "role_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Role Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Delete Role",
+        "tags": [
+          "crm roles"
+        ]
+      },
+      "patch": {
+        "operationId": "update_role_api_v1_crm_roles__role_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "role_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Role Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoleUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoleOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Update Role",
+        "tags": [
+          "crm roles"
+        ]
+      }
+    },
+    "/api/v1/crm/settings": {
+      "get": {
+        "operationId": "get_settings_page_api_v1_crm_settings_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchemeSettings-Output"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Settings Page",
+        "tags": [
+          "crm settings"
+        ]
+      },
+      "put": {
+        "description": "Replace the settings. Changes apply to new payments only; past lots keep their terms.",
+        "operationId": "save_settings_page_api_v1_crm_settings_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SchemeSettings-Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SchemeSettings-Output"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Save Settings Page",
+        "tags": [
+          "crm settings"
+        ]
+      }
+    },
+    "/api/v1/crm/stores": {
+      "get": {
+        "operationId": "list_stores_api_v1_crm_stores_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/StoreOut"
+                  },
+                  "title": "Response List Stores Api V1 Crm Stores Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Stores",
+        "tags": [
+          "crm stores"
+        ]
+      },
+      "post": {
+        "operationId": "create_store_api_v1_crm_stores_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StoreIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoreOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Create Store",
+        "tags": [
+          "crm stores"
+        ]
+      }
+    },
+    "/api/v1/crm/stores/{store_id}": {
+      "patch": {
+        "operationId": "update_store_api_v1_crm_stores__store_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "store_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Store Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StoreUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoreOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Update Store",
+        "tags": [
+          "crm stores"
+        ]
+      }
+    },
+    "/api/v1/crm/users": {
+      "get": {
+        "operationId": "list_users_api_v1_crm_users_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_UserOut_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Users",
+        "tags": [
+          "crm users"
+        ]
+      },
+      "post": {
+        "operationId": "create_user_api_v1_crm_users_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Create User",
+        "tags": [
+          "crm users"
+        ]
+      }
+    },
+    "/api/v1/crm/users/{user_id}": {
+      "patch": {
+        "operationId": "update_user_api_v1_crm_users__user_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "User Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Update User",
+        "tags": [
+          "crm users"
+        ]
+      }
+    },
+    "/api/v1/crm/users/{user_id}/resend-password": {
+      "post": {
+        "description": "Issue a fresh temporary password; the user must set a new one at next sign-in.",
+        "operationId": "resend_password_api_v1_crm_users__user_id__resend_password_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "User Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Resend Password",
+        "tags": [
+          "crm users"
+        ]
+      }
+    },
+    "/api/v1/public/tenants/{slug}/config": {
+      "get": {
+        "operationId": "tenant_config_api_v1_public_tenants__slug__config_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "title": "Slug",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicConfig"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Tenant Config",
+        "tags": [
+          "public"
+        ]
+      }
+    }
+  }
+}
