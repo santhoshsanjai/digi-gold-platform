@@ -62,7 +62,11 @@ class Settings(BaseSettings):
     media_base_url: str = ""
     media_max_mb: int = 5
 
-    cors_origins: list[str] = ["http://localhost:5173", "http://localhost:5174"]
+    cors_origins: list[str] = [
+        "http://localhost:5173",  # CRM
+        "http://localhost:5174",  # Platform Console
+        "http://localhost:8081",  # mobile app in the browser preview
+    ]
     config_cache_seconds: int = 300
 
 

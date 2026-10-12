@@ -82,6 +82,18 @@ cd ../.. && npm run api:types -w @digigold/web-common    # writes packages/web-c
 
 CI fails if either file is out of date.
 
+## Customer mobile app
+
+`apps/mobile` is an Expo app (iOS, Android, and web for previews). One build serves one client:
+the client's slug and API address are environment variables, and the name, logo and colours
+come from that client's branding in the API. See [apps/mobile/README.md](apps/mobile/README.md).
+
+```bash
+cd apps/mobile && npm ci
+cp .env.example .env     # set EXPO_PUBLIC_TENANT_SLUG and EXPO_PUBLIC_API_URL
+npm run web              # or: npm start, then scan the QR code with Expo Go
+```
+
 ## Website content
 
 Each client's website is content, not code. In the Console's **Website** tab you edit:
@@ -107,6 +119,7 @@ uv run pytest           # needs the database from docker compose (digigold_test)
 uv run ruff check . && uv run ruff format --check .
 cd ../..
 npm run lint && npm run build  # CRM, Console and shared components
+cd apps/mobile && npm run typecheck && npm run lint
 ```
 
 ## Design documents

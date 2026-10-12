@@ -54,3 +54,24 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck -w @digigold/web-common
       - run: npm run build
+
+  mobile:
+    # The customer app has its own lockfile; it is not part of the npm workspaces.
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/mobile/package-lock.json
+      - run: npm ci
+      - name: API types match the API schema
+        run: |
+          npm run api:types
+          git diff --exit-code src/api/schema.d.ts || (echo "Run: npm run api:types in apps/mobile" && exit 1)
+      - run: npm run typecheck
+      - run: npm run lint
