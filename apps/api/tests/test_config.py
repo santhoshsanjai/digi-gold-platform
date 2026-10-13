@@ -14,3 +14,10 @@ def test_production_refuses_the_default_signing_secret():
 def test_production_accepts_a_real_secret_and_dev_keeps_its_default():
     assert Settings(env="prod", jwt_secret="x" * 40, _env_file=None).env == "prod"
     assert Settings(env="dev", _env_file=None).env == "dev"
+
+
+async def test_seed_demo_refuses_outside_development():
+    from app.services.demo import seed_demo
+
+    with pytest.raises(SystemExit, match="DG_ENV=dev"):
+        await seed_demo()

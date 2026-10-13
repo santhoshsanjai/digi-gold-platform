@@ -20,6 +20,10 @@ tenants' rows even if a query forgets to filter. The API sets `app.tenant_id` at
 of each request's transaction. The API must connect as a **non-superuser** role, because
 superusers bypass row-level security.
 
+## Try it on your computer
+
+Step-by-step, with demo logins and what to check in each app: [docs/local-setup.md](docs/local-setup.md).
+
 ## Run the API locally
 
 Needs Docker and [uv](https://docs.astral.sh/uv/).
