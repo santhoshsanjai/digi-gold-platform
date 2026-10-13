@@ -61,6 +61,15 @@ async def create_tenant_cmd(slug: str, name: str, owner_email: str, owner_name: 
     await engine.dispose()
 
 
+async def _seed_demo() -> None:
+    from app.services.demo import OWNER, PASSWORD, PLATFORM_ADMIN, SLUG, seed_demo
+
+    for note in await seed_demo():
+        print(f"- {note}")
+    print(f"Platform Console: {PLATFORM_ADMIN} / {PASSWORD}")
+    print(f"CRM (client '{SLUG}'): {OWNER} / {PASSWORD}")
+
+
 async def _reminders() -> None:
     from app.services.expiry import send_reminders
 
@@ -88,6 +97,7 @@ def main() -> None:
     client.add_argument("--name", required=True)
     client.add_argument("--owner-email", required=True)
     client.add_argument("--owner-name", required=True)
+    sub.add_parser("seed-demo", help="(development only) create a demo client with known passwords")
     sub.add_parser(
         "send-expiry-reminders", help="send today's lot expiry reminders now (also runs daily)"
     )
@@ -98,6 +108,8 @@ def main() -> None:
         asyncio.run(create_platform_admin(args.email, args.name))
     elif args.command == "create-tenant":
         asyncio.run(create_tenant_cmd(args.slug, args.name, args.owner_email, args.owner_name))
+    elif args.command == "seed-demo":
+        asyncio.run(_seed_demo())
     elif args.command == "send-expiry-reminders":
         asyncio.run(_reminders())
     elif args.command == "export-openapi":
