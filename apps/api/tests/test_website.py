@@ -90,6 +90,72 @@ async def test_rich_text_is_sanitised_and_bad_links_refused(client, admin_header
     assert r.status_code == 422
 
 
+async def test_category_and_collection_cards_keep_their_order(client, admin_headers):
+    t = await create_tenant(client, admin_headers)
+    page = await _page(client, admin_headers, t["id"])
+    base = f"{API}/console/tenants/{t['id']}/pages/{page['id']}"
+    cards = [
+        {
+            "title": "Necklaces",
+            "image_url": "/media/a.jpg",
+            "link_url": "/gold",
+            "sample_image": True,
+        },
+        {"title": "Bangles", "image_url": "https://cdn.example.com/b.jpg", "image_alt": "Bangles"},
+    ]
+    sections = [
+        {
+            "id": "c",
+            "type": "categories",
+            "eyebrow": "Shop",
+            "heading": "By category",
+            "items": cards,
+        },
+        {"id": "f", "type": "collections", "heading": "Featured", "items": cards[::-1]},
+        _hero() | {"size": "compact", "cta2_label": "Visit", "cta2_url": "/contact"},
+    ]
+    r = await client.patch(base, json={"content": {"sections": sections}}, headers=admin_headers)
+    assert r.status_code == 200, r.text
+    await client.post(f"{base}/publish", headers=admin_headers)
+    live = (await client.get(f"{API}/public/tenants/sri-gold/pages/home")).json()["content"]
+    cats, cols, hero = live["sections"]
+    assert [c["title"] for c in cats["items"]] == ["Necklaces", "Bangles"]
+    assert cats["eyebrow"] == "Shop" and cats["items"][0]["sample_image"] is True
+    assert [c["title"] for c in cols["items"]] == ["Bangles", "Necklaces"]
+    assert hero["size"] == "compact" and hero["sample_image"] is False
+
+    bad = [{"id": "c", "type": "categories", "items": [{"title": "X", "link_url": "javascript:x"}]}]
+    r = await client.patch(base, json={"content": {"sections": bad}}, headers=admin_headers)
+    assert r.status_code == 422
+    untitled = [{"id": "c", "type": "collections", "items": [{"image_url": "/media/a.jpg"}]}]
+    r = await client.patch(base, json={"content": {"sections": untitled}}, headers=admin_headers)
+    assert r.status_code == 422
+
+
+async def test_site_settings_announcement_map_and_business_type(client, admin_headers):
+    t = await create_tenant(client, admin_headers)
+    url = f"{API}/console/tenants/{t['id']}/website"
+    body = {
+        "announcement": "Open on Sunday until 2 pm",
+        "announcement_url": "/contact",
+        "local_business": "JewelryStore",
+        "contact": {
+            "hours": "Mon–Sat: 9:30 am – 9 pm\nSunday: 10 am – 2 pm",
+            "map_embed_url": "https://www.google.com/maps?q=Karaikudi&output=embed",
+        },
+    }
+    r = await client.put(url, json=body, headers=admin_headers)
+    assert r.status_code == 200, r.text
+    site = (await client.get(f"{API}/public/tenants/sri-gold/site")).json()["settings"]
+    assert site["announcement"] == "Open on Sunday until 2 pm"
+    assert site["local_business"] == "JewelryStore"
+    assert site["contact"]["hours"].count("\n") == 1
+
+    # Only Google Maps can be framed on the site.
+    body["contact"]["map_embed_url"] = "https://evil.example.com/frame"
+    assert (await client.put(url, json=body, headers=admin_headers)).status_code == 422
+
+
 async def test_menu_lists_published_pages_in_order(client, admin_headers):
     t = await create_tenant(client, admin_headers)
     tid = t["id"]

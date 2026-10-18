@@ -7,8 +7,12 @@ import type { Branding, Tenant } from '../../api/types.ts'
 import { ImageField } from '../../components/ImageField.tsx'
 import { useSaveBrandingMutation } from '../../store/api/consoleApi.ts'
 
-const FONTS = ['Inter', 'Poppins', 'Lato', 'Montserrat', 'Playfair Display', 'Noto Sans', 'Mukta']
+const FONTS = ['Inter', 'Poppins', 'Lato', 'Montserrat', 'Jost', 'Playfair Display', 'Noto Sans', 'Mukta']
   .map((f) => ({ label: f, value: f }))
+const HEADING_FONTS = [
+  { label: 'Same as the main font', value: '' },
+  ...['Cormorant Garamond', 'Playfair Display', 'Marcellus', 'Cinzel', 'Lora'].map((f) => ({ label: f, value: f })),
+]
 
 export function BrandingTab({ tenant }: { tenant: Tenant }) {
   const [form] = Form.useForm<Branding>()
@@ -52,7 +56,15 @@ export function BrandingTab({ tenant }: { tenant: Tenant }) {
             <InputContainer type="color" name="secondary_color" label="Second colour" />
             <InputContainer type="color" name="background_color" label="Background" />
           </div>
-          <InputContainer type="select" name="font_family" label="Font" options={FONTS} />
+          <div className="grid gap-x-4 sm:grid-cols-2">
+            <InputContainer type="select" name="font_family" label="Font" options={FONTS} />
+            <InputContainer
+              type="select"
+              name="heading_font_family"
+              label="Website heading font"
+              options={HEADING_FONTS}
+            />
+          </div>
           <div className="grid gap-x-4 sm:grid-cols-2">
             <InputContainer type="email" name="support_email" label="Support email" />
             <InputContainer type="input" name="support_phone" label="Support phone" />

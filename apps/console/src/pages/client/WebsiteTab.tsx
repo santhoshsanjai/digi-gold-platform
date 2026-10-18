@@ -14,6 +14,7 @@ import {
   useSitePagesQuery,
   useWebsiteQuery,
 } from '../../store/api/consoleApi.ts'
+import { ImageField } from '../../components/ImageField.tsx'
 import { linkRule, pageSlugRule } from '../../utils/rules.ts'
 import { slugify } from '../../utils/slug.ts'
 
@@ -169,7 +170,28 @@ function SettingsCard({ tenant }: { tenant: Tenant }) {
           rows={2}
           notes="One or two sentences shown under the site in search results."
         />
+        <Form.Item
+          name="share_image_url"
+          label="Sharing picture"
+          extra="Shown when a page is shared on WhatsApp or social media. The logo is used if empty."
+        >
+          <ImageField tenantId={tenant.id} />
+        </Form.Item>
         <InputContainer type="textarea" name="footer_text" label="Footer text" rows={2} />
+        <div className="grid gap-x-4 md:grid-cols-2">
+          <InputContainer
+            type="input"
+            name="announcement"
+            label="Announcement"
+            notes="A one-line message above the menu, such as a festive offer. Leave empty to hide it."
+          />
+          <InputContainer
+            type="input"
+            name="announcement_url"
+            label="Announcement link"
+            rules={[linkRule]}
+          />
+        </div>
 
         <h4 className="text-sm font-semibold mt-2">Contact</h4>
         <InputContainer type="textarea" name={['contact', 'address']} label="Address" rows={2} />
@@ -179,15 +201,40 @@ function SettingsCard({ tenant }: { tenant: Tenant }) {
           <InputContainer type="email" name={['contact', 'email']} label="Email" />
         </div>
         <div className="grid gap-x-4 md:grid-cols-2">
-          <InputContainer type="input" name={['contact', 'hours']} label="Opening hours" />
           <InputContainer
-            type="input"
-            name={['contact', 'map_url']}
-            label="Map link"
-            rules={[linkRule]}
-            notes="A Google Maps embed or share link."
+            type="textarea"
+            name={['contact', 'hours']}
+            label="Opening hours"
+            rows={3}
+            notes="One line per day range, e.g. “Mon–Sat: 9:30 am – 9 pm”."
           />
+          <div>
+            <InputContainer
+              type="input"
+              name={['contact', 'map_url']}
+              label="Directions link"
+              rules={[linkRule]}
+              notes="A Google Maps share link, opened by the “Get directions” button."
+            />
+            <InputContainer
+              type="input"
+              name={['contact', 'map_embed_url']}
+              label="Map to show on the page"
+              notes="In Google Maps: Share → Embed a map, and paste the link inside src=“…”."
+            />
+          </div>
         </div>
+        <InputContainer
+          type="select"
+          name="local_business"
+          label="Tell search engines about the shop"
+          options={[
+            { label: 'No', value: '' },
+            { label: 'Yes, a jewellery shop', value: 'JewelryStore' },
+            { label: 'Yes, a shop', value: 'Store' },
+          ]}
+          notes="Uses only the name, logo, address, phone, email and social links above, so check they are right."
+        />
 
         <h4 className="text-sm font-semibold mt-2">Social and app links</h4>
         <div className="grid gap-x-4 md:grid-cols-2">

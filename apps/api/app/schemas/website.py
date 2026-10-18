@@ -44,7 +44,16 @@ class _Strict(BaseModel):
 
 class _Section(_Strict):
     id: str = Field(min_length=1, max_length=40, description="Stable key set by the editor")
+    eyebrow: Short = Field("", description="A short label above the heading")
     heading: Short = ""
+
+
+class _Picture(_Strict):
+    """Alt text, and whether the picture is a sample (stock or borrowed) rather than the
+    client's own. The website marks samples so visitors never mistake them for real stock."""
+
+    image_alt: Short = ""
+    sample_image: bool = False
 
 
 class _RichText:
@@ -54,14 +63,17 @@ class _RichText:
         return clean_html(v)
 
 
-class HeroSection(_Section):
+class HeroSection(_Picture, _Section):
     type: Literal["hero"]
+    size: Literal["full", "compact"] = "full"
     subheading: Text = ""
     image_url: Url = ""
     cta_label: Short = ""
     cta_url: Url = ""
+    cta2_label: Short = ""
+    cta2_url: Url = ""
 
-    _urls = field_validator("cta_url", "image_url")(_check_url)
+    _urls = field_validator("cta_url", "cta2_url", "image_url")(_check_url)
 
 
 class RichTextSection(_RichText, _Section):
@@ -69,13 +81,15 @@ class RichTextSection(_RichText, _Section):
     body_html: str = Field("", max_length=20000)
 
 
-class ImageTextSection(_RichText, _Section):
+class ImageTextSection(_RichText, _Picture, _Section):
     type: Literal["image_text"]
     body_html: str = Field("", max_length=20000)
     image_url: Url = ""
     image_side: Literal["left", "right"] = "right"
+    cta_label: Short = ""
+    cta_url: Url = ""
 
-    _urls = field_validator("image_url")(_check_url)
+    _urls = field_validator("image_url", "cta_url")(_check_url)
 
 
 class Item(_Strict):
@@ -92,6 +106,34 @@ class FeaturesSection(_Section):
 class StepsSection(_Section):
     type: Literal["steps"]
     items: list[Item] = Field(default_factory=list, max_length=8)
+
+
+class Card(_Picture):
+    """A picture with a title and a link: a category or a collection."""
+
+    title: Short
+    text: Text = ""
+    image_url: Url = ""
+    link_url: Url = ""
+    link_label: Short = ""
+
+    _urls = field_validator("image_url", "link_url")(_check_url)
+
+
+class CategoriesSection(_Section):
+    """Picture tiles in the order given, such as "Necklaces", "Bangles"."""
+
+    type: Literal["categories"]
+    intro: Text = ""
+    items: list[Card] = Field(default_factory=list, max_length=24)
+
+
+class CollectionsSection(_Section):
+    """Larger editorial rows, picture beside text, for featured collections."""
+
+    type: Literal["collections"]
+    intro: Text = ""
+    items: list[Card] = Field(default_factory=list, max_length=12)
 
 
 class GoldRateSection(_Section):
@@ -114,6 +156,7 @@ class FaqSection(_Section):
 class GalleryImage(_Strict):
     url: Url
     caption: Short = ""
+    sample: bool = False
 
     _urls = field_validator("url")(_check_url)
 
@@ -145,6 +188,8 @@ Section = Annotated[
     | ImageTextSection
     | FeaturesSection
     | StepsSection
+    | CategoriesSection
+    | CollectionsSection
     | GoldRateSection
     | FaqSection
     | GallerySection
@@ -154,8 +199,8 @@ Section = Annotated[
 ]
 
 SECTION_TYPES = [
-    "hero", "rich_text", "image_text", "features", "steps",
-    "gold_rate", "faq", "gallery", "cta", "contact",
+    "hero", "rich_text", "image_text", "features", "steps", "categories",
+    "collections", "gold_rate", "faq", "gallery", "cta", "contact",
 ]  # fmt: skip
 
 
@@ -176,10 +221,18 @@ class Contact(_Strict):
     phone: Annotated[str, Field(max_length=30)] = ""
     whatsapp: Annotated[str, Field(max_length=30)] = ""
     email: Annotated[str, Field(max_length=254)] = ""
-    hours: Short = ""
+    hours: Annotated[str, Field(max_length=500, description="One line per day range")] = ""
     map_url: Url = ""
+    map_embed_url: Url = Field("", description="A Google Maps embed link, shown as a map")
 
-    _urls = field_validator("map_url")(_check_url)
+    _urls = field_validator("map_url", "map_embed_url")(_check_url)
+
+    @field_validator("map_embed_url")
+    @classmethod
+    def _embed(cls, v: str) -> str:
+        if v and not v.startswith("https://www.google.com/maps"):
+            raise ValueError("use a Google Maps embed link (https://www.google.com/maps/...)")
+        return v
 
 
 class Social(_Strict):
@@ -204,7 +257,15 @@ class WebsiteSettings(_Strict):
     site_title: Short = ""
     tagline: Short = ""
     seo_description: Annotated[str, Field(max_length=300)] = ""
+    share_image_url: Url = Field("", description="Shown when a page is shared on social media")
     footer_text: Text = ""
+    announcement: Short = Field("", description="A one-line message above the menu")
+    announcement_url: Url = ""
+    local_business: Literal["", "JewelryStore", "Store"] = Field(
+        "", description="Describe the business to search engines using the details above"
+    )
     contact: Contact = Field(default_factory=Contact)
     social: Social = Field(default_factory=Social)
     app_links: AppLinks = Field(default_factory=AppLinks)
+
+    _urls = field_validator("share_image_url", "announcement_url")(_check_url)

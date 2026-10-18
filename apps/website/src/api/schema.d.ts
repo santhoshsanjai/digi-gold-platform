@@ -1205,6 +1205,12 @@ export interface components {
              */
             font_family: string;
             /**
+             * Heading Font Family
+             * @description Empty means the main font
+             * @default
+             */
+            heading_font_family: string;
+            /**
              * Logo Url
              * @default
              */
@@ -1230,6 +1236,44 @@ export interface components {
              */
             support_phone: string;
         };
+        /**
+         * Card
+         * @description A picture with a title and a link: a category or a collection.
+         */
+        Card: {
+            /**
+             * Image Alt
+             * @default
+             */
+            image_alt: string;
+            /**
+             * Image Url
+             * @default
+             */
+            image_url: string;
+            /**
+             * Link Label
+             * @default
+             */
+            link_label: string;
+            /**
+             * Link Url
+             * @default
+             */
+            link_url: string;
+            /**
+             * Sample Image
+             * @default false
+             */
+            sample_image: boolean;
+            /**
+             * Text
+             * @default
+             */
+            text: string;
+            /** Title */
+            title: string;
+        };
         /** CatalogueOut */
         CatalogueOut: {
             /** Actions */
@@ -1240,6 +1284,40 @@ export interface components {
             }[];
             /** Modules */
             modules: string[];
+        };
+        /**
+         * CategoriesSection
+         * @description Picture tiles in the order given, such as "Necklaces", "Bangles".
+         */
+        CategoriesSection: {
+            /**
+             * Eyebrow
+             * @description A short label above the heading
+             * @default
+             */
+            eyebrow: string;
+            /**
+             * Heading
+             * @default
+             */
+            heading: string;
+            /**
+             * Id
+             * @description Stable key set by the editor
+             */
+            id: string;
+            /**
+             * Intro
+             * @default
+             */
+            intro: string;
+            /** Items */
+            items?: components["schemas"]["Card"][];
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "categories";
         };
         /** ChangePasswordIn */
         ChangePasswordIn: {
@@ -1283,6 +1361,40 @@ export interface components {
             /** Total Payments */
             total_payments: number;
         };
+        /**
+         * CollectionsSection
+         * @description Larger editorial rows, picture beside text, for featured collections.
+         */
+        CollectionsSection: {
+            /**
+             * Eyebrow
+             * @description A short label above the heading
+             * @default
+             */
+            eyebrow: string;
+            /**
+             * Heading
+             * @default
+             */
+            heading: string;
+            /**
+             * Id
+             * @description Stable key set by the editor
+             */
+            id: string;
+            /**
+             * Intro
+             * @default
+             */
+            intro: string;
+            /** Items */
+            items?: components["schemas"]["Card"][];
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            type: "collections";
+        };
         /** Contact */
         Contact: {
             /**
@@ -1297,9 +1409,16 @@ export interface components {
             email: string;
             /**
              * Hours
+             * @description One line per day range
              * @default
              */
             hours: string;
+            /**
+             * Map Embed Url
+             * @description A Google Maps embed link, shown as a map
+             * @default
+             */
+            map_embed_url: string;
             /**
              * Map Url
              * @default
@@ -1321,6 +1440,12 @@ export interface components {
          * @description Shows the contact details from the site settings, with an optional map.
          */
         ContactSection: {
+            /**
+             * Eyebrow
+             * @description A short label above the heading
+             * @default
+             */
+            eyebrow: string;
             /**
              * Heading
              * @default
@@ -1354,6 +1479,12 @@ export interface components {
              * @default
              */
             button_url: string;
+            /**
+             * Eyebrow
+             * @description A short label above the heading
+             * @default
+             */
+            eyebrow: string;
             /**
              * Heading
              * @default
@@ -1521,6 +1652,12 @@ export interface components {
         /** FaqSection */
         FaqSection: {
             /**
+             * Eyebrow
+             * @description A short label above the heading
+             * @default
+             */
+            eyebrow: string;
+            /**
              * Heading
              * @default
              */
@@ -1577,6 +1714,12 @@ export interface components {
         /** FeaturesSection */
         FeaturesSection: {
             /**
+             * Eyebrow
+             * @description A short label above the heading
+             * @default
+             */
+            eyebrow: string;
+            /**
              * Heading
              * @default
              */
@@ -1618,11 +1761,22 @@ export interface components {
              * @default
              */
             caption: string;
+            /**
+             * Sample
+             * @default false
+             */
+            sample: boolean;
             /** Url */
             url: string;
         };
         /** GallerySection */
         GallerySection: {
+            /**
+             * Eyebrow
+             * @description A short label above the heading
+             * @default
+             */
+            eyebrow: string;
             /**
              * Heading
              * @default
@@ -1646,6 +1800,12 @@ export interface components {
          * @description Shows today's published rate, read live from the API.
          */
         GoldRateSection: {
+            /**
+             * Eyebrow
+             * @description A short label above the heading
+             * @default
+             */
+            eyebrow: string;
             /**
              * Heading
              * @default
@@ -1675,6 +1835,16 @@ export interface components {
         /** HeroSection */
         HeroSection: {
             /**
+             * Cta2 Label
+             * @default
+             */
+            cta2_label: string;
+            /**
+             * Cta2 Url
+             * @default
+             */
+            cta2_url: string;
+            /**
              * Cta Label
              * @default
              */
@@ -1684,6 +1854,12 @@ export interface components {
              * @default
              */
             cta_url: string;
+            /**
+             * Eyebrow
+             * @description A short label above the heading
+             * @default
+             */
+            eyebrow: string;
             /**
              * Heading
              * @default
@@ -1695,10 +1871,26 @@ export interface components {
              */
             id: string;
             /**
+             * Image Alt
+             * @default
+             */
+            image_alt: string;
+            /**
              * Image Url
              * @default
              */
             image_url: string;
+            /**
+             * Sample Image
+             * @default false
+             */
+            sample_image: boolean;
+            /**
+             * Size
+             * @default full
+             * @enum {string}
+             */
+            size: "full" | "compact";
             /**
              * Subheading
              * @default
@@ -1750,6 +1942,22 @@ export interface components {
              */
             body_html: string;
             /**
+             * Cta Label
+             * @default
+             */
+            cta_label: string;
+            /**
+             * Cta Url
+             * @default
+             */
+            cta_url: string;
+            /**
+             * Eyebrow
+             * @description A short label above the heading
+             * @default
+             */
+            eyebrow: string;
+            /**
              * Heading
              * @default
              */
@@ -1759,6 +1967,11 @@ export interface components {
              * @description Stable key set by the editor
              */
             id: string;
+            /**
+             * Image Alt
+             * @default
+             */
+            image_alt: string;
             /**
              * Image Side
              * @default right
@@ -1770,6 +1983,11 @@ export interface components {
              * @default
              */
             image_url: string;
+            /**
+             * Sample Image
+             * @default false
+             */
+            sample_image: boolean;
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
@@ -1955,7 +2173,7 @@ export interface components {
         /** PageContent */
         PageContent: {
             /** Sections */
-            sections?: (components["schemas"]["HeroSection"] | components["schemas"]["RichTextSection"] | components["schemas"]["ImageTextSection"] | components["schemas"]["FeaturesSection"] | components["schemas"]["StepsSection"] | components["schemas"]["GoldRateSection"] | components["schemas"]["FaqSection"] | components["schemas"]["GallerySection"] | components["schemas"]["CtaSection"] | components["schemas"]["ContactSection"])[];
+            sections?: (components["schemas"]["HeroSection"] | components["schemas"]["RichTextSection"] | components["schemas"]["ImageTextSection"] | components["schemas"]["FeaturesSection"] | components["schemas"]["StepsSection"] | components["schemas"]["CategoriesSection"] | components["schemas"]["CollectionsSection"] | components["schemas"]["GoldRateSection"] | components["schemas"]["FaqSection"] | components["schemas"]["GallerySection"] | components["schemas"]["CtaSection"] | components["schemas"]["ContactSection"])[];
         };
         /** PageCreate */
         PageCreate: {
@@ -2455,6 +2673,12 @@ export interface components {
              */
             body_html: string;
             /**
+             * Eyebrow
+             * @description A short label above the heading
+             * @default
+             */
+            eyebrow: string;
+            /**
              * Heading
              * @default
              */
@@ -2710,6 +2934,12 @@ export interface components {
         /** StepsSection */
         StepsSection: {
             /**
+             * Eyebrow
+             * @description A short label above the heading
+             * @default
+             */
+            eyebrow: string;
+            /**
              * Heading
              * @default
              */
@@ -2933,6 +3163,17 @@ export interface components {
          * @description Site-wide content: shown on every page, applied as soon as it is saved.
          */
         WebsiteSettings: {
+            /**
+             * Announcement
+             * @description A one-line message above the menu
+             * @default
+             */
+            announcement: string;
+            /**
+             * Announcement Url
+             * @default
+             */
+            announcement_url: string;
             app_links?: components["schemas"]["AppLinks"];
             contact?: components["schemas"]["Contact"];
             /**
@@ -2941,10 +3182,23 @@ export interface components {
              */
             footer_text: string;
             /**
+             * Local Business
+             * @description Describe the business to search engines using the details above
+             * @default
+             * @enum {string}
+             */
+            local_business: "" | "JewelryStore" | "Store";
+            /**
              * Seo Description
              * @default
              */
             seo_description: string;
+            /**
+             * Share Image Url
+             * @description Shown when a page is shared on social media
+             * @default
+             */
+            share_image_url: string;
             /**
              * Site Title
              * @default

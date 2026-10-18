@@ -116,6 +116,13 @@
             "title": "Font Family",
             "type": "string"
           },
+          "heading_font_family": {
+            "default": "",
+            "description": "Empty means the main font",
+            "maxLength": 60,
+            "title": "Heading Font Family",
+            "type": "string"
+          },
           "logo_url": {
             "default": "",
             "maxLength": 500,
@@ -150,6 +157,57 @@
         "title": "Branding",
         "type": "object"
       },
+      "Card": {
+        "additionalProperties": false,
+        "description": "A picture with a title and a link: a category or a collection.",
+        "properties": {
+          "image_alt": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Image Alt",
+            "type": "string"
+          },
+          "image_url": {
+            "default": "",
+            "maxLength": 500,
+            "title": "Image Url",
+            "type": "string"
+          },
+          "link_label": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Link Label",
+            "type": "string"
+          },
+          "link_url": {
+            "default": "",
+            "maxLength": 500,
+            "title": "Link Url",
+            "type": "string"
+          },
+          "sample_image": {
+            "default": false,
+            "title": "Sample Image",
+            "type": "boolean"
+          },
+          "text": {
+            "default": "",
+            "maxLength": 2000,
+            "title": "Text",
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 200,
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title"
+        ],
+        "title": "Card",
+        "type": "object"
+      },
       "CatalogueOut": {
         "properties": {
           "actions": {
@@ -181,6 +239,57 @@
           "menu"
         ],
         "title": "CatalogueOut",
+        "type": "object"
+      },
+      "CategoriesSection": {
+        "additionalProperties": false,
+        "description": "Picture tiles in the order given, such as \"Necklaces\", \"Bangles\".",
+        "properties": {
+          "eyebrow": {
+            "default": "",
+            "description": "A short label above the heading",
+            "maxLength": 200,
+            "title": "Eyebrow",
+            "type": "string"
+          },
+          "heading": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Heading",
+            "type": "string"
+          },
+          "id": {
+            "description": "Stable key set by the editor",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Id",
+            "type": "string"
+          },
+          "intro": {
+            "default": "",
+            "maxLength": 2000,
+            "title": "Intro",
+            "type": "string"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Card"
+            },
+            "maxItems": 24,
+            "title": "Items",
+            "type": "array"
+          },
+          "type": {
+            "const": "categories",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "title": "CategoriesSection",
         "type": "object"
       },
       "ChangePasswordIn": {
@@ -275,6 +384,57 @@
         "title": "CollectionsOut",
         "type": "object"
       },
+      "CollectionsSection": {
+        "additionalProperties": false,
+        "description": "Larger editorial rows, picture beside text, for featured collections.",
+        "properties": {
+          "eyebrow": {
+            "default": "",
+            "description": "A short label above the heading",
+            "maxLength": 200,
+            "title": "Eyebrow",
+            "type": "string"
+          },
+          "heading": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Heading",
+            "type": "string"
+          },
+          "id": {
+            "description": "Stable key set by the editor",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Id",
+            "type": "string"
+          },
+          "intro": {
+            "default": "",
+            "maxLength": 2000,
+            "title": "Intro",
+            "type": "string"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Card"
+            },
+            "maxItems": 12,
+            "title": "Items",
+            "type": "array"
+          },
+          "type": {
+            "const": "collections",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "type"
+        ],
+        "title": "CollectionsSection",
+        "type": "object"
+      },
       "Contact": {
         "additionalProperties": false,
         "properties": {
@@ -292,8 +452,16 @@
           },
           "hours": {
             "default": "",
-            "maxLength": 200,
+            "description": "One line per day range",
+            "maxLength": 500,
             "title": "Hours",
+            "type": "string"
+          },
+          "map_embed_url": {
+            "default": "",
+            "description": "A Google Maps embed link, shown as a map",
+            "maxLength": 500,
+            "title": "Map Embed Url",
             "type": "string"
           },
           "map_url": {
@@ -322,6 +490,13 @@
         "additionalProperties": false,
         "description": "Shows the contact details from the site settings, with an optional map.",
         "properties": {
+          "eyebrow": {
+            "default": "",
+            "description": "A short label above the heading",
+            "maxLength": 200,
+            "title": "Eyebrow",
+            "type": "string"
+          },
           "heading": {
             "default": "",
             "maxLength": 200,
@@ -366,6 +541,13 @@
             "default": "",
             "maxLength": 500,
             "title": "Button Url",
+            "type": "string"
+          },
+          "eyebrow": {
+            "default": "",
+            "description": "A short label above the heading",
+            "maxLength": 200,
+            "title": "Eyebrow",
             "type": "string"
           },
           "heading": {
@@ -760,6 +942,13 @@
       "FaqSection": {
         "additionalProperties": false,
         "properties": {
+          "eyebrow": {
+            "default": "",
+            "description": "A short label above the heading",
+            "maxLength": 200,
+            "title": "Eyebrow",
+            "type": "string"
+          },
           "heading": {
             "default": "",
             "maxLength": 200,
@@ -835,6 +1024,13 @@
       "FeaturesSection": {
         "additionalProperties": false,
         "properties": {
+          "eyebrow": {
+            "default": "",
+            "description": "A short label above the heading",
+            "maxLength": 200,
+            "title": "Eyebrow",
+            "type": "string"
+          },
           "heading": {
             "default": "",
             "maxLength": 200,
@@ -922,6 +1118,11 @@
             "title": "Caption",
             "type": "string"
           },
+          "sample": {
+            "default": false,
+            "title": "Sample",
+            "type": "boolean"
+          },
           "url": {
             "maxLength": 500,
             "title": "Url",
@@ -937,6 +1138,13 @@
       "GallerySection": {
         "additionalProperties": false,
         "properties": {
+          "eyebrow": {
+            "default": "",
+            "description": "A short label above the heading",
+            "maxLength": 200,
+            "title": "Eyebrow",
+            "type": "string"
+          },
           "heading": {
             "default": "",
             "maxLength": 200,
@@ -975,6 +1183,13 @@
         "additionalProperties": false,
         "description": "Shows today's published rate, read live from the API.",
         "properties": {
+          "eyebrow": {
+            "default": "",
+            "description": "A short label above the heading",
+            "maxLength": 200,
+            "title": "Eyebrow",
+            "type": "string"
+          },
           "heading": {
             "default": "",
             "maxLength": 200,
@@ -1023,6 +1238,18 @@
       "HeroSection": {
         "additionalProperties": false,
         "properties": {
+          "cta2_label": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Cta2 Label",
+            "type": "string"
+          },
+          "cta2_url": {
+            "default": "",
+            "maxLength": 500,
+            "title": "Cta2 Url",
+            "type": "string"
+          },
           "cta_label": {
             "default": "",
             "maxLength": 200,
@@ -1033,6 +1260,13 @@
             "default": "",
             "maxLength": 500,
             "title": "Cta Url",
+            "type": "string"
+          },
+          "eyebrow": {
+            "default": "",
+            "description": "A short label above the heading",
+            "maxLength": 200,
+            "title": "Eyebrow",
             "type": "string"
           },
           "heading": {
@@ -1048,10 +1282,30 @@
             "title": "Id",
             "type": "string"
           },
+          "image_alt": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Image Alt",
+            "type": "string"
+          },
           "image_url": {
             "default": "",
             "maxLength": 500,
             "title": "Image Url",
+            "type": "string"
+          },
+          "sample_image": {
+            "default": false,
+            "title": "Sample Image",
+            "type": "boolean"
+          },
+          "size": {
+            "default": "full",
+            "enum": [
+              "full",
+              "compact"
+            ],
+            "title": "Size",
             "type": "string"
           },
           "subheading": {
@@ -1195,6 +1449,25 @@
             "title": "Body Html",
             "type": "string"
           },
+          "cta_label": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Cta Label",
+            "type": "string"
+          },
+          "cta_url": {
+            "default": "",
+            "maxLength": 500,
+            "title": "Cta Url",
+            "type": "string"
+          },
+          "eyebrow": {
+            "default": "",
+            "description": "A short label above the heading",
+            "maxLength": 200,
+            "title": "Eyebrow",
+            "type": "string"
+          },
           "heading": {
             "default": "",
             "maxLength": 200,
@@ -1206,6 +1479,12 @@
             "maxLength": 40,
             "minLength": 1,
             "title": "Id",
+            "type": "string"
+          },
+          "image_alt": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Image Alt",
             "type": "string"
           },
           "image_side": {
@@ -1222,6 +1501,11 @@
             "maxLength": 500,
             "title": "Image Url",
             "type": "string"
+          },
+          "sample_image": {
+            "default": false,
+            "title": "Sample Image",
+            "type": "boolean"
           },
           "type": {
             "const": "image_text",
@@ -1612,6 +1896,8 @@
             "items": {
               "discriminator": {
                 "mapping": {
+                  "categories": "#/components/schemas/CategoriesSection",
+                  "collections": "#/components/schemas/CollectionsSection",
                   "contact": "#/components/schemas/ContactSection",
                   "cta": "#/components/schemas/CtaSection",
                   "faq": "#/components/schemas/FaqSection",
@@ -1640,6 +1926,12 @@
                 },
                 {
                   "$ref": "#/components/schemas/StepsSection"
+                },
+                {
+                  "$ref": "#/components/schemas/CategoriesSection"
+                },
+                {
+                  "$ref": "#/components/schemas/CollectionsSection"
                 },
                 {
                   "$ref": "#/components/schemas/GoldRateSection"
@@ -2954,6 +3246,13 @@
             "title": "Body Html",
             "type": "string"
           },
+          "eyebrow": {
+            "default": "",
+            "description": "A short label above the heading",
+            "maxLength": 200,
+            "title": "Eyebrow",
+            "type": "string"
+          },
           "heading": {
             "default": "",
             "maxLength": 200,
@@ -3420,6 +3719,13 @@
       "StepsSection": {
         "additionalProperties": false,
         "properties": {
+          "eyebrow": {
+            "default": "",
+            "description": "A short label above the heading",
+            "maxLength": 200,
+            "title": "Eyebrow",
+            "type": "string"
+          },
           "heading": {
             "default": "",
             "maxLength": 200,
@@ -4001,6 +4307,19 @@
         "additionalProperties": false,
         "description": "Site-wide content: shown on every page, applied as soon as it is saved.",
         "properties": {
+          "announcement": {
+            "default": "",
+            "description": "A one-line message above the menu",
+            "maxLength": 200,
+            "title": "Announcement",
+            "type": "string"
+          },
+          "announcement_url": {
+            "default": "",
+            "maxLength": 500,
+            "title": "Announcement Url",
+            "type": "string"
+          },
           "app_links": {
             "$ref": "#/components/schemas/AppLinks"
           },
@@ -4013,10 +4332,28 @@
             "title": "Footer Text",
             "type": "string"
           },
+          "local_business": {
+            "default": "",
+            "description": "Describe the business to search engines using the details above",
+            "enum": [
+              "",
+              "JewelryStore",
+              "Store"
+            ],
+            "title": "Local Business",
+            "type": "string"
+          },
           "seo_description": {
             "default": "",
             "maxLength": 300,
             "title": "Seo Description",
+            "type": "string"
+          },
+          "share_image_url": {
+            "default": "",
+            "description": "Shown when a page is shared on social media",
+            "maxLength": 500,
+            "title": "Share Image Url",
             "type": "string"
           },
           "site_title": {

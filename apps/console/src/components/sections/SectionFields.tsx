@@ -17,7 +17,17 @@ interface Props {
 /** The fields for one section, bound to `sections[index]` in the page editor's form. */
 export function SectionFields({ tenantId, type, index }: Props) {
   const f = (...path: (string | number)[]) => [index, ...path]
-  const heading = <InputContainer type="input" name={f('heading')} label="Heading" />
+  const heading = (
+    <div className="grid gap-x-4 md:grid-cols-[200px_1fr]">
+      <InputContainer
+        type="input"
+        name={f('eyebrow')}
+        label="Label above"
+        notes="Optional, e.g. “Our story”"
+      />
+      <InputContainer type="input" name={f('heading')} label="Heading" />
+    </div>
+  )
   const image = (name: string, label = 'Picture') => (
     <Form.Item name={f(name)} label={label}>
       <ImageField tenantId={tenantId} />
@@ -31,6 +41,23 @@ export function SectionFields({ tenantId, type, index }: Props) {
   const link = (name: string, label: string) => (
     <InputContainer type="input" name={f(name)} label={label} rules={[linkRule]} />
   )
+  const button = (label: string, url: string, title = 'Button') => (
+    <div className="grid gap-x-4 md:grid-cols-2">
+      <InputContainer type="input" name={f(label)} label={`${title} text`} />
+      {link(url, `${title} link`)}
+    </div>
+  )
+  const pictureInfo = (
+    <div className="grid gap-x-4 md:grid-cols-[1fr_auto]">
+      <InputContainer
+        type="input"
+        name={f('image_alt')}
+        label="Picture description"
+        notes="Read aloud to blind visitors and used by search engines."
+      />
+      <SampleSwitch name={f('sample_image')} />
+    </div>
+  )
 
   switch (type) {
     case 'hero':
@@ -38,11 +65,19 @@ export function SectionFields({ tenantId, type, index }: Props) {
         <>
           {heading}
           <InputContainer type="textarea" name={f('subheading')} label="Subheading" rows={2} />
+          <InputContainer
+            type="radio"
+            name={f('size')}
+            label="Size"
+            options={[
+              { label: 'Full screen (home page)', value: 'full' },
+              { label: 'Compact (other pages)', value: 'compact' },
+            ]}
+          />
           {image('image_url')}
-          <div className="grid gap-x-4 md:grid-cols-2">
-            <InputContainer type="input" name={f('cta_label')} label="Button text" />
-            {link('cta_url', 'Button link')}
-          </div>
+          {pictureInfo}
+          {button('cta_label', 'cta_url')}
+          {button('cta2_label', 'cta2_url', 'Second button')}
         </>
       )
     case 'rich_text':
@@ -58,6 +93,8 @@ export function SectionFields({ tenantId, type, index }: Props) {
           {heading}
           {body}
           {image('image_url')}
+          {pictureInfo}
+          {button('cta_label', 'cta_url')}
           <InputContainer
             type="radio"
             name={f('image_side')}
@@ -94,6 +131,45 @@ export function SectionFields({ tenantId, type, index }: Props) {
                   />
                 </div>
                 <InputContainer type="textarea" name={[i, 'text']} label="Text" rows={2} />
+              </>
+            )}
+          </ItemList>
+        </>
+      )
+    case 'categories':
+    case 'collections':
+      return (
+        <>
+          {heading}
+          <InputContainer type="textarea" name={f('intro')} label="Introduction" rows={2} />
+          <ItemList
+            index={index}
+            field="items"
+            addLabel={type === 'categories' ? 'Add category' : 'Add collection'}
+            max={type === 'categories' ? 24 : 12}
+            blank={{ title: '', text: '', image_url: '', image_alt: '', sample_image: false, link_url: '', link_label: '' }}
+          >
+            {(i) => (
+              <>
+                <InputContainer type="input" name={[i, 'title']} label="Title" required />
+                <InputContainer type="textarea" name={[i, 'text']} label="Short description" rows={2} />
+                <Form.Item name={[i, 'image_url']} label="Picture">
+                  <ImageField tenantId={tenantId} />
+                </Form.Item>
+                <div className="grid gap-x-4 md:grid-cols-[1fr_auto]">
+                  <InputContainer type="input" name={[i, 'image_alt']} label="Picture description" />
+                  <SampleSwitch name={[i, 'sample_image']} />
+                </div>
+                <div className="grid gap-x-4 md:grid-cols-2">
+                  {/* Same rule as the section links: the API refuses anything else. */}
+                  <InputContainer type="input" name={[i, 'link_url']} label="Link" rules={[linkRule]} />
+                  <InputContainer
+                    type="input"
+                    name={[i, 'link_label']}
+                    label="Link text"
+                    placeholder={type === 'categories' ? 'Explore' : 'Discover the collection'}
+                  />
+                </div>
               </>
             )}
           </ItemList>
@@ -140,7 +216,10 @@ export function SectionFields({ tenantId, type, index }: Props) {
                 >
                   <ImageField tenantId={tenantId} />
                 </Form.Item>
-                <InputContainer type="input" name={[i, 'caption']} label="Caption" />
+                <div className="grid gap-x-4 md:grid-cols-[1fr_auto]">
+                  <InputContainer type="input" name={[i, 'caption']} label="Caption" />
+                  <SampleSwitch name={[i, 'sample']} />
+                </div>
               </>
             )}
           </ItemList>
@@ -151,10 +230,7 @@ export function SectionFields({ tenantId, type, index }: Props) {
         <>
           {heading}
           <InputContainer type="textarea" name={f('text')} label="Message" rows={2} />
-          <div className="grid gap-x-4 md:grid-cols-2">
-            <InputContainer type="input" name={f('button_label')} label="Button text" />
-            {link('button_url', 'Button link')}
-          </div>
+          {button('button_label', 'button_url')}
         </>
       )
     case 'contact':
@@ -172,12 +248,24 @@ export function SectionFields({ tenantId, type, index }: Props) {
   }
 }
 
+/** Stock or borrowed pictures are labelled "Sample image" on the site. */
+function SampleSwitch({ name }: { name: (string | number)[] }) {
+  return (
+    <InputContainer
+      type="switch"
+      name={name}
+      label="Sample picture"
+      notes="Not the client's own piece"
+    />
+  )
+}
+
 interface ItemListProps {
   index: number
   field: string
   addLabel: string
   max: number
-  blank: Record<string, string>
+  blank: Record<string, string | boolean>
   children: (name: number) => React.ReactNode
 }
 

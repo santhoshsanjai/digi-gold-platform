@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { api, NotFound } from './api/client'
 import { Layout } from './Layout'
-import { PageView } from './PageView'
+import { PageSkeleton, PageView } from './PageView'
 import { applyBranding } from './theme'
 import { usePreload } from './preload'
 import { useAsync } from './useAsync'
@@ -19,19 +19,27 @@ export default function App() {
   if (config.status === 'error' || site.status === 'error') {
     const unknown = [config, site].some((r) => r.status === 'error' && r.error instanceof NotFound)
     return (
-      <main className="center">
+      <main className="notice">
+        <span className="ornament" aria-hidden="true" />
         <h1>{unknown ? 'This website is not available' : 'We could not load the website'}</h1>
-        <p>{unknown ? 'Please check the address.' : 'Please try again in a moment.'}</p>
+        <p>{unknown ? 'Please check the address.' : 'Please check your connection and try again in a moment.'}</p>
+        {unknown ? null : (
+          <div className="actions center">
+            <button type="button" className="btn solid" onClick={() => window.location.reload()}>
+              <span>Try again</span>
+            </button>
+          </div>
+        )}
       </main>
     )
   }
-  if (config.status !== 'ready' || site.status !== 'ready') return <div className="center" aria-busy="true" />
+  if (config.status !== 'ready' || site.status !== 'ready') return <PageSkeleton />
 
   return (
     <Layout config={config.data} site={site.data}>
       <Routes>
-        <Route path="/" element={<PageView slug="home" site={site.data} />} />
-        <Route path="/:slug" element={<PageView site={site.data} />} />
+        <Route path="/" element={<PageView slug="home" site={site.data} config={config.data} />} />
+        <Route path="/:slug" element={<PageView site={site.data} config={config.data} />} />
       </Routes>
     </Layout>
   )

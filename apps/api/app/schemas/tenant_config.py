@@ -29,6 +29,7 @@ class Branding(_Strict):
     secondary_color: HexColor = "#1F2937"
     background_color: HexColor = "#FFFFFF"
     font_family: str = Field("Inter", max_length=60)
+    heading_font_family: str = Field("", max_length=60, description="Empty means the main font")
     support_email: str = Field("", max_length=254)
     support_phone: str = Field("", max_length=20)
 
