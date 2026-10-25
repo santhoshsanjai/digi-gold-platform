@@ -4,6 +4,65 @@
  */
 
 export interface paths {
+    "/api/v1/app/auth/change-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Change Password
+         * @description Change (or, for customers who only used SMS codes, create) the password.
+         *
+         *     Every other device is signed out; this one gets a fresh session.
+         */
+        post: operations["change_password_api_v1_app_auth_change_password_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/app/auth/forgot-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Forgot Password
+         * @description Email a temporary password. Always answers 202, so it never reveals who has an account.
+         */
+        post: operations["forgot_password_api_v1_app_auth_forgot_password_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/app/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Login */
+        post: operations["login_api_v1_app_auth_login_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/app/auth/logout": {
         parameters: {
             query?: never;
@@ -49,6 +108,68 @@ export interface paths {
         put?: never;
         /** Refresh */
         post: operations["refresh_api_v1_app_auth_refresh_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/app/auth/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Register
+         * @description Create the account, or add email sign-in to the customer already known by this number.
+         *
+         *     The customer signs in afterwards with their email and password.
+         */
+        post: operations["register_api_v1_app_auth_register_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/app/auth/register/otp": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Request Registration Code
+         * @description Check the details, then text a code that confirms the mobile number.
+         */
+        post: operations["request_registration_code_api_v1_app_auth_register_otp_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/app/auth/set-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Set Password
+         * @description Replace a temporary password. The customer then signs in with the new one.
+         */
+        post: operations["set_password_api_v1_app_auth_set_password_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1319,13 +1440,6 @@ export interface components {
              */
             type: "categories";
         };
-        /** ChangePasswordIn */
-        ChangePasswordIn: {
-            /** Current Password */
-            current_password: string;
-            /** New Password */
-            new_password: string;
-        };
         /** CollectionDay */
         CollectionDay: {
             /** Amount Inr */
@@ -1576,6 +1690,12 @@ export interface components {
             /** Refresh Token */
             refresh_token: string;
             /**
+             * Status
+             * @default ok
+             * @constant
+             */
+            status: "ok";
+            /**
              * Token Type
              * @default bearer
              * @constant
@@ -1743,16 +1863,6 @@ export interface components {
             new_password: string;
             /** Password Change Token */
             password_change_token: string;
-        };
-        /** ForgotIn */
-        ForgotIn: {
-            /**
-             * Email
-             * Format: email
-             */
-            email: string;
-            /** Tenant */
-            tenant?: string | null;
         };
         /** GalleryImage */
         GalleryImage: {
@@ -2034,21 +2144,6 @@ export interface components {
             lot_id: string | null;
             /** Note */
             note: string;
-        };
-        /** LoginIn */
-        LoginIn: {
-            /**
-             * Email
-             * Format: email
-             */
-            email: string;
-            /** Password */
-            password: string;
-            /**
-             * Tenant
-             * @description Client slug; omit for Platform Console admins
-             */
-            tenant?: string | null;
         };
         /** LotOut */
         LotOut: {
@@ -2468,6 +2563,8 @@ export interface components {
         };
         /** ProfileIn */
         ProfileIn: {
+            /** Current Password */
+            current_password?: string | null;
             /** Email */
             email?: string | null;
             /** Name */
@@ -2657,6 +2754,40 @@ export interface components {
              * @description How the money was returned
              */
             note: string;
+        };
+        /** RegisterIn */
+        RegisterIn: {
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+            /** Name */
+            name: string;
+            /** Password */
+            password: string;
+            /** Phone */
+            phone: string;
+            /** Tenant */
+            tenant: string;
+        };
+        /** RegisterVerifyIn */
+        RegisterVerifyIn: {
+            /** Code */
+            code: string;
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+            /** Name */
+            name: string;
+            /** Password */
+            password: string;
+            /** Phone */
+            phone: string;
+            /** Tenant */
+            tenant: string;
         };
         /** ResetIn */
         ResetIn: {
@@ -2890,6 +3021,13 @@ export interface components {
         SectionTypesOut: {
             /** Types */
             types: string[];
+        };
+        /** SetPasswordIn */
+        SetPasswordIn: {
+            /** New Password */
+            new_password: string;
+            /** Password Change Token */
+            password_change_token: string;
         };
         /**
          * SlipOut
@@ -3211,6 +3349,35 @@ export interface components {
              */
             tagline: string;
         };
+        /** ChangePasswordIn */
+        app__api__app_auth__ChangePasswordIn: {
+            /** Current Password */
+            current_password?: string | null;
+            /** New Password */
+            new_password: string;
+        };
+        /** ForgotIn */
+        app__api__app_auth__ForgotIn: {
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+            /** Tenant */
+            tenant: string;
+        };
+        /** LoginIn */
+        app__api__app_auth__LoginIn: {
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+            /** Password */
+            password: string;
+            /** Tenant */
+            tenant: string;
+        };
         /** MeOut */
         app__api__app_gold__MeOut: {
             /** Can Redeem */
@@ -3219,11 +3386,18 @@ export interface components {
             email: string;
             /** Gold Grams */
             gold_grams: string;
+            /** Has Password */
+            has_password: boolean;
             /**
              * Id
              * Format: uuid
              */
             id: string;
+            /**
+             * Member Since
+             * Format: date-time
+             */
+            member_since: string;
             /** Name */
             name: string;
             /** Next Expiry At */
@@ -3261,6 +3435,38 @@ export interface components {
             test_payments: boolean;
             /** Updated At */
             updated_at: string | null;
+        };
+        /** ChangePasswordIn */
+        app__api__auth__ChangePasswordIn: {
+            /** Current Password */
+            current_password: string;
+            /** New Password */
+            new_password: string;
+        };
+        /** ForgotIn */
+        app__api__auth__ForgotIn: {
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+            /** Tenant */
+            tenant?: string | null;
+        };
+        /** LoginIn */
+        app__api__auth__LoginIn: {
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+            /** Password */
+            password: string;
+            /**
+             * Tenant
+             * @description Client slug; omit for Platform Console admins
+             */
+            tenant?: string | null;
         };
         /** MeOut */
         app__api__auth__MeOut: {
@@ -3314,6 +3520,126 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    change_password_api_v1_app_auth_change_password_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["app__api__app_auth__ChangePasswordIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CustomerTokensOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    forgot_password_api_v1_app_auth_forgot_password_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["app__api__app_auth__ForgotIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    login_api_v1_app_auth_login_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["app__api__app_auth__LoginIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CustomerTokensOut"] | components["schemas"]["PasswordChangeRequiredOut"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description Locked */
+            423: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     logout_api_v1_app_auth_logout_post: {
         parameters: {
             query?: never;
@@ -3399,6 +3725,103 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["CustomerTokensOut"];
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    register_api_v1_app_auth_register_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RegisterVerifyIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    request_registration_code_api_v1_app_auth_register_otp_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RegisterIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    set_password_api_v1_app_auth_set_password_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SetPasswordIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {
@@ -3737,7 +4160,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ChangePasswordIn"];
+                "application/json": components["schemas"]["app__api__auth__ChangePasswordIn"];
             };
         };
         responses: {
@@ -3801,7 +4224,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ForgotIn"];
+                "application/json": components["schemas"]["app__api__auth__ForgotIn"];
             };
         };
         responses: {
@@ -3834,7 +4257,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["LoginIn"];
+                "application/json": components["schemas"]["app__api__auth__LoginIn"];
             };
         };
         responses: {

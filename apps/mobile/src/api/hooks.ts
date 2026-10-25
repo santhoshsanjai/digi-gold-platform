@@ -51,7 +51,7 @@ export const useRedemptionCode = () =>
 export const useUpdateProfile = () => {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: (body: { name?: string; email?: string }) =>
+    mutationFn: (body: { name?: string; email?: string; current_password?: string }) =>
       api<void>('/app/me', { method: 'PATCH', body }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['me'] }),
   })

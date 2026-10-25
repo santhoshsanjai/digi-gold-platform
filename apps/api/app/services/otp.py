@@ -37,7 +37,7 @@ async def issue(session: AsyncSession, tenant_id: UUID, phone: str, purpose: str
     count = await session.scalar(select(func.count()).select_from(recent.subquery()))
     if count >= settings.otp_max_per_hour:
         raise OtpError("too many codes requested; try again later")
-    if purpose == "login":  # SMS costs money; in-app redemption codes need no resend gap
+    if purpose != "redeem":  # SMS costs money; in-app redemption codes need no resend gap
         last = await session.scalar(recent.order_by(CustomerOtp.created_at.desc()).limit(1))
         if last and last.created_at > now() - timedelta(seconds=settings.otp_resend_seconds):
             raise OtpError("please wait before requesting another code")

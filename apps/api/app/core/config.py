@@ -48,6 +48,8 @@ class Settings(BaseSettings):
     otp_max_attempts: int = 5
     otp_resend_seconds: int = 30
     otp_max_per_hour: int = 5
+    # Temporary password emailed by "forgot password" in the app.
+    customer_temp_password_minutes: int = 30
     # "console" keeps SMS in memory and logs them; a real SMS provider is added later.
     sms_backend: Literal["console"] = "console"
 

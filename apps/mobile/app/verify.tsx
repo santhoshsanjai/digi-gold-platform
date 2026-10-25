@@ -1,17 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
+import { View, type TextInput } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
-import type { TextInput } from 'react-native'
-import { api, ApiError } from '../src/api/client'
+import { api } from '../src/api/client'
 import type { Tokens } from '../src/api/types'
-import { useAuth } from '../src/auth/AuthProvider'
+import { authMessage, useAuth } from '../src/auth/AuthProvider'
 import { TENANT_SLUG } from '../src/config'
-import { Button, ErrorNote, Field, Screen, Text } from '../src/ui'
+import { AuthField, AuthScreen, Banner, GoldButton, TextLink } from '../src/ui/gold'
 
 const RESEND_SECONDS = 30
 
 export default function Verify() {
   const { phone = '' } = useLocalSearchParams<{ phone: string }>()
-  const { signIn } = useAuth()
+  const { signInWithTokens } = useAuth()
   const [code, setCode] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -25,6 +25,7 @@ export default function Verify() {
   }, [wait])
 
   const verify = async (value: string) => {
+    if (busy) return
     setError(null)
     setBusy(true)
     try {
@@ -33,9 +34,9 @@ export default function Verify() {
         auth: false,
         body: { tenant: TENANT_SLUG, phone, code: value },
       })
-      await signIn(tokens)
+      await signInWithTokens(tokens)
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : 'Could not sign you in. Try again.')
+      setError(authMessage(e, 'Could not sign you in. Try again.'))
       setCode('')
       input.current?.focus()
       setBusy(false)
@@ -48,27 +49,20 @@ export default function Verify() {
       await api('/app/auth/otp', { method: 'POST', auth: false, body: { tenant: TENANT_SLUG, phone } })
       setWait(RESEND_SECONDS)
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : 'Could not send the code. Try again.')
+      setError(authMessage(e, 'Could not send the code. Try again.'))
     }
   }
 
   return (
-    <Screen
-      padTop={false}
-      footer={<Button label="Verify" onPress={() => verify(code)} loading={busy} disabled={code.length !== 6} />}
-    >
-      <Text size="title" style={{ marginTop: 72 }}>
-        Enter the code
-      </Text>
-      <Text tone="muted">Sent to +91 {phone}</Text>
-      <Field
+    <AuthScreen title="Enter the code" subtitle={`Sent to +91 ${phone}`}>
+      <AuthField
         ref={input}
         label="6-digit code"
         value={code}
         onChangeText={(t) => {
           const digits = t.replace(/\D/g, '').slice(0, 6)
           setCode(digits)
-          if (digits.length === 6 && !busy) void verify(digits)
+          if (digits.length === 6) void verify(digits)
         }}
         keyboardType="number-pad"
         textContentType="oneTimeCode"
@@ -76,15 +70,17 @@ export default function Verify() {
         autoFocus
         maxLength={6}
         placeholder="••••••"
-        style={{ letterSpacing: 6 }}
+        style={{ letterSpacing: 8, fontSize: 22 }}
       />
-      <ErrorNote message={error} />
-      <Button
-        variant="secondary"
-        label={wait > 0 ? `Send a new code in ${wait}s` : 'Send a new code'}
-        onPress={resend}
-        disabled={wait > 0}
-      />
-    </Screen>
+      <Banner tone="danger" text={error} />
+      <GoldButton label="Verify" onPress={() => verify(code)} loading={busy} disabled={code.length !== 6} />
+      <View style={{ alignItems: 'center' }}>
+        {wait > 0 ? (
+          <TextLink label={`Send a new code in ${wait}s`} onPress={() => {}} style={{ opacity: 0.5 }} />
+        ) : (
+          <TextLink label="Send a new code" onPress={resend} />
+        )}
+      </View>
+    </AuthScreen>
   )
 }

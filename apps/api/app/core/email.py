@@ -26,7 +26,11 @@ def send_email(message: Email) -> None:
     settings = get_settings()
     if settings.email_backend == "console":
         outbox.append(message)
-        log.info("email to=%s subject=%s", message.to, message.subject)
+        if settings.env == "dev":
+            # Without a mail server, developers read temporary passwords from the server log.
+            log.info("email to=%s subject=%s\n%s", message.to, message.subject, message.body)
+        else:
+            log.info("email to=%s subject=%s", message.to, message.subject)
         return
 
     msg = EmailMessage()
@@ -57,6 +61,23 @@ def temp_password_email(to: str, name: str, org: str, password: str, hours: int,
             f"Temporary password: {password}\n\n"
             f"This password expires in {hours} hours. You will be asked to choose a new "
             "password when you first sign in.\n"
+        ),
+    )
+
+
+def customer_temp_password_email(
+    to: str, name: str, org: str, password: str, minutes: int
+) -> Email:
+    return Email(
+        to=to,
+        subject=f"Your {org} temporary password",
+        body=(
+            f"Hello {name or 'there'},\n\n"
+            f"We received a request to reset the password for your {org} app account.\n\n"
+            f"Temporary password: {password}\n\n"
+            f"Sign in to the app with it within {minutes} minutes. You will be asked to choose "
+            "a new password straight away, and the temporary one stops working after that.\n\n"
+            "If you did not ask for this, ignore this email. Your current password still works.\n"
         ),
     )
 

@@ -14,7 +14,7 @@ from sqlalchemy import func, select
 from app.api.common import Limit, Offset, Page
 from app.core.config import get_settings
 from app.core.deps import CurrentCustomer, Session
-from app.core.security import now
+from app.core.security import now, verify_password
 from app.models import Customer, GoldLot, LedgerEntry, PaymentOrder, Tenant
 from app.schemas.tenant_config import Features, SchemeSettings, merged
 from app.services import otp
@@ -33,6 +33,8 @@ class MeOut(BaseModel):
     phone: str
     name: str
     email: str
+    has_password: bool
+    member_since: datetime
     pan_provided: bool
     gold_grams: Decimal
     rupee_balance_inr: Decimal
@@ -46,6 +48,8 @@ class MeOut(BaseModel):
 class ProfileIn(BaseModel):
     name: str | None = Field(None, min_length=1, max_length=200)
     email: EmailStr | None = None
+    # Needed to change the email of an account that signs in with it.
+    current_password: str | None = Field(None, max_length=128)
 
 
 class PanIn(BaseModel):
@@ -145,6 +149,8 @@ async def me(customer: CurrentCustomer, session: Session):
         phone=customer.phone,
         name=customer.name,
         email=customer.email,
+        has_password=customer.password_hash is not None,
+        member_since=customer.created_at,
         pan_provided=customer.pan is not None,
         gold_grams=customer.gold_grams,
         rupee_balance_inr=customer.rupee_balance_inr,
@@ -157,11 +163,40 @@ async def me(customer: CurrentCustomer, session: Session):
 
 
 @router.patch("/me", status_code=204)
-async def update_profile(body: ProfileIn, customer: CurrentCustomer):
+async def update_profile(body: ProfileIn, customer: CurrentCustomer, session: Session):
+    email = str(body.email).strip().lower() if body.email is not None else None
+    if email is not None and email != customer.email and customer.password_hash is not None:
+        # The email is where password resets go, so changing it needs the password.
+        if not body.current_password or not verify_password(
+            customer.password_hash, body.current_password
+        ):
+            return JSONResponse(
+                status_code=400,
+                content={
+                    "detail": "enter your current password to change your email",
+                    "code": "bad_password",
+                },
+            )
+        taken = await session.scalar(
+            select(func.count()).where(
+                Customer.tenant_id == customer.tenant_id,
+                Customer.email == email,
+                Customer.password_hash.is_not(None),
+                Customer.id != customer.id,
+            )
+        )
+        if taken:
+            return JSONResponse(
+                status_code=409,
+                content={
+                    "detail": "this email is already used by another account",
+                    "code": "email_taken",
+                },
+            )
     if body.name is not None:
         customer.name = body.name.strip()
-    if body.email is not None:
-        customer.email = str(body.email).lower()
+    if email is not None:
+        customer.email = email
 
 
 @router.post("/me/pan", status_code=204)

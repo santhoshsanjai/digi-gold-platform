@@ -1,4 +1,4 @@
-import { forwardRef, type ReactNode } from 'react'
+import { forwardRef, useState, type ReactNode } from 'react'
 import {
   ActivityIndicator,
   Pressable,
@@ -151,10 +151,13 @@ interface FieldProps extends TextInputProps {
   error?: string | null
   hint?: string
   prefix?: string
+  /** Adds a Show / Hide control and hides the text by default. */
+  password?: boolean
 }
 
-export const Field = forwardRef<TextInput, FieldProps>(function Field({ label, error, hint, prefix, style, ...rest }, ref) {
+export const Field = forwardRef<TextInput, FieldProps>(function Field({ label, error, hint, prefix, password, style, ...rest }, ref) {
   const { colors } = useTheme()
+  const [hidden, setHidden] = useState(true)
   return (
     <View style={{ gap: 6 }}>
       <Text size="small" tone="muted" style={{ fontWeight: '600' }}>
@@ -178,9 +181,23 @@ export const Field = forwardRef<TextInput, FieldProps>(function Field({ label, e
           ref={ref}
           accessibilityLabel={label}
           placeholderTextColor={colors.muted}
+          secureTextEntry={password ? hidden : undefined}
+          autoCapitalize={password ? 'none' : undefined}
+          autoCorrect={password ? false : undefined}
           {...rest}
           style={[{ flex: 1, minHeight: 50, fontSize: 18, color: colors.text }, style]}
         />
+        {password && (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={hidden ? `Show ${label.toLowerCase()}` : `Hide ${label.toLowerCase()}`}
+            hitSlop={10}
+            onPress={() => setHidden((h) => !h)}
+            style={{ paddingLeft: 12, minHeight: 44, justifyContent: 'center' }}
+          >
+            <RNText style={{ color: colors.primary, fontSize: 14, fontWeight: '600' }}>{hidden ? 'Show' : 'Hide'}</RNText>
+          </Pressable>
+        )}
       </View>
       {error ? (
         <Text size="small" tone="danger" accessibilityLiveRegion="polite">

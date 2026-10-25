@@ -292,26 +292,6 @@
         "title": "CategoriesSection",
         "type": "object"
       },
-      "ChangePasswordIn": {
-        "properties": {
-          "current_password": {
-            "maxLength": 128,
-            "title": "Current Password",
-            "type": "string"
-          },
-          "new_password": {
-            "maxLength": 128,
-            "title": "New Password",
-            "type": "string"
-          }
-        },
-        "required": [
-          "new_password",
-          "current_password"
-        ],
-        "title": "ChangePasswordIn",
-        "type": "object"
-      },
       "CollectionDay": {
         "properties": {
           "amount_inr": {
@@ -757,6 +737,12 @@
             "title": "Refresh Token",
             "type": "string"
           },
+          "status": {
+            "const": "ok",
+            "default": "ok",
+            "title": "Status",
+            "type": "string"
+          },
           "token_type": {
             "const": "bearer",
             "default": "bearer",
@@ -1082,31 +1068,6 @@
           "password_change_token"
         ],
         "title": "FirstLoginIn",
-        "type": "object"
-      },
-      "ForgotIn": {
-        "properties": {
-          "email": {
-            "format": "email",
-            "title": "Email",
-            "type": "string"
-          },
-          "tenant": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Tenant"
-          }
-        },
-        "required": [
-          "email"
-        ],
-        "title": "ForgotIn",
         "type": "object"
       },
       "GalleryImage": {
@@ -1596,38 +1557,6 @@
           "created_at"
         ],
         "title": "LedgerOut",
-        "type": "object"
-      },
-      "LoginIn": {
-        "properties": {
-          "email": {
-            "format": "email",
-            "title": "Email",
-            "type": "string"
-          },
-          "password": {
-            "maxLength": 128,
-            "title": "Password",
-            "type": "string"
-          },
-          "tenant": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Client slug; omit for Platform Console admins",
-            "title": "Tenant"
-          }
-        },
-        "required": [
-          "email",
-          "password"
-        ],
-        "title": "LoginIn",
         "type": "object"
       },
       "LotOut": {
@@ -2720,6 +2649,18 @@
       },
       "ProfileIn": {
         "properties": {
+          "current_password": {
+            "anyOf": [
+              {
+                "maxLength": 128,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Password"
+          },
           "email": {
             "anyOf": [
               {
@@ -3218,6 +3159,86 @@
         "title": "RefundIn",
         "type": "object"
       },
+      "RegisterIn": {
+        "properties": {
+          "email": {
+            "format": "email",
+            "title": "Email",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "password": {
+            "maxLength": 128,
+            "title": "Password",
+            "type": "string"
+          },
+          "phone": {
+            "title": "Phone",
+            "type": "string"
+          },
+          "tenant": {
+            "title": "Tenant",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tenant",
+          "phone",
+          "name",
+          "email",
+          "password"
+        ],
+        "title": "RegisterIn",
+        "type": "object"
+      },
+      "RegisterVerifyIn": {
+        "properties": {
+          "code": {
+            "pattern": "^\\d{6}$",
+            "title": "Code",
+            "type": "string"
+          },
+          "email": {
+            "format": "email",
+            "title": "Email",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "password": {
+            "maxLength": 128,
+            "title": "Password",
+            "type": "string"
+          },
+          "phone": {
+            "title": "Phone",
+            "type": "string"
+          },
+          "tenant": {
+            "title": "Tenant",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tenant",
+          "phone",
+          "name",
+          "email",
+          "password",
+          "code"
+        ],
+        "title": "RegisterVerifyIn",
+        "type": "object"
+      },
       "ResetIn": {
         "properties": {
           "new_password": {
@@ -3645,6 +3666,25 @@
           "types"
         ],
         "title": "SectionTypesOut",
+        "type": "object"
+      },
+      "SetPasswordIn": {
+        "properties": {
+          "new_password": {
+            "maxLength": 128,
+            "title": "New Password",
+            "type": "string"
+          },
+          "password_change_token": {
+            "title": "Password Change Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "new_password",
+          "password_change_token"
+        ],
+        "title": "SetPasswordIn",
         "type": "object"
       },
       "SlipOut": {
@@ -4375,6 +4415,76 @@
         "title": "WebsiteSettings",
         "type": "object"
       },
+      "app__api__app_auth__ChangePasswordIn": {
+        "properties": {
+          "current_password": {
+            "anyOf": [
+              {
+                "maxLength": 128,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Password"
+          },
+          "new_password": {
+            "maxLength": 128,
+            "title": "New Password",
+            "type": "string"
+          }
+        },
+        "required": [
+          "new_password"
+        ],
+        "title": "ChangePasswordIn",
+        "type": "object"
+      },
+      "app__api__app_auth__ForgotIn": {
+        "properties": {
+          "email": {
+            "format": "email",
+            "title": "Email",
+            "type": "string"
+          },
+          "tenant": {
+            "title": "Tenant",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tenant",
+          "email"
+        ],
+        "title": "ForgotIn",
+        "type": "object"
+      },
+      "app__api__app_auth__LoginIn": {
+        "properties": {
+          "email": {
+            "format": "email",
+            "title": "Email",
+            "type": "string"
+          },
+          "password": {
+            "maxLength": 128,
+            "title": "Password",
+            "type": "string"
+          },
+          "tenant": {
+            "title": "Tenant",
+            "type": "string"
+          }
+        },
+        "required": [
+          "tenant",
+          "email",
+          "password"
+        ],
+        "title": "LoginIn",
+        "type": "object"
+      },
       "app__api__app_gold__MeOut": {
         "properties": {
           "can_redeem": {
@@ -4389,9 +4499,18 @@
             "title": "Gold Grams",
             "type": "string"
           },
+          "has_password": {
+            "title": "Has Password",
+            "type": "boolean"
+          },
           "id": {
             "format": "uuid",
             "title": "Id",
+            "type": "string"
+          },
+          "member_since": {
+            "format": "date-time",
+            "title": "Member Since",
             "type": "string"
           },
           "name": {
@@ -4440,6 +4559,8 @@
           "phone",
           "name",
           "email",
+          "has_password",
+          "member_since",
           "pan_provided",
           "gold_grams",
           "rupee_balance_inr",
@@ -4518,6 +4639,83 @@
           "test_payments"
         ],
         "title": "RateOut",
+        "type": "object"
+      },
+      "app__api__auth__ChangePasswordIn": {
+        "properties": {
+          "current_password": {
+            "maxLength": 128,
+            "title": "Current Password",
+            "type": "string"
+          },
+          "new_password": {
+            "maxLength": 128,
+            "title": "New Password",
+            "type": "string"
+          }
+        },
+        "required": [
+          "new_password",
+          "current_password"
+        ],
+        "title": "ChangePasswordIn",
+        "type": "object"
+      },
+      "app__api__auth__ForgotIn": {
+        "properties": {
+          "email": {
+            "format": "email",
+            "title": "Email",
+            "type": "string"
+          },
+          "tenant": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tenant"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "title": "ForgotIn",
+        "type": "object"
+      },
+      "app__api__auth__LoginIn": {
+        "properties": {
+          "email": {
+            "format": "email",
+            "title": "Email",
+            "type": "string"
+          },
+          "password": {
+            "maxLength": 128,
+            "title": "Password",
+            "type": "string"
+          },
+          "tenant": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Client slug; omit for Platform Console admins",
+            "title": "Tenant"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ],
+        "title": "LoginIn",
         "type": "object"
       },
       "app__api__auth__MeOut": {
@@ -4652,6 +4850,151 @@
   },
   "openapi": "3.1.0",
   "paths": {
+    "/api/v1/app/auth/change-password": {
+      "post": {
+        "description": "Change (or, for customers who only used SMS codes, create) the password.\n\nEvery other device is signed out; this one gets a fresh session.",
+        "operationId": "change_password_api_v1_app_auth_change_password_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/app__api__app_auth__ChangePasswordIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerTokensOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Change Password",
+        "tags": [
+          "app auth"
+        ]
+      }
+    },
+    "/api/v1/app/auth/forgot-password": {
+      "post": {
+        "description": "Email a temporary password. Always answers 202, so it never reveals who has an account.",
+        "operationId": "forgot_password_api_v1_app_auth_forgot_password_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/app__api__app_auth__ForgotIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Forgot Password",
+        "tags": [
+          "app auth"
+        ]
+      }
+    },
+    "/api/v1/app/auth/login": {
+      "post": {
+        "operationId": "login_api_v1_app_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/app__api__app_auth__LoginIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/CustomerTokensOut"
+                    },
+                    {
+                      "$ref": "#/components/schemas/PasswordChangeRequiredOut"
+                    }
+                  ],
+                  "title": "Response Login Api V1 App Auth Login Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          },
+          "423": {
+            "description": "Locked"
+          }
+        },
+        "summary": "Login",
+        "tags": [
+          "app auth"
+        ]
+      }
+    },
     "/api/v1/app/auth/logout": {
       "post": {
         "operationId": "logout_api_v1_app_auth_logout_post",
@@ -4761,6 +5104,121 @@
           }
         },
         "summary": "Refresh",
+        "tags": [
+          "app auth"
+        ]
+      }
+    },
+    "/api/v1/app/auth/register": {
+      "post": {
+        "description": "Create the account, or add email sign-in to the customer already known by this number.\n\nThe customer signs in afterwards with their email and password.",
+        "operationId": "register_api_v1_app_auth_register_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterVerifyIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Register",
+        "tags": [
+          "app auth"
+        ]
+      }
+    },
+    "/api/v1/app/auth/register/otp": {
+      "post": {
+        "description": "Check the details, then text a code that confirms the mobile number.",
+        "operationId": "request_registration_code_api_v1_app_auth_register_otp_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Request Registration Code",
+        "tags": [
+          "app auth"
+        ]
+      }
+    },
+    "/api/v1/app/auth/set-password": {
+      "post": {
+        "description": "Replace a temporary password. The customer then signs in with the new one.",
+        "operationId": "set_password_api_v1_app_auth_set_password_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetPasswordIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Set Password",
         "tags": [
           "app auth"
         ]
@@ -5250,7 +5708,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ChangePasswordIn"
+                "$ref": "#/components/schemas/app__api__auth__ChangePasswordIn"
               }
             }
           },
@@ -5332,7 +5790,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ForgotIn"
+                "$ref": "#/components/schemas/app__api__auth__ForgotIn"
               }
             }
           },
@@ -5371,7 +5829,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginIn"
+                "$ref": "#/components/schemas/app__api__auth__LoginIn"
               }
             }
           },

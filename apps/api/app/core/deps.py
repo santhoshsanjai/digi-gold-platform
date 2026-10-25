@@ -122,7 +122,12 @@ async def current_customer(
         raise unauthorized("invalid or expired token") from None
     await scope_to_tenant(session, tenant_id)
     customer = await session.get(Customer, customer_id)
-    if customer is None or not customer.is_active or not await tenant_active(session, tenant_id):
+    if (
+        customer is None
+        or not customer.is_active
+        or customer.must_change_password
+        or not await tenant_active(session, tenant_id)
+    ):
         raise unauthorized("account is not usable")
     return customer
 

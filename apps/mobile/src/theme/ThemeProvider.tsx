@@ -92,9 +92,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 }
 
 const styles = StyleSheet.create({
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24, gap: 12 },
-  title: { fontSize: 20, fontWeight: '600' },
-  body: { fontSize: 15, color: '#6b7280', textAlign: 'center' },
-  button: { marginTop: 8, paddingHorizontal: 24, paddingVertical: 12, borderRadius: 10, backgroundColor: '#111827' },
-  buttonText: { color: '#fff', fontWeight: '600' },
+  center: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24, gap: 12, backgroundColor: '#0d0b08' },
+  // The same warm black as the welcome screen that usually follows, so nothing flashes.
+  title: { fontSize: 20, fontWeight: '600', color: '#f4eee2' },
+  body: { fontSize: 15, color: '#a39883', textAlign: 'center' },
+  button: { marginTop: 8, paddingHorizontal: 24, paddingVertical: 12, borderRadius: 10, backgroundColor: '#d9b45a' },
+  buttonText: { color: '#1c1407', fontWeight: '600' },
 })
