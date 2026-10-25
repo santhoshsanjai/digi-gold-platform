@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider, useAuth } from '../src/auth/AuthProvider'
 import { ThemeProvider, useTheme } from '../src/theme/ThemeProvider'
 import { gold, GoldBackdrop } from '../src/ui/gold'
+import { ToastProvider, useToast } from '../src/ui/toast'
 
 export default function RootLayout() {
   const [client] = useState(
@@ -16,9 +17,11 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <QueryClientProvider client={client}>
         <ThemeProvider>
-          <AuthProvider>
-            <Routes />
-          </AuthProvider>
+          <ToastProvider>
+            <AuthProvider>
+              <Routes />
+            </AuthProvider>
+          </ToastProvider>
         </ThemeProvider>
       </QueryClientProvider>
     </SafeAreaProvider>
@@ -31,8 +34,13 @@ export default function RootLayout() {
  * sends it to the index, which redirects to the right place.
  */
 function Routes() {
-  const { status } = useAuth()
+  const { status, notice } = useAuth()
   const { colors, dark } = useTheme()
+  const toast = useToast()
+  // Session messages (expired, password updated, account ready) appear as a toast.
+  useEffect(() => {
+    if (notice) (notice.tone === 'success' ? toast.success : toast.info)(notice.text)
+  }, [notice, toast])
   if (status === 'initializing') {
     // Restoring the saved session: show nothing protected until it is confirmed.
     return (
@@ -45,13 +53,14 @@ function Routes() {
   }
   const modal = {
     headerShown: true,
-    headerStyle: { backgroundColor: colors.header },
-    headerTintColor: colors.onHeader,
-    headerTitleStyle: { fontWeight: '600' as const },
+    headerStyle: { backgroundColor: colors.bg },
+    headerTintColor: colors.text,
+    headerShadowVisible: false,
+    headerTitleStyle: { fontWeight: '600' as const, fontSize: 17 },
     headerBackTitle: 'Back',
     contentStyle: { backgroundColor: colors.bg },
   }
-  const auth = { contentStyle: { backgroundColor: gold.bg }, animation: 'slide_from_right' as const }
+  const auth = { contentStyle: { backgroundColor: colors.bg }, animation: 'slide_from_right' as const }
   return (
     <>
       <StatusBar style={dark ? 'light' : 'dark'} />
@@ -66,7 +75,7 @@ function Routes() {
           <Stack.Screen name="account-password" options={{ ...modal, title: 'Password' }} />
         </Stack.Protected>
         <Stack.Protected guard={status === 'signedOut'}>
-          <Stack.Screen name="welcome" options={{ ...auth, animation: 'fade' }} />
+          <Stack.Screen name="welcome" options={{ contentStyle: { backgroundColor: gold.bg }, animation: 'fade' }} />
           <Stack.Screen name="sign-in" options={{ ...auth, animation: 'fade_from_bottom' }} />
           <Stack.Screen name="sign-up" options={{ ...auth, animation: 'fade_from_bottom' }} />
           <Stack.Screen name="sign-up-verify" options={auth} />

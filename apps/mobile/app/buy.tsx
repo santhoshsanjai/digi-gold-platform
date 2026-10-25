@@ -6,6 +6,7 @@ import { useCreateOrder, useMe, useRate } from '../src/api/hooks'
 import { formatGrams, formatInr, formatInrWhole } from '../src/format'
 import { useTheme } from '../src/theme/ThemeProvider'
 import { Button, Card, ErrorNote, Field, Screen, Spinner, Text } from '../src/ui'
+import { useToast } from '../src/ui/toast'
 
 const QUICK = [500, 1000, 2000, 5000]
 
@@ -15,7 +16,7 @@ export default function Buy() {
   const me = useMe()
   const create = useCreateOrder()
   const [text, setText] = useState('')
-  const [error, setError] = useState<string | null>(null)
+  const toast = useToast()
 
   if (rate.isPending) {
     return (
@@ -45,16 +46,15 @@ export default function Buy() {
   const canBuy = r.buying_open && amount >= min && amount <= max
 
   const submit = async () => {
-    setError(null)
     try {
       const order = await create.mutateAsync(amount)
       router.replace({ pathname: '/checkout', params: { orderId: order.id } })
     } catch (e) {
       if (e instanceof ApiError && e.code === 'pan_required') {
         router.push('/pan')
-        setError('Add your PAN to continue buying, then come back and try again.')
+        toast.info('Add your PAN to continue buying, then come back and try again.')
       } else {
-        setError(e instanceof ApiError ? e.message : 'Could not start the payment. Try again.')
+        toast.error(e instanceof ApiError ? e.message : 'Could not start the payment. Try again.')
       }
     }
   }
@@ -122,7 +122,6 @@ export default function Buy() {
           </Text>
         </Card>
       )}
-      <ErrorNote message={error} />
     </Screen>
   )
 }

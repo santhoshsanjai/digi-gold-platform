@@ -5,7 +5,8 @@ import type { Me } from '../src/api/types'
 import { authMessage, useAuth } from '../src/auth/AuthProvider'
 import { confirmError, passwordError } from '../src/auth/validation'
 import { Button, Card, ErrorNote, Field, Screen, Spinner, Text } from '../src/ui'
-import { SuccessMark } from '../src/ui/gold'
+import { useToast } from '../src/ui/toast'
+import { SuccessMark } from '../src/ui/auth'
 
 /** Change the password, or add one for a customer who has only used SMS codes. */
 export default function AccountPassword() {
@@ -24,7 +25,7 @@ function PasswordForm({ m }: { m: Me }) {
   const [tried, setTried] = useState(false)
   const [busy, setBusy] = useState(false)
   const [done, setDone] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const toast = useToast()
 
   if (!m.has_password && !m.email) {
     return (
@@ -63,12 +64,11 @@ function PasswordForm({ m }: { m: Me }) {
     setTried(true)
     if (busy || Object.values(errors).some(Boolean)) return
     setBusy(true)
-    setError(null)
     try {
       await changePassword(m.has_password ? current : null, next)
       setDone(true)
     } catch (e) {
-      setError(authMessage(e, 'Could not change your password. Try again.'))
+      toast.error(authMessage(e, 'Could not change your password. Try again.'))
     } finally {
       setBusy(false)
     }
@@ -107,7 +107,6 @@ function PasswordForm({ m }: { m: Me }) {
         textContentType="newPassword"
         error={tried ? errors.confirm : null}
       />
-      <ErrorNote message={error} />
     </Screen>
   )
 }

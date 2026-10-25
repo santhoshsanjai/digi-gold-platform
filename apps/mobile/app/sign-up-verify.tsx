@@ -2,19 +2,20 @@ import { useEffect, useRef, useState } from 'react'
 import { View, type TextInput } from 'react-native'
 import { Redirect, router } from 'expo-router'
 import { authMessage, useAuth } from '../src/auth/AuthProvider'
-import { AuthField, AuthScreen, Banner, GoldButton, SuccessMark, TextLink } from '../src/ui/gold'
+import { Button, Field, Text } from '../src/ui'
+import { AuthScreen, SuccessMark, TextLink } from '../src/ui/auth'
+import { useToast } from '../src/ui/toast'
 
 const RESEND_SECONDS = 30
 
-/** Confirms the mobile number with the texted code, which creates the account. */
+/** Confirms the mobile number with the code (sent by SMS and email), which creates the account. */
 export default function SignUpVerify() {
   const { pendingRegistration, completeRegistration, resendRegistrationCode } = useAuth()
+  const toast = useToast()
   const pending = pendingRegistration()
   const [code, setCode] = useState('')
   const [busy, setBusy] = useState(false)
   const [done, setDone] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [info, setInfo] = useState<string | null>(null)
   const [wait, setWait] = useState(RESEND_SECONDS)
   const input = useRef<TextInput>(null)
 
@@ -28,14 +29,12 @@ export default function SignUpVerify() {
 
   const verify = async (value: string) => {
     if (busy) return
-    setError(null)
-    setInfo(null)
     setBusy(true)
     try {
       await completeRegistration(value)
       setDone(true)
     } catch (e) {
-      setError(authMessage(e, 'Could not verify the code. Try again.'))
+      toast.error(authMessage(e, 'Could not verify the code. Try again.'))
       setCode('')
       input.current?.focus()
     } finally {
@@ -44,22 +43,21 @@ export default function SignUpVerify() {
   }
 
   const resend = async () => {
-    setError(null)
     try {
       await resendRegistrationCode()
       setWait(RESEND_SECONDS)
-      setInfo('A new code is on its way.')
+      toast.success('A new code has been sent.')
     } catch (e) {
-      setError(authMessage(e, 'Could not send the code. Try again.'))
+      toast.error(authMessage(e, 'Could not send the code. Try again.'))
     }
   }
 
   if (done) {
     return (
-      <AuthScreen back={false} title="You're all set" subtitle="Your account is ready. Sign in with your email and password to continue.">
+      <AuthScreen back={false} title="Account created" subtitle="Your account is ready. Sign in with your email and password.">
         <SuccessMark />
-        <GoldButton
-          label="Continue to sign in"
+        <Button
+          label="Sign in"
           onPress={() => {
             // Leave the sign-up form (and the password typed into it) behind.
             if (router.canDismiss()) router.dismissAll()
@@ -71,8 +69,16 @@ export default function SignUpVerify() {
   }
 
   return (
-    <AuthScreen title="Confirm your number" subtitle={`Enter the 6-digit code we sent by SMS to +91 ${pending?.phone} and by email to ${pending?.email}.`}>
-      <AuthField
+    <AuthScreen
+      title="Verify your number"
+      subtitle={
+        <Text tone="muted">
+          Enter the 6-digit code sent to <Text style={{ fontWeight: '600' }}>+91 {pending?.phone}</Text> and{' '}
+          <Text style={{ fontWeight: '600' }}>{pending?.email}</Text>.
+        </Text>
+      }
+    >
+      <Field
         ref={input}
         label="Verification code"
         value={code}
@@ -86,19 +92,12 @@ export default function SignUpVerify() {
         autoComplete="sms-otp"
         autoFocus
         maxLength={6}
-        placeholder="••••••"
-        style={{ letterSpacing: 8, fontSize: 22 }}
+        style={{ letterSpacing: 6, fontSize: 20, fontWeight: '600' }}
       />
-      <Banner tone="danger" text={error} />
-      <Banner tone="success" text={info} />
-      <GoldButton label="Verify and create account" onPress={() => verify(code)} loading={busy} disabled={code.length !== 6} />
+      <Button label="Verify" onPress={() => verify(code)} loading={busy} disabled={code.length !== 6} />
       <View style={{ alignItems: 'center' }}>
-        {wait > 0 ? (
-          <TextLink label={`Send a new code in ${wait}s`} onPress={() => {}} style={{ opacity: 0.5 }} />
-        ) : (
-          <TextLink label="Send a new code" onPress={resend} />
-        )}
-        <TextLink label="Change my details" onPress={() => router.back()} style={{ fontWeight: '500' }} />
+        <TextLink label={wait > 0 ? `Resend code in ${wait}s` : 'Resend code'} onPress={resend} disabled={wait > 0} />
+        <TextLink label="Change details" onPress={() => router.back()} style={{ fontWeight: '500' }} />
       </View>
     </AuthScreen>
   )

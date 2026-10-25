@@ -4,7 +4,7 @@ import { router } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTheme } from '../src/theme/ThemeProvider'
-import { gold, GoldBackdrop, GoldButton, GoldCoinFace, serif, Sheen, useReducedMotion } from '../src/ui/gold'
+import { gold, GoldBackdrop, GoldCoinFace, Sheen, useReducedMotion, WelcomeButton } from '../src/ui/gold'
 
 const native = Platform.OS !== 'web'
 // The full introduction plays once per launch; coming back here (after signing out) is quick.
@@ -97,9 +97,6 @@ export default function Welcome() {
           alignSelf: 'center',
         }}
       >
-        <Animated.Text style={[{ color: gold.accent, fontSize: 12, fontWeight: '600', letterSpacing: 3, textAlign: 'center' }, { opacity: title }]}>
-          DIGITAL GOLD
-        </Animated.Text>
 
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 28 }}>
           <Animated.View
@@ -157,12 +154,11 @@ export default function Welcome() {
           <View style={{ alignItems: 'center', gap: 12 }}>
             <Animated.Text
               accessibilityRole="header"
-              style={[{ color: gold.text, fontFamily: serif, fontSize: 32, lineHeight: 38, fontWeight: '600', textAlign: 'center' }, rise(title)]}
+              style={[{ color: gold.text, fontSize: 28, lineHeight: 34, fontWeight: '700', textAlign: 'center' }, rise(title)]}
             >
               {name}
             </Animated.Text>
             <Animated.View style={[{ alignItems: 'center', gap: 14 }, rise(copy, 10)]}>
-              <View style={{ width: 36, height: 1, backgroundColor: gold.deep }} />
               <Text style={{ color: gold.muted, fontSize: 16, lineHeight: 24, textAlign: 'center', maxWidth: 320 }}>
                 Save in real gold, a little at a time, and redeem it for jewellery in store.
               </Text>
@@ -172,10 +168,10 @@ export default function Welcome() {
 
         <View style={{ gap: 12 }}>
           <Animated.View style={rise(actions[0], 18)}>
-            <GoldButton label="Create account" onPress={() => router.push('/sign-up')} />
+            <WelcomeButton label="Create account" onPress={() => router.push('/sign-up')} />
           </Animated.View>
           <Animated.View style={rise(actions[1], 18)}>
-            <GoldButton variant="outline" label="Sign in" onPress={() => router.push('/sign-in')} />
+            <WelcomeButton outline label="Sign in" onPress={() => router.push('/sign-in')} />
           </Animated.View>
         </View>
       </View>

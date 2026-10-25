@@ -5,6 +5,7 @@ import type { Me } from '../src/api/types'
 import { authMessage } from '../src/auth/AuthProvider'
 import { emailError, nameError, normaliseEmail } from '../src/auth/validation'
 import { Button, ErrorNote, Field, Screen, Spinner, Text } from '../src/ui'
+import { useToast } from '../src/ui/toast'
 import { FadeIn } from '../src/ui/gold'
 
 export default function EditProfile() {
@@ -21,7 +22,7 @@ function EditForm({ m }: { m: Me }) {
   const [email, setEmail] = useState(m.email)
   const [password, setPassword] = useState('')
   const [tried, setTried] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const toast = useToast()
 
   const emailChanged = normaliseEmail(email) !== m.email
   // The email is where password resets go, so changing it on a password account needs the password.
@@ -36,16 +37,16 @@ function EditForm({ m }: { m: Me }) {
   const submit = async () => {
     setTried(true)
     if (save.isPending || Object.values(errors).some(Boolean)) return
-    setError(null)
     try {
       await save.mutateAsync({
         name: name.trim(),
         email: email ? normaliseEmail(email) : undefined,
         current_password: needsPassword ? password : undefined,
       })
+      toast.success('Profile updated')
       router.back()
     } catch (e) {
-      setError(authMessage(e, 'Could not save your profile. Try again.'))
+      toast.error(authMessage(e, 'Could not save your profile. Try again.'))
     }
   }
 
@@ -83,7 +84,6 @@ function EditForm({ m }: { m: Me }) {
       <Text size="small" tone="muted">
         Your mobile number is how the store finds your account. To change it, visit the store.
       </Text>
-      <ErrorNote message={error} />
     </Screen>
   )
 }

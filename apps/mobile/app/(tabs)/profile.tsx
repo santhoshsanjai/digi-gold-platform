@@ -8,7 +8,67 @@ import { formatDate } from '../../src/format'
 import { useTheme } from '../../src/theme/ThemeProvider'
 import { Button, Card, ErrorNote, Pill, Row, Screen, Spinner, Text } from '../../src/ui'
 import { confirmAction } from '../../src/ui/confirm'
-import { FadeIn, GoldCoinFace } from '../../src/ui/gold'
+import { FadeIn } from '../../src/ui/gold'
+
+/** First letters of the first and last name, e.g. "Meena Raman" -> "MR". */
+function initials(name: string): string {
+  const words = name.replace(/@.*/, '').split(/[\s._-]+/).filter(Boolean)
+  const letters = words.length > 1 ? words[0][0] + words[words.length - 1][0] : (words[0] ?? '?').slice(0, 2)
+  return letters.toUpperCase()
+}
+
+/** A round avatar with the customer's initials and a small edit button. */
+function Avatar({ name, onEdit }: { name: string; onEdit: () => void }) {
+  const { colors } = useTheme()
+  const size = 88
+  return (
+    <View accessible accessibilityLabel={`Profile picture, ${initials(name)}`} style={{ width: size, height: size }}>
+      <View
+        style={{
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          backgroundColor: colors.primarySoft,
+          borderWidth: 3,
+          borderColor: colors.surface,
+          alignItems: 'center',
+          justifyContent: 'center',
+          shadowColor: '#000',
+          shadowOpacity: 0.08,
+          shadowRadius: 8,
+          shadowOffset: { width: 0, height: 3 },
+          elevation: 2,
+        }}
+      >
+        <Text style={{ color: colors.primary, fontSize: 32, lineHeight: 38, fontWeight: '600' }}>{initials(name)}</Text>
+      </View>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Edit profile"
+        hitSlop={8}
+        onPress={onEdit}
+        style={({ pressed }) => ({
+          position: 'absolute',
+          right: 0,
+          bottom: 0,
+          width: 30,
+          height: 30,
+          borderRadius: 15,
+          backgroundColor: colors.primary,
+          borderWidth: 2,
+          borderColor: colors.surface,
+          alignItems: 'center',
+          justifyContent: 'center',
+          opacity: pressed ? 0.8 : 1,
+        })}
+      >
+        <Svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={colors.onPrimary} strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
+          <Path d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4" />
+        </Svg>
+      </Pressable>
+    </View>
+  )
+}
 
 export default function Profile() {
   const me = useMe()
@@ -25,23 +85,20 @@ export default function Profile() {
 function ProfileView({ m, refreshing, onRefresh }: { m: Me; refreshing: boolean; onRefresh: () => void }) {
   const { brand, name, colors } = useTheme()
   const { signOut } = useAuth()
-  const initial = (m.name || m.email || name).trim().slice(0, 1).toUpperCase()
 
   const logOut = () =>
     confirmAction('Log out?', 'You will need your email and password to sign in again.', 'Log out', () => void signOut())
 
   return (
     <Screen refresh={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-      <FadeIn style={{ alignItems: 'center', gap: 10, paddingTop: 8 }}>
-        <View accessibilityLabel="Profile picture" style={{ borderRadius: 40, shadowColor: '#a67c2e', shadowOpacity: 0.25, shadowRadius: 10, shadowOffset: { width: 0, height: 4 } }}>
-          <GoldCoinFace size={80} initial={initial} />
-        </View>
-        <Text size="title" style={{ textAlign: 'center' }}>
+      <FadeIn style={{ alignItems: 'center', gap: 4, paddingTop: 12, paddingBottom: 4 }}>
+        <Avatar name={m.name || m.email || name} onEdit={() => router.push('/edit-profile')} />
+        <Text size="title" style={{ textAlign: 'center', marginTop: 12 }}>
           {m.name || 'Your profile'}
         </Text>
         {m.email ? <Text tone="muted">{m.email}</Text> : null}
-        <View>
-          <Pill label="Active account" tone="success" />
+        <View style={{ marginTop: 8 }}>
+          <Pill label="Active" tone="success" />
         </View>
       </FadeIn>
 

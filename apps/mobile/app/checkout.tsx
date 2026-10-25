@@ -1,10 +1,10 @@
-import { useState } from 'react'
 import { router, useLocalSearchParams } from 'expo-router'
 import { ApiError } from '../src/api/client'
 import { useOrder, useRate, useTestOutcome } from '../src/api/hooks'
 import { formatGrams, formatInr } from '../src/format'
 import { clock, useCountdown } from '../src/useCountdown'
 import { Button, Card, ErrorNote, Row, Screen, Spinner, Text } from '../src/ui'
+import { useToast } from '../src/ui/toast'
 
 /**
  * Practice checkout. While the client has no payment gateway, three buttons stand in for it:
@@ -15,7 +15,7 @@ export default function Checkout() {
   const order = useOrder(orderId)
   const rate = useRate()
   const outcome = useTestOutcome(orderId)
-  const [error, setError] = useState<string | null>(null)
+  const toast = useToast()
   const left = useCountdown(order.data?.status === 'created' ? order.data.lock_expires_at : undefined)
 
   if (order.isPending) {
@@ -36,11 +36,10 @@ export default function Checkout() {
   }
 
   const choose = async (value: 'success' | 'failure' | 'pending') => {
-    setError(null)
     try {
       await outcome.mutateAsync(value)
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : 'Something went wrong. Try again.')
+      toast.error(e instanceof ApiError ? e.message : 'Something went wrong. Try again.')
     }
   }
 
@@ -134,7 +133,6 @@ export default function Checkout() {
           <Text>No money moves. Choose how this payment should end to see each result.</Text>
         </Card>
       )}
-      <ErrorNote message={error} />
     </Screen>
   )
 }

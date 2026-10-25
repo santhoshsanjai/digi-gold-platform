@@ -4,16 +4,18 @@ import { router } from 'expo-router'
 import { authMessage, useAuth } from '../src/auth/AuthProvider'
 import { emailError } from '../src/auth/validation'
 import { useTheme } from '../src/theme/ThemeProvider'
-import { AuthField, AuthScreen, Banner, GoldButton, SwitchLine, TextLink } from '../src/ui/gold'
+import { Button, Field } from '../src/ui'
+import { AuthScreen, SwitchLine, TextLink } from '../src/ui/auth'
+import { useToast } from '../src/ui/toast'
 
 export default function SignIn() {
   const { name } = useTheme()
-  const { signIn, notice, clearNotice, lastEmail } = useAuth()
+  const { signIn, lastEmail } = useAuth()
+  const toast = useToast()
   const [email, setEmail] = useState(lastEmail)
   const [password, setPassword] = useState('')
   const [tried, setTried] = useState(false)
   const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const passwordRef = useRef<TextInput>(null)
 
   const emailBad = emailError(email)
@@ -22,28 +24,22 @@ export default function SignIn() {
   const submit = async () => {
     setTried(true)
     if (busy || emailBad || passwordBad) return
-    setError(null)
-    clearNotice()
     setBusy(true)
     try {
       await signIn(email, password)
       // The navigation guard moves on to the app, or to the password change.
     } catch (e) {
-      setError(authMessage(e, 'Could not sign you in. Try again.'))
+      toast.error(authMessage(e, 'Could not sign you in. Try again.'))
       setBusy(false)
     }
   }
 
   return (
-    <AuthScreen title="Welcome back" subtitle={`Sign in to your ${name} account.`}>
-      <Banner tone={notice?.tone ?? 'success'} text={notice?.text} />
-      <AuthField
+    <AuthScreen title="Sign in" subtitle={`Welcome back to ${name}.`}>
+      <Field
         label="Email"
         value={email}
-        onChangeText={(t) => {
-          setEmail(t)
-          setError(null)
-        }}
+        onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
         autoCorrect={false}
@@ -51,19 +47,16 @@ export default function SignIn() {
         textContentType="emailAddress"
         returnKeyType="next"
         onSubmitEditing={() => passwordRef.current?.focus()}
-        placeholder="you@example.com"
+        placeholder="name@example.com"
         error={tried ? emailBad : null}
       />
-      <View style={{ gap: 4 }}>
-        <AuthField
+      <View>
+        <Field
           ref={passwordRef}
           label="Password"
           password
           value={password}
-          onChangeText={(t) => {
-            setPassword(t)
-            setError(null)
-          }}
+          onChangeText={setPassword}
           autoComplete="current-password"
           textContentType="password"
           returnKeyType="go"
@@ -71,15 +64,14 @@ export default function SignIn() {
           error={tried ? passwordBad : null}
         />
         <View style={{ alignItems: 'flex-end' }}>
-          <TextLink label="Forgot password?" onPress={() => router.push('/forgot-password')} />
+          <TextLink label="Forgot password?" onPress={() => router.push('/forgot-password')} style={{ fontSize: 14 }} />
         </View>
       </View>
-      <Banner tone="danger" text={error} />
-      <GoldButton label="Sign in" onPress={submit} loading={busy} />
+      <Button label="Sign in" onPress={submit} loading={busy} />
       <View style={{ flexGrow: 1 }} />
-      <View style={{ alignItems: 'center', gap: 4 }}>
-        <TextLink label="Sign in with a mobile code instead" onPress={() => router.push('/login')} style={{ fontWeight: '500' }} />
-        <SwitchLine prompt="New here?" action="Create an account" onPress={() => router.replace('/sign-up')} />
+      <View style={{ alignItems: 'center' }}>
+        <TextLink label="Use a mobile code instead" onPress={() => router.push('/login')} style={{ fontWeight: '500' }} />
+        <SwitchLine prompt="Don't have an account?" action="Sign up" onPress={() => router.replace('/sign-up')} />
       </View>
     </AuthScreen>
   )

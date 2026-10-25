@@ -4,8 +4,8 @@ import { ApiError } from '../../src/api/client'
 import { useLots, useMe, useRate } from '../../src/api/hooks'
 import { daysUntil, formatDate, formatDateTime, formatGrams, formatInr } from '../../src/format'
 import { useTheme } from '../../src/theme/ThemeProvider'
-import { Button, Card, ErrorNote, Eyebrow, Pill, Progress, Screen, serif, Spinner, Text } from '../../src/ui'
-import { FadeIn, gold, GoldBackdrop, GoldCoinFace } from '../../src/ui/gold'
+import { Button, Card, ErrorNote, Pill, Progress, Screen, Spinner, Text } from '../../src/ui'
+import { FadeIn, gold } from '../../src/ui/gold'
 
 export default function Home() {
   const { name } = useTheme()
@@ -46,28 +46,24 @@ export default function Home() {
     <Screen
       refresh={<RefreshControl refreshing={me.isRefetching || rate.isRefetching} onRefresh={refetch} />}
     >
-      <FadeIn style={{ gap: 4 }}>
-        <Eyebrow>{name.toUpperCase()}</Eyebrow>
+      <FadeIn style={{ gap: 2 }}>
+        <Text tone="muted">{name}</Text>
         <Text size="title">{hello}</Text>
       </FadeIn>
 
       <FadeIn delay={60}>
-        <View style={{ borderRadius: 22, overflow: 'hidden', padding: 22, gap: 6, backgroundColor: gold.bg }}>
-          <GoldBackdrop glowY={0.1} />
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-            <RNText style={{ color: gold.accent, fontSize: 11, fontWeight: '600', letterSpacing: 1.8 }}>YOUR GOLD</RNText>
-            <GoldCoinFace size={40} initial={name.slice(0, 1).toUpperCase()} />
-          </View>
+        <View style={{ borderRadius: 16, padding: 20, gap: 4, backgroundColor: gold.surface }}>
+          <RNText style={{ color: gold.muted, fontSize: 14, fontWeight: '500' }}>Gold balance</RNText>
           <RNText
             accessibilityLabel={`${grams.toFixed(4)} grams of gold`}
-            style={{ color: gold.text, fontFamily: serif, fontSize: 40, lineHeight: 46, fontWeight: '600', fontVariant: ['tabular-nums'] }}
+            style={{ color: gold.text, fontSize: 34, lineHeight: 40, fontWeight: '700', fontVariant: ['tabular-nums'] }}
           >
             {formatGrams(grams)}
           </RNText>
-          <RNText style={{ color: gold.light, fontSize: 15 }}>
+          <RNText style={{ color: gold.accent, fontSize: 15, fontWeight: '500' }}>
             {value !== null ? `Worth ${formatInr(value)} at today's rate` : "Today's rate is not published yet"}
           </RNText>
-          <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: gold.line, marginVertical: 8 }} />
+          <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: gold.line, marginVertical: 10 }} />
           <RNText style={{ color: gold.muted, fontSize: 13 }}>You have paid {formatInr(m.total_paid_inr)} in total</RNText>
           {Number(m.rupee_balance_inr) > 0 && (
             <RNText style={{ color: gold.muted, fontSize: 13 }}>
@@ -79,7 +75,7 @@ export default function Home() {
 
       <Card>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Eyebrow>TODAY&apos;S {r.purity} RATE</Eyebrow>
+          <Text tone="muted" style={{ fontSize: 14, fontWeight: '500' }}>Today&apos;s {r.purity} rate</Text>
           <Pill label={r.buying_open ? 'Buying open' : 'Buying closed'} tone={r.buying_open ? 'success' : 'warning'} />
         </View>
         <Text size="title">{r.rate_per_gram ? `${formatInr(r.rate_per_gram)} / g` : 'Not published'}</Text>

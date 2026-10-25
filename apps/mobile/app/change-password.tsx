@@ -2,8 +2,10 @@ import { useEffect, useRef, useState } from 'react'
 import { BackHandler, View, type TextInput } from 'react-native'
 import { authMessage, useAuth } from '../src/auth/AuthProvider'
 import { confirmError, passwordError } from '../src/auth/validation'
+import { Button, Field } from '../src/ui'
+import { AuthScreen, StrengthMeter } from '../src/ui/auth'
 import { confirmAction } from '../src/ui/confirm'
-import { AuthField, AuthScreen, Banner, GoldButton, StrengthMeter } from '../src/ui/gold'
+import { useToast } from '../src/ui/toast'
 
 /**
  * Required after signing in with a temporary password. It is the only screen the navigation
@@ -12,16 +14,16 @@ import { AuthField, AuthScreen, Banner, GoldButton, StrengthMeter } from '../src
  */
 export default function ChangePassword() {
   const { completePasswordChange, cancelPasswordChange } = useAuth()
+  const toast = useToast()
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
   const [tried, setTried] = useState(false)
   const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const confirmRef = useRef<TextInput>(null)
 
   const leave = () =>
     confirmAction(
-      'Stop changing your password?',
+      'Cancel password change?',
       'You will need your temporary password to sign in again.',
       'Sign out',
       cancelPasswordChange,
@@ -42,57 +44,45 @@ export default function ChangePassword() {
     setTried(true)
     if (busy || errors.password || errors.confirm) return
     setBusy(true)
-    setError(null)
     try {
       await completePasswordChange(password) // returns to sign-in with a confirmation
     } catch (e) {
-      setError(authMessage(e, 'Could not change your password. Try again.'))
+      toast.error(authMessage(e, 'Could not change your password. Try again.'))
       setBusy(false)
     }
   }
 
   return (
-    <AuthScreen
-      onBack={leave}
-      title="Choose a new password"
-      subtitle="You signed in with a temporary password. Set a new one to keep your account secure."
-    >
-      <AuthField
+    <AuthScreen onBack={leave} title="Set a new password" subtitle="You signed in with a temporary password. Choose a new one to continue.">
+      <Field
         label="New password"
         password
         value={password}
-        onChangeText={(t) => {
-          setPassword(t)
-          setError(null)
-        }}
+        onChangeText={setPassword}
         autoFocus
         autoComplete="new-password"
         textContentType="newPassword"
         returnKeyType="next"
         onSubmitEditing={() => confirmRef.current?.focus()}
-        hint="At least 8 characters, with a letter and a number."
+        hint="At least 8 characters with a letter and a number"
         error={tried ? errors.password : null}
       />
       <StrengthMeter password={password} />
-      <AuthField
+      <Field
         ref={confirmRef}
         label="Confirm new password"
         password
         value={confirm}
-        onChangeText={(t) => {
-          setConfirm(t)
-          setError(null)
-        }}
+        onChangeText={setConfirm}
         autoComplete="new-password"
         textContentType="newPassword"
         returnKeyType="go"
         onSubmitEditing={submit}
         error={tried ? errors.confirm : null}
       />
-      <Banner tone="danger" text={error} />
-      <GoldButton label="Save new password" onPress={submit} loading={busy} />
+      <Button label="Save password" onPress={submit} loading={busy} />
       <View style={{ flexGrow: 1 }} />
-      <GoldButton variant="ghost" label="Sign out instead" onPress={leave} />
+      <Button variant="text" label="Sign out" onPress={leave} />
     </AuthScreen>
   )
 }

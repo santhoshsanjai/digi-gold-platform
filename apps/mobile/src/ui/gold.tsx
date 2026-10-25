@@ -1,33 +1,24 @@
 /**
- * The look of the welcome, sign-in, sign-up and password screens: warm black, ivory text and
- * one gold accent. Built on React Native's Animated (native driver) and react-native-svg,
- * both already in the app, so no animation library is added.
+ * The brand pieces of the welcome screen and the home balance card: warm black, ivory text,
+ * the gold coin and its motion. Built on React Native's Animated (native driver) and
+ * react-native-svg, both already in the app, so no animation library is added. Forms use
+ * the app's ordinary components (src/ui) so every screen shares one style.
  */
-import { forwardRef, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useId, useMemo, useState, type ReactNode } from 'react'
 import {
   AccessibilityInfo,
-  ActivityIndicator,
   Animated,
   Easing,
   Platform,
   Pressable,
   StyleSheet,
   Text,
-  TextInput,
   View,
   useWindowDimensions,
   type StyleProp,
-  type TextInputProps,
-  type TextStyle,
   type ViewStyle,
 } from 'react-native'
-import { router } from 'expo-router'
-import { StatusBar } from 'expo-status-bar'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import Svg, { Circle, Defs, LinearGradient, Path, RadialGradient, Rect, Stop, Text as SvgText } from 'react-native-svg'
-import { passwordStrength, STRENGTH_LABEL } from '../auth/validation'
-import { useTheme } from '../theme/ThemeProvider'
-import { KeyboardScroll, useKeyboardHeight, useRevealOnFocus } from './keyboard'
+import Svg, { Circle, Defs, LinearGradient, RadialGradient, Rect, Stop, Text as SvgText } from 'react-native-svg'
 
 export const gold = {
   bg: '#0d0b08',
@@ -50,7 +41,6 @@ export const gold = {
   warningSoft: '#2a2312',
 } as const
 
-export const serif = Platform.select({ ios: 'Georgia', android: 'serif', default: 'Georgia, "Times New Roman", serif' })
 
 /** True when the phone asks for less motion; animations then show their end state. */
 export function useReducedMotion(): boolean {
@@ -193,10 +183,10 @@ export function GoldCoinFace({ size, initial }: { size: number; initial: string 
       <Circle cx="100" cy="100" r="80" fill="none" stroke="#7a5418" strokeOpacity="0.45" strokeWidth="1.2" />
       <Circle cx="100" cy="100" r="84" fill="none" stroke="#fff3c4" strokeOpacity="0.35" strokeWidth="1" strokeDasharray="0.5 5" strokeLinecap="round" />
       <Circle cx="100" cy="100" r="88" fill={`url(#${shine})`} />
-      <SvgText x="100" y="101" fill="#fff1c2" fillOpacity="0.45" fontSize="78" fontWeight="700" fontFamily={serif} textAnchor="middle" alignmentBaseline="central">
+      <SvgText x="100" y="101" fill="#fff1c2" fillOpacity="0.45" fontSize="78" fontWeight="700" textAnchor="middle" alignmentBaseline="central">
         {initial}
       </SvgText>
-      <SvgText x="101" y="103" fill="#6f4c15" fillOpacity="0.85" fontSize="78" fontWeight="700" fontFamily={serif} textAnchor="middle" alignmentBaseline="central">
+      <SvgText x="101" y="103" fill="#6f4c15" fillOpacity="0.85" fontSize="78" fontWeight="700" textAnchor="middle" alignmentBaseline="central">
         {initial}
       </SvgText>
     </Svg>
@@ -234,310 +224,26 @@ export function Sheen({ size, progress }: { size: number; progress: Animated.Val
   )
 }
 
-/** The screens' shared frame: background, safe areas, keyboard avoidance and a back button. */
-export function AuthScreen({
-  title,
-  subtitle,
-  children,
-  back = true,
-  onBack,
-}: {
-  title?: string
-  subtitle?: ReactNode
-  children: ReactNode
-  back?: boolean
-  onBack?: () => void
-}) {
-  const insets = useSafeAreaInsets()
-  const keyboard = useKeyboardHeight()
-  const { name } = useTheme()
-  return (
-    <View style={{ flex: 1, backgroundColor: gold.bg }}>
-      <StatusBar style="light" />
-      <GoldBackdrop glowY={0.05} />
-      <KeyboardScroll
-        keyboard={keyboard}
-        contentContainerStyle={{
-            flexGrow: 1,
-            paddingHorizontal: 24,
-            paddingTop: insets.top + 8,
-            paddingBottom: insets.bottom + 24,
-            width: '100%',
-            maxWidth: 480,
-            alignSelf: 'center',
-            gap: 20,
-          }}
-        >
-          <View style={{ height: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-            {back ? (
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="Go back"
-                hitSlop={12}
-                onPress={onBack ?? (() => (router.canGoBack() ? router.back() : router.replace('/welcome')))}
-                style={({ pressed }) => ({ width: 44, height: 44, justifyContent: 'center', opacity: pressed ? 0.6 : 1 })}
-              >
-                <Svg width={24} height={24} viewBox="0 0 24 24" fill="none" stroke={gold.text} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
-                  <Path d="M15 5l-7 7 7 7" />
-                </Svg>
-              </Pressable>
-            ) : (
-              <View style={{ width: 44 }} />
-            )}
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-              <GoldCoinFace size={22} initial={name.slice(0, 1).toUpperCase()} />
-              <Text style={styles.eyebrow} numberOfLines={1}>
-                {name.toUpperCase()}
-              </Text>
-            </View>
-            <View style={{ width: 44 }} />
-          </View>
-          {(title || subtitle) && (
-            <FadeIn style={{ gap: 8 }}>
-              {title ? (
-                <Text accessibilityRole="header" style={styles.title}>
-                  {title}
-                </Text>
-              ) : null}
-              {typeof subtitle === 'string' ? <Text style={styles.subtitle}>{subtitle}</Text> : subtitle}
-            </FadeIn>
-          )}
-          <FadeIn delay={80} style={{ gap: 16, flexGrow: 1 }}>
-            {children}
-          </FadeIn>
-      </KeyboardScroll>
-    </View>
-  )
-}
 
-interface AuthFieldProps extends TextInputProps {
-  label: string
-  error?: string | null
-  hint?: string
-  prefix?: string
-  /** Adds a Show / Hide control and hides the text by default. */
-  password?: boolean
-}
-
-/** A labelled input whose border warms to gold on focus. */
-export const AuthField = forwardRef<TextInput, AuthFieldProps>(function AuthField(
-  { label, error, hint, prefix, password, style, onFocus, onBlur, ...rest },
-  ref,
-) {
-  const [hidden, setHidden] = useState(true)
-  const [focus] = useState(() => new Animated.Value(0))
-  const box = useRef<View>(null)
-  const reveal = useRevealOnFocus()
-  const to = (v: number) => Animated.timing(focus, { toValue: v, duration: 160, useNativeDriver: false }).start()
-  const borderColor = error
-    ? gold.danger
-    : focus.interpolate({ inputRange: [0, 1], outputRange: [gold.line, gold.lineFocus] })
-  return (
-    <View ref={box} collapsable={false} style={{ gap: 8 }}>
-      <Text style={styles.label}>{label}</Text>
-      <Animated.View style={[styles.fieldBox, { borderColor }]}>
-        {prefix ? <Text style={styles.prefix}>{prefix}</Text> : null}
-        <TextInput
-          ref={ref}
-          accessibilityLabel={label}
-          accessibilityHint={error ?? hint}
-          placeholderTextColor={gold.faint}
-          selectionColor={gold.accent}
-          cursorColor={gold.accent}
-          secureTextEntry={password ? hidden : undefined}
-          autoCapitalize={password ? 'none' : rest.autoCapitalize}
-          autoCorrect={password ? false : rest.autoCorrect}
-          onFocus={(e) => {
-            to(1)
-            reveal(box.current)
-            onFocus?.(e)
-          }}
-          onBlur={(e) => {
-            to(0)
-            onBlur?.(e)
-          }}
-          {...rest}
-          style={[styles.input, style]}
-        />
-        {password && (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={hidden ? `Show ${label.toLowerCase()}` : `Hide ${label.toLowerCase()}`}
-            hitSlop={10}
-            onPress={() => setHidden((h) => !h)}
-            style={{ paddingLeft: 12, minHeight: 44, justifyContent: 'center' }}
-          >
-            <Text style={{ color: gold.accent, fontSize: 14, fontWeight: '600' }}>{hidden ? 'Show' : 'Hide'}</Text>
-          </Pressable>
-        )}
-      </Animated.View>
-      {error ? (
-        <Text style={[styles.small, { color: gold.danger }]} accessibilityLiveRegion="polite">
-          {error}
-        </Text>
-      ) : hint ? (
-        <Text style={[styles.small, { color: gold.muted }]}>{hint}</Text>
-      ) : null}
-    </View>
-  )
-})
-
-/** Four segments that fill as a new password gets stronger. */
-export function StrengthMeter({ password }: { password: string }) {
-  const score = passwordStrength(password)
-  if (!password) return null
-  const color = score <= 1 ? gold.danger : score === 2 ? gold.warning : gold.success
-  return (
-    <View style={{ gap: 6, marginTop: -6 }} accessibilityLabel={`Password strength: ${STRENGTH_LABEL[score]}`}>
-      <View style={{ flexDirection: 'row', gap: 6 }}>
-        {[1, 2, 3, 4].map((i) => (
-          <View key={i} style={{ flex: 1, height: 3, borderRadius: 2, backgroundColor: i <= score ? color : gold.line }} />
-        ))}
-      </View>
-      <Text style={[styles.small, { color: gold.muted }]}>{STRENGTH_LABEL[score]}</Text>
-    </View>
-  )
-}
-
-export function GoldButton({
-  label,
-  onPress,
-  variant = 'gold',
-  loading,
-  disabled,
-  style,
-}: {
-  label: string
-  onPress: () => void
-  variant?: 'gold' | 'outline' | 'ghost'
-  loading?: boolean
-  disabled?: boolean
-  style?: StyleProp<ViewStyle>
-}) {
-  const id = useSvgId('btn')
-  // The gradient is drawn at the button's measured size with its own rounded corners.
-  // Percentage-sized SVG inside a clipped view drew past the right edge on Android.
-  const [box, setBox] = useState({ w: 0, h: 0 })
-  const off = !!(disabled || loading)
-  const fg = variant === 'gold' ? gold.onAccent : variant === 'outline' ? gold.text : gold.accent
+/** A button for the dark welcome screen: solid gold, or an outline. */
+export function WelcomeButton({ label, onPress, outline }: { label: string; onPress: () => void; outline?: boolean }) {
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={label}
-      accessibilityState={{ disabled: off, busy: !!loading }}
-      onPress={off ? undefined : onPress}
-      onLayout={(e) => {
-        const { width, height } = e.nativeEvent.layout
-        if (width !== box.w || height !== box.h) setBox({ w: width, h: height })
-      }}
-      style={({ pressed }) => [
-        {
-          minHeight: variant === 'ghost' ? 44 : 54,
-          borderRadius: 14,
-          overflow: 'hidden',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'row',
-          gap: 10,
-          paddingHorizontal: 20,
-          borderWidth: variant === 'outline' ? 1 : 0,
-          borderColor: '#4a3f2b',
-          backgroundColor: variant === 'gold' && box.w === 0 ? gold.accent : 'transparent',
-          opacity: off && !loading ? 0.45 : 1,
-          transform: [{ scale: pressed && !off ? 0.985 : 1 }],
-        },
-        style,
-      ]}
+      onPress={onPress}
+      style={({ pressed }) => ({
+        minHeight: 52,
+        borderRadius: 12,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: outline ? 'transparent' : gold.accent,
+        borderWidth: outline ? 1 : 0,
+        borderColor: 'rgba(244,238,226,0.28)',
+        opacity: pressed ? 0.85 : 1,
+      })}
     >
-      {variant === 'gold' && box.w > 0 && (
-        <Svg style={{ position: 'absolute', left: 0, top: 0 }} width={box.w} height={box.h}>
-          <Defs>
-            <LinearGradient id={id} x1="0" y1="0" x2="1" y2="1">
-              <Stop offset="0" stopColor="#f3dc96" />
-              <Stop offset="0.45" stopColor="#d9b25a" />
-              <Stop offset="1" stopColor="#b98b35" />
-            </LinearGradient>
-            <LinearGradient id={`${id}hi`} x1="0" y1="0" x2="0" y2="1">
-              <Stop offset="0" stopColor="#ffffff" stopOpacity="0.28" />
-              <Stop offset="0.5" stopColor="#ffffff" stopOpacity="0" />
-            </LinearGradient>
-          </Defs>
-          <Rect x="0" y="0" width={box.w} height={box.h} rx={14} ry={14} fill={`url(#${id})`} />
-          <Rect x="0" y="0" width={box.w} height={box.h} rx={14} ry={14} fill={`url(#${id}hi)`} />
-        </Svg>
-      )}
-      {loading && <ActivityIndicator color={fg} />}
-      <Text style={{ color: fg, fontSize: 16, fontWeight: '600', letterSpacing: 0.2 }}>{label}</Text>
+      <Text style={{ color: outline ? gold.text : gold.onAccent, fontSize: 16, fontWeight: '600' }}>{label}</Text>
     </Pressable>
   )
 }
-
-/** A short status message: success, warning or error. */
-export function Banner({ tone, text }: { tone: 'success' | 'warning' | 'danger'; text: string | null | undefined }) {
-  if (!text) return null
-  const fg = gold[tone]
-  const bg = gold[`${tone}Soft` as const]
-  return (
-    <FadeIn>
-      <View accessibilityLiveRegion="polite" style={{ backgroundColor: bg, borderRadius: 12, paddingVertical: 12, paddingHorizontal: 14, borderLeftWidth: 3, borderLeftColor: fg }}>
-        <Text style={{ color: fg, fontSize: 14, lineHeight: 20 }}>{text}</Text>
-      </View>
-    </FadeIn>
-  )
-}
-
-/** An inline text action, such as "Forgot password?". */
-export function TextLink({ label, onPress, style }: { label: string; onPress: () => void; style?: StyleProp<TextStyle> }) {
-  return (
-    <Pressable accessibilityRole="link" accessibilityLabel={label} hitSlop={10} onPress={onPress} style={{ minHeight: 44, justifyContent: 'center' }}>
-      {({ pressed }) => <Text style={[{ color: gold.accent, fontSize: 15, fontWeight: '600', opacity: pressed ? 0.6 : 1 }, style]}>{label}</Text>}
-    </Pressable>
-  )
-}
-
-/** "Prompt  Action" on one centred line, for switching between sign-in and sign-up. */
-export function SwitchLine({ prompt, action, onPress }: { prompt: string; action: string; onPress: () => void }) {
-  return (
-    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-      <Text style={{ color: gold.muted, fontSize: 15 }}>{prompt}</Text>
-      <TextLink label={action} onPress={onPress} />
-    </View>
-  )
-}
-
-/** A gold tick that draws in, for "done" states. */
-export function SuccessMark({ size = 72 }: { size?: number }) {
-  const reduced = useReducedMotion()
-  const [v] = useState(() => new Animated.Value(reduced ? 1 : 0))
-  useEffect(() => {
-    if (reduced) return v.setValue(1)
-    Animated.spring(v, { toValue: 1, friction: 6, tension: 80, useNativeDriver: native }).start()
-  }, [v, reduced])
-  return (
-    <Animated.View style={{ alignSelf: 'flex-start', opacity: v, transform: [{ scale: v.interpolate({ inputRange: [0, 1], outputRange: [0.6, 1] }) }] }}>
-      <Svg width={size} height={size} viewBox="0 0 72 72">
-        <Circle cx="36" cy="36" r="34" fill="#21190b" stroke={gold.accent} strokeWidth="1.5" />
-        <Path d="M23 37l9 9 17-19" fill="none" stroke={gold.light} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-      </Svg>
-    </Animated.View>
-  )
-}
-
-export const styles = StyleSheet.create({
-  eyebrow: { color: gold.accent, fontSize: 11, fontWeight: '600', letterSpacing: 2.4 },
-  title: { color: gold.text, fontFamily: serif, fontSize: 28, lineHeight: 34, fontWeight: '600' },
-  subtitle: { color: gold.muted, fontSize: 15, lineHeight: 22 },
-  label: { color: gold.muted, fontSize: 13, fontWeight: '600', letterSpacing: 0.3 },
-  small: { fontSize: 13, lineHeight: 18 },
-  fieldBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: 14,
-    backgroundColor: gold.field,
-    paddingHorizontal: 16,
-  },
-  prefix: { color: gold.muted, fontSize: 17, marginRight: 8 },
-  // The gold border shows focus, so the browser's own outline is hidden in the web preview.
-  input: { flex: 1, minHeight: 54, fontSize: 17, color: gold.text, ...(Platform.OS === 'web' ? { outlineWidth: 0 } : null) },
-})
