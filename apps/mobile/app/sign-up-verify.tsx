@@ -58,13 +58,20 @@ export default function SignUpVerify() {
     return (
       <AuthScreen back={false} title="You're all set" subtitle="Your account is ready. Sign in with your email and password to continue.">
         <SuccessMark />
-        <GoldButton label="Continue to sign in" onPress={() => router.replace('/sign-in')} />
+        <GoldButton
+          label="Continue to sign in"
+          onPress={() => {
+            // Leave the sign-up form (and the password typed into it) behind.
+            if (router.canDismiss()) router.dismissAll()
+            router.replace('/sign-in')
+          }}
+        />
       </AuthScreen>
     )
   }
 
   return (
-    <AuthScreen title="Confirm your number" subtitle={`Enter the 6-digit code we sent to +91 ${pending?.phone}.`}>
+    <AuthScreen title="Confirm your number" subtitle={`Enter the 6-digit code we sent by SMS to +91 ${pending?.phone} and by email to ${pending?.email}.`}>
       <AuthField
         ref={input}
         label="Verification code"

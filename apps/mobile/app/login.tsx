@@ -30,7 +30,7 @@ export default function Login() {
   }
 
   return (
-    <AuthScreen title="Sign in with your mobile" subtitle="We will text a 6-digit code to this number.">
+    <AuthScreen title="Sign in with your mobile" subtitle="We will send a 6-digit code to this number, and to your email if your account has one.">
       <AuthField
         label="Mobile number"
         prefix="+91"

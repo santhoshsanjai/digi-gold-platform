@@ -41,6 +41,11 @@ class Customer(IdMixin, TimestampMixin, Base):
     total_paid_inr: Mapped[Decimal] = mapped_column(Numeric(14, 2), default=Decimal("0"))
     last_login_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
+    @property
+    def has_password(self) -> bool:
+        """Signs in with email and password (rather than only with SMS codes)."""
+        return self.password_hash is not None
+
 
 class CustomerOtp(IdMixin, Base):
     __tablename__ = "customer_otps"

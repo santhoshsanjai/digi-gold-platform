@@ -1,10 +1,11 @@
-import { RefreshControl, View } from 'react-native'
+import { RefreshControl, Text as RNText, StyleSheet, View } from 'react-native'
 import { router } from 'expo-router'
 import { ApiError } from '../../src/api/client'
 import { useLots, useMe, useRate } from '../../src/api/hooks'
 import { daysUntil, formatDate, formatDateTime, formatGrams, formatInr } from '../../src/format'
 import { useTheme } from '../../src/theme/ThemeProvider'
-import { Button, Card, ErrorNote, Pill, Progress, Screen, Spinner, Text } from '../../src/ui'
+import { Button, Card, ErrorNote, Eyebrow, Pill, Progress, Screen, serif, Spinner, Text } from '../../src/ui'
+import { FadeIn, gold, GoldBackdrop, GoldCoinFace } from '../../src/ui/gold'
 
 export default function Home() {
   const { name } = useTheme()
@@ -45,33 +46,40 @@ export default function Home() {
     <Screen
       refresh={<RefreshControl refreshing={me.isRefetching || rate.isRefetching} onRefresh={refetch} />}
     >
-      <Text size="heading">{hello}</Text>
+      <FadeIn style={{ gap: 4 }}>
+        <Eyebrow>{name.toUpperCase()}</Eyebrow>
+        <Text size="title">{hello}</Text>
+      </FadeIn>
 
-      <Card>
-        <Text tone="muted" size="small">
-          Your gold
-        </Text>
-        <Text size="big" accessibilityLabel={`${grams.toFixed(4)} grams of gold`}>
-          {formatGrams(grams)}
-        </Text>
-        <Text tone="muted">
-          {value !== null ? `Worth ${formatInr(value)} at today's rate` : 'Today\'s rate is not published yet'}
-        </Text>
-        <Text size="small" tone="muted">
-          You have paid {formatInr(m.total_paid_inr)} in total
-        </Text>
-        {Number(m.rupee_balance_inr) > 0 && (
-          <Text size="small" tone="muted">
-            {formatInr(m.rupee_balance_inr)} is waiting to be added to your next purchase
-          </Text>
-        )}
-      </Card>
+      <FadeIn delay={60}>
+        <View style={{ borderRadius: 22, overflow: 'hidden', padding: 22, gap: 6, backgroundColor: gold.bg }}>
+          <GoldBackdrop glowY={0.1} />
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <RNText style={{ color: gold.accent, fontSize: 11, fontWeight: '600', letterSpacing: 1.8 }}>YOUR GOLD</RNText>
+            <GoldCoinFace size={40} initial={name.slice(0, 1).toUpperCase()} />
+          </View>
+          <RNText
+            accessibilityLabel={`${grams.toFixed(4)} grams of gold`}
+            style={{ color: gold.text, fontFamily: serif, fontSize: 40, lineHeight: 46, fontWeight: '600', fontVariant: ['tabular-nums'] }}
+          >
+            {formatGrams(grams)}
+          </RNText>
+          <RNText style={{ color: gold.light, fontSize: 15 }}>
+            {value !== null ? `Worth ${formatInr(value)} at today's rate` : "Today's rate is not published yet"}
+          </RNText>
+          <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: gold.line, marginVertical: 8 }} />
+          <RNText style={{ color: gold.muted, fontSize: 13 }}>You have paid {formatInr(m.total_paid_inr)} in total</RNText>
+          {Number(m.rupee_balance_inr) > 0 && (
+            <RNText style={{ color: gold.muted, fontSize: 13 }}>
+              {formatInr(m.rupee_balance_inr)} is waiting to be added to your next purchase
+            </RNText>
+          )}
+        </View>
+      </FadeIn>
 
       <Card>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text tone="muted" size="small">
-            Today&apos;s {r.purity} rate
-          </Text>
+          <Eyebrow>TODAY&apos;S {r.purity} RATE</Eyebrow>
           <Pill label={r.buying_open ? 'Buying open' : 'Buying closed'} tone={r.buying_open ? 'success' : 'warning'} />
         </View>
         <Text size="title">{r.rate_per_gram ? `${formatInr(r.rate_per_gram)} / g` : 'Not published'}</Text>

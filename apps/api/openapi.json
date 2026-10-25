@@ -648,6 +648,10 @@
             "title": "Gold Grams",
             "type": "string"
           },
+          "has_password": {
+            "title": "Has Password",
+            "type": "boolean"
+          },
           "id": {
             "format": "uuid",
             "title": "Id",
@@ -709,6 +713,7 @@
           "pan",
           "pan_verified",
           "is_active",
+          "has_password",
           "gold_grams",
           "rupee_balance_inr",
           "total_paid_inr",
@@ -3913,6 +3918,19 @@
           }
         },
         "title": "StoreUpdate",
+        "type": "object"
+      },
+      "TempPasswordOut": {
+        "properties": {
+          "sent_to": {
+            "title": "Sent To",
+            "type": "string"
+          }
+        },
+        "required": [
+          "sent_to"
+        ],
+        "title": "TempPasswordOut",
         "type": "object"
       },
       "TenantCreate": {
@@ -7264,6 +7282,55 @@
           }
         ],
         "summary": "Customer Detail",
+        "tags": [
+          "crm customers"
+        ]
+      }
+    },
+    "/api/v1/crm/customers/{customer_id}/send-temp-password": {
+      "post": {
+        "description": "Email the customer a temporary password for the app, for when they cannot sign in.\n\nIt goes only to the email already on their account, never to one typed by staff, and\nstaff never see it. The customer must choose a new password after using it.",
+        "operationId": "send_temp_password_api_v1_crm_customers__customer_id__send_temp_password_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "customer_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Customer Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TempPasswordOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Send Temp Password",
         "tags": [
           "crm customers"
         ]

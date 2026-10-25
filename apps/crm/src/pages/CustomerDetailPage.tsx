@@ -1,5 +1,6 @@
-import { Alert, Descriptions, Skeleton, Table, Tabs } from 'antd'
+import { Alert, Button, Descriptions, Popconfirm, Skeleton, Table, Tabs, Tooltip } from 'antd'
 import { Link, useParams } from 'react-router-dom'
+import { toast } from 'sonner'
 import { PageHeader } from '@digigold/web-common/components/PageHeader.tsx'
 import { StatusBadge } from '@digigold/web-common/components/StatusBadge.tsx'
 import { Card } from '@digigold/web-common/components/ui/Card.tsx'
@@ -9,6 +10,7 @@ import {
   useCustomerQuery,
   usePaymentsQuery,
   useRedemptionsQuery,
+  useSendCustomerTempPasswordMutation,
 } from '../store/api/goldApi.ts'
 import type { LedgerEntry, Lot, Payment, Redemption } from '../api/types.ts'
 import { errorMessage } from '@digigold/web-common/utils/errors.ts'
@@ -24,6 +26,7 @@ export default function CustomerDetailPage() {
   const { customerId = '' } = useParams()
   const { can } = useAuth()
   const { data, isLoading, error } = useCustomerQuery(customerId)
+  const [sendTempPassword, sending] = useSendCustomerTempPasswordMutation()
   const payments = usePaymentsQuery(
     { customer_id: customerId, limit: 50 },
     { skip: !can('payments:view') },
@@ -36,6 +39,15 @@ export default function CustomerDetailPage() {
   if (error) return <Alert type="error" showIcon title={errorMessage(error)} />
   if (isLoading || !data) return <Skeleton active paragraph={{ rows: 10 }} />
   const c = data.customer
+
+  const sendTemp = async () => {
+    try {
+      const { sent_to } = await sendTempPassword(c.id).unwrap()
+      toast.success(`A temporary password was emailed to ${sent_to}`)
+    } catch (e) {
+      toast.error(errorMessage(e))
+    }
+  }
 
   const lotColumns = [
     { title: 'Bought on', dataIndex: 'paid_at', render: formatDate },
@@ -75,6 +87,23 @@ export default function CustomerDetailPage() {
       <PageHeader
         title={c.name || c.phone}
         description={<Link to="/customers">← All customers</Link>}
+        actions={
+          can('customers:edit') && (
+            <Tooltip title={c.email ? undefined : 'The customer must add an email in the app first'}>
+              <Popconfirm
+                title="Send a temporary password?"
+                description={`It is emailed to ${c.email}. The customer signs in to the app with it and must then choose a new password.`}
+                okText="Send"
+                onConfirm={sendTemp}
+                disabled={!c.email || !c.is_active}
+              >
+                <Button loading={sending.isLoading} disabled={!c.email || !c.is_active}>
+                  Send temporary password
+                </Button>
+              </Popconfirm>
+            </Tooltip>
+          )
+        }
       />
       <div className="grid gap-4 sm:grid-cols-3 mb-6">
         <StatCard title="Gold balance" value={formatGrams(c.gold_grams)} />
@@ -94,6 +123,9 @@ export default function CustomerDetailPage() {
           </Descriptions.Item>
           <Descriptions.Item label="Joined">{formatDate(c.created_at)}</Descriptions.Item>
           <Descriptions.Item label="Last sign-in">{formatDateTime(c.last_login_at)}</Descriptions.Item>
+          <Descriptions.Item label="App sign-in">
+            {c.has_password ? 'Email and password' : 'Mobile code only'}
+          </Descriptions.Item>
           <Descriptions.Item label="Account">
             <StatusBadge status={c.is_active ? 'active' : 'inactive'} />
           </Descriptions.Item>

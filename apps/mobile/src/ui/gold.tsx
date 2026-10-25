@@ -3,16 +3,14 @@
  * one gold accent. Built on React Native's Animated (native driver) and react-native-svg,
  * both already in the app, so no animation library is added.
  */
-import { forwardRef, useEffect, useId, useMemo, useState, type ReactNode } from 'react'
+import { forwardRef, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react'
 import {
   AccessibilityInfo,
   ActivityIndicator,
   Animated,
   Easing,
-  KeyboardAvoidingView,
   Platform,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -28,6 +26,8 @@ import { StatusBar } from 'expo-status-bar'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Svg, { Circle, Defs, LinearGradient, Path, RadialGradient, Rect, Stop, Text as SvgText } from 'react-native-svg'
 import { passwordStrength, STRENGTH_LABEL } from '../auth/validation'
+import { useTheme } from '../theme/ThemeProvider'
+import { KeyboardScroll, useKeyboardHeight, useRevealOnFocus } from './keyboard'
 
 export const gold = {
   bg: '#0d0b08',
@@ -249,14 +249,15 @@ export function AuthScreen({
   onBack?: () => void
 }) {
   const insets = useSafeAreaInsets()
+  const keyboard = useKeyboardHeight()
+  const { name } = useTheme()
   return (
     <View style={{ flex: 1, backgroundColor: gold.bg }}>
       <StatusBar style="light" />
       <GoldBackdrop glowY={0.05} />
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <ScrollView
-          keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{
+      <KeyboardScroll
+        keyboard={keyboard}
+        contentContainerStyle={{
             flexGrow: 1,
             paddingHorizontal: 24,
             paddingTop: insets.top + 8,
@@ -267,8 +268,8 @@ export function AuthScreen({
             gap: 20,
           }}
         >
-          <View style={{ height: 44, justifyContent: 'center' }}>
-            {back && (
+          <View style={{ height: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            {back ? (
               <Pressable
                 accessibilityRole="button"
                 accessibilityLabel="Go back"
@@ -280,7 +281,16 @@ export function AuthScreen({
                   <Path d="M15 5l-7 7 7 7" />
                 </Svg>
               </Pressable>
+            ) : (
+              <View style={{ width: 44 }} />
             )}
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+              <GoldCoinFace size={22} initial={name.slice(0, 1).toUpperCase()} />
+              <Text style={styles.eyebrow} numberOfLines={1}>
+                {name.toUpperCase()}
+              </Text>
+            </View>
+            <View style={{ width: 44 }} />
           </View>
           {(title || subtitle) && (
             <FadeIn style={{ gap: 8 }}>
@@ -295,8 +305,7 @@ export function AuthScreen({
           <FadeIn delay={80} style={{ gap: 16, flexGrow: 1 }}>
             {children}
           </FadeIn>
-        </ScrollView>
-      </KeyboardAvoidingView>
+      </KeyboardScroll>
     </View>
   )
 }
@@ -317,12 +326,14 @@ export const AuthField = forwardRef<TextInput, AuthFieldProps>(function AuthFiel
 ) {
   const [hidden, setHidden] = useState(true)
   const [focus] = useState(() => new Animated.Value(0))
+  const box = useRef<View>(null)
+  const reveal = useRevealOnFocus()
   const to = (v: number) => Animated.timing(focus, { toValue: v, duration: 160, useNativeDriver: false }).start()
   const borderColor = error
     ? gold.danger
     : focus.interpolate({ inputRange: [0, 1], outputRange: [gold.line, gold.lineFocus] })
   return (
-    <View style={{ gap: 8 }}>
+    <View ref={box} collapsable={false} style={{ gap: 8 }}>
       <Text style={styles.label}>{label}</Text>
       <Animated.View style={[styles.fieldBox, { borderColor }]}>
         {prefix ? <Text style={styles.prefix}>{prefix}</Text> : null}
@@ -338,6 +349,7 @@ export const AuthField = forwardRef<TextInput, AuthFieldProps>(function AuthFiel
           autoCorrect={password ? false : rest.autoCorrect}
           onFocus={(e) => {
             to(1)
+            reveal(box.current)
             onFocus?.(e)
           }}
           onBlur={(e) => {
@@ -403,6 +415,9 @@ export function GoldButton({
   style?: StyleProp<ViewStyle>
 }) {
   const id = useSvgId('btn')
+  // The gradient is drawn at the button's measured size with its own rounded corners.
+  // Percentage-sized SVG inside a clipped view drew past the right edge on Android.
+  const [box, setBox] = useState({ w: 0, h: 0 })
   const off = !!(disabled || loading)
   const fg = variant === 'gold' ? gold.onAccent : variant === 'outline' ? gold.text : gold.accent
   return (
@@ -411,6 +426,10 @@ export function GoldButton({
       accessibilityLabel={label}
       accessibilityState={{ disabled: off, busy: !!loading }}
       onPress={off ? undefined : onPress}
+      onLayout={(e) => {
+        const { width, height } = e.nativeEvent.layout
+        if (width !== box.w || height !== box.h) setBox({ w: width, h: height })
+      }}
       style={({ pressed }) => [
         {
           minHeight: variant === 'ghost' ? 44 : 54,
@@ -423,22 +442,28 @@ export function GoldButton({
           paddingHorizontal: 20,
           borderWidth: variant === 'outline' ? 1 : 0,
           borderColor: '#4a3f2b',
+          backgroundColor: variant === 'gold' && box.w === 0 ? gold.accent : 'transparent',
           opacity: off && !loading ? 0.45 : 1,
           transform: [{ scale: pressed && !off ? 0.985 : 1 }],
         },
         style,
       ]}
     >
-      {variant === 'gold' && (
-        <Svg style={StyleSheet.absoluteFill} width="100%" height="100%">
+      {variant === 'gold' && box.w > 0 && (
+        <Svg style={{ position: 'absolute', left: 0, top: 0 }} width={box.w} height={box.h}>
           <Defs>
             <LinearGradient id={id} x1="0" y1="0" x2="1" y2="1">
-              <Stop offset="0" stopColor="#f1d68a" />
-              <Stop offset="0.5" stopColor="#d6ad52" />
-              <Stop offset="1" stopColor="#b88a33" />
+              <Stop offset="0" stopColor="#f3dc96" />
+              <Stop offset="0.45" stopColor="#d9b25a" />
+              <Stop offset="1" stopColor="#b98b35" />
+            </LinearGradient>
+            <LinearGradient id={`${id}hi`} x1="0" y1="0" x2="0" y2="1">
+              <Stop offset="0" stopColor="#ffffff" stopOpacity="0.28" />
+              <Stop offset="0.5" stopColor="#ffffff" stopOpacity="0" />
             </LinearGradient>
           </Defs>
-          <Rect width="100%" height="100%" fill={`url(#${id})`} />
+          <Rect x="0" y="0" width={box.w} height={box.h} rx={14} ry={14} fill={`url(#${id})`} />
+          <Rect x="0" y="0" width={box.w} height={box.h} rx={14} ry={14} fill={`url(#${id}hi)`} />
         </Svg>
       )}
       {loading && <ActivityIndicator color={fg} />}
@@ -499,6 +524,7 @@ export function SuccessMark({ size = 72 }: { size?: number }) {
 }
 
 export const styles = StyleSheet.create({
+  eyebrow: { color: gold.accent, fontSize: 11, fontWeight: '600', letterSpacing: 2.4 },
   title: { color: gold.text, fontFamily: serif, fontSize: 28, lineHeight: 34, fontWeight: '600' },
   subtitle: { color: gold.muted, fontSize: 15, lineHeight: 22 },
   label: { color: gold.muted, fontSize: 13, fontWeight: '600', letterSpacing: 0.3 },

@@ -22,13 +22,12 @@ from sqlalchemy import delete, func, select
 from app.core.config import get_settings
 from app.core.db import bypass_tenant_scope, scope_to_tenant
 from app.core.deps import CUSTOMER, CurrentCustomer, Session, tenant_active
-from app.core.email import customer_temp_password_email, send_email
+from app.core.email import send_email
 from app.core.security import (
     DUMMY_HASH,
     check_password_policy,
     create_jwt,
     decode_jwt,
-    generate_temp_password,
     hash_password,
     hash_token,
     new_opaque_token,
@@ -38,6 +37,7 @@ from app.core.security import (
 from app.core.sms import Sms, send_sms
 from app.models import Customer, CustomerToken, Tenant
 from app.services import otp
+from app.services.customer_auth import code_email, issue_temp_password, shop_name
 from app.services.phone import normalise_phone
 from app.services.users import normalise_email
 
@@ -216,12 +216,18 @@ async def _registration_problem(session, tenant_id: UUID, body: RegisterIn) -> J
     return None
 
 
-def _send_code(tenant: Tenant, phone: str, code: str, what: str, tasks: BackgroundTasks) -> None:
-    name = tenant.branding.get("display_name") or tenant.name
+def _send_code(
+    tenant: Tenant, phone: str, email: str, code: str, what: str, tasks: BackgroundTasks
+) -> None:
+    """Text the code, and email it too when there is an address: SMS delivery is not set up
+    for every client yet, so email is the channel that is sure to arrive."""
+    name = shop_name(tenant)
     tasks.add_task(
         send_sms,
         Sms(phone, f"{code} is your {name} {what} code. Valid for {settings.otp_minutes} minutes."),
     )
+    if email:
+        tasks.add_task(send_email, code_email(email, name, code, what))
 
 
 @router.post("/otp", status_code=202)
@@ -231,7 +237,12 @@ async def request_code(body: PhoneIn, session: Session, tasks: BackgroundTasks):
         code = await otp.issue(session, tenant.id, body.phone, "login")
     except otp.OtpError as e:
         raise HTTPException(429, str(e)) from None
-    _send_code(tenant, body.phone, code, "sign-in", tasks)
+    email = await session.scalar(
+        select(Customer.email).where(
+            Customer.tenant_id == tenant.id, Customer.phone == body.phone, Customer.is_active
+        )
+    )
+    _send_code(tenant, body.phone, email or "", code, "sign-in", tasks)
     return {"status": "sent"}
 
 
@@ -268,7 +279,7 @@ async def request_registration_code(body: RegisterIn, session: Session, tasks: B
         code = await otp.issue(session, tenant.id, body.phone, "register")
     except otp.OtpError as e:
         raise HTTPException(429, str(e)) from None
-    _send_code(tenant, body.phone, code, "verification", tasks)
+    _send_code(tenant, body.phone, normalise_email(body.email), code, "verification", tasks)
     return {"status": "sent"}
 
 
@@ -390,19 +401,7 @@ async def forgot_password(body: ForgotIn, session: Session, tasks: BackgroundTas
     expires = customer.temp_password_expires_at
     if expires and expires - lifetime > now() - timedelta(seconds=settings.otp_resend_seconds):
         return {"status": "accepted"}  # one was just sent; don't flood their inbox
-    password = generate_temp_password()
-    customer.temp_password_hash = hash_password(password)
-    customer.temp_password_expires_at = now() + lifetime
-    tasks.add_task(
-        send_email,
-        customer_temp_password_email(
-            customer.email,
-            customer.name,
-            tenant.branding.get("display_name") or tenant.name,
-            password,
-            settings.customer_temp_password_minutes,
-        ),
-    )
+    tasks.add_task(send_email, issue_temp_password(customer, tenant))
     return {"status": "accepted"}
 
 

@@ -5,14 +5,17 @@ from decimal import Decimal
 from typing import Annotated, Literal
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from pydantic import BaseModel, ConfigDict
 from sqlalchemy import func, or_, select
 
 from app.api.app_gold import LedgerOut, LotOut
 from app.api.common import Limit, Offset, Page
 from app.core.deps import Session, Staff, require
-from app.models import Customer, GoldLot, LedgerEntry, PaymentOrder
+from app.core.email import send_email
+from app.models import Customer, GoldLot, LedgerEntry, PaymentOrder, Tenant
+from app.services import audit
+from app.services.customer_auth import issue_temp_password
 
 router = APIRouter(prefix="/crm", tags=["crm customers"])
 
@@ -27,6 +30,7 @@ class CustomerOut(BaseModel):
     pan: str | None
     pan_verified: bool
     is_active: bool
+    has_password: bool
     gold_grams: Decimal
     rupee_balance_inr: Decimal
     total_paid_inr: Decimal
@@ -104,6 +108,52 @@ async def customer_detail(
         open_lots=[LotOut.model_validate(lot) for lot in lots],
         recent_entries=[LedgerOut.model_validate(e) for e in entries],
     )
+
+
+class TempPasswordOut(BaseModel):
+    sent_to: str
+
+
+@router.post("/customers/{customer_id}/send-temp-password", response_model=TempPasswordOut)
+async def send_temp_password(
+    customer_id: UUID,
+    staff: Annotated[Staff, Depends(require("customers:edit"))],
+    session: Session,
+    tasks: BackgroundTasks,
+):
+    """Email the customer a temporary password for the app, for when they cannot sign in.
+
+    It goes only to the email already on their account, never to one typed by staff, and
+    staff never see it. The customer must choose a new password after using it."""
+    customer = await session.get(Customer, customer_id)
+    if customer is None or customer.tenant_id != staff.tenant_id:
+        raise HTTPException(404, "customer not found")
+    if not customer.is_active:
+        raise HTTPException(422, "this customer's account is disabled")
+    if not customer.email:
+        raise HTTPException(422, "this customer has no email address on their account")
+    if not customer.has_password:
+        taken = await session.scalar(
+            select(func.count()).where(
+                Customer.tenant_id == customer.tenant_id,
+                Customer.email == customer.email,
+                Customer.password_hash.is_not(None),
+                Customer.id != customer.id,
+            )
+        )
+        if taken:
+            raise HTTPException(409, "another account already signs in with this email")
+    tenant = await session.get(Tenant, customer.tenant_id)
+    tasks.add_task(send_email, issue_temp_password(customer, tenant, by_store=True))
+    audit.record(
+        session,
+        tenant_id=customer.tenant_id,
+        actor_id=staff.user.id,
+        action="customer.temp_password_sent",
+        entity_type="customer",
+        entity_id=customer.id,
+    )
+    return TempPasswordOut(sent_to=customer.email)
 
 
 @router.get("/payments", response_model=Page[PaymentOut])

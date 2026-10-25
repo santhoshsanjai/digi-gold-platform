@@ -230,3 +230,47 @@ async def test_sms_customer_can_add_a_password(client, owner_headers):
     assert (
         await _login(client, password="First-pass-1", email_="sms@example.com")
     ).status_code == 200
+
+
+async def test_codes_are_emailed_as_well(client, owner_headers):
+    r = await client.post(f"{AUTH}/register/otp", json=DETAILS)
+    assert r.status_code == 202
+    msg = email.outbox[-1]
+    assert msg.to == "priya@example.com" and last_otp("+919876543210") in msg.body
+    await _register(client, phone="9876500001", email="second@example.com")
+    r = await client.post(f"{AUTH}/otp", json={"tenant": "sri-gold", "phone": "9876500001"})
+    assert r.status_code == 202
+    assert email.outbox[-1].to == "second@example.com"
+    assert last_otp("+919876500001") in email.outbox[-1].body
+
+
+async def test_store_sends_a_temporary_password(client, owner_headers):
+    await _register(client)
+    customers = (await client.get(f"{API}/crm/customers", headers=owner_headers)).json()
+    cid = customers["items"][0]["id"]
+    assert customers["items"][0]["has_password"] is True
+    r = await client.post(f"{API}/crm/customers/{cid}/send-temp-password", headers=owner_headers)
+    assert r.status_code == 200 and r.json()["sent_to"] == "priya@example.com"
+    temp = _temp_password("priya@example.com")
+    assert "has sent you a temporary password" in email.outbox[-1].body
+    r = await _login(client, password=temp)
+    assert r.json()["status"] == "password_change_required"
+
+
+async def test_store_temp_password_for_an_sms_customer(client, owner_headers):
+    h = await customer_sign_in(client)
+    cid = (await client.get(f"{API}/app/me", headers=h)).json()["id"]
+    url = f"{API}/crm/customers/{cid}/send-temp-password"
+    r = await client.post(url, headers=owner_headers)
+    assert r.status_code == 422  # no email yet
+    await client.patch(f"{API}/app/me", json={"email": "sms@example.com"}, headers=h)
+    assert (await client.post(url, headers=owner_headers)).status_code == 200
+    r = await _login(client, password=_temp_password("sms@example.com"), email_="sms@example.com")
+    assert r.json()["status"] == "password_change_required"
+
+
+async def test_staff_without_permission_cannot_send(client, owner_headers):
+    await _register(client)
+    cid = (await client.get(f"{API}/crm/customers", headers=owner_headers)).json()["items"][0]["id"]
+    r = await client.post(f"{API}/crm/customers/{cid}/send-temp-password")
+    assert r.status_code == 401

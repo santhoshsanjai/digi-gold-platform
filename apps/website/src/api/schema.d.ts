@@ -775,6 +775,29 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/crm/customers/{customer_id}/send-temp-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Send Temp Password
+         * @description Email the customer a temporary password for the app, for when they cannot sign in.
+         *
+         *     It goes only to the email already on their account, never to one typed by staff, and
+         *     staff never see it. The customer must choose a new password after using it.
+         */
+        post: operations["send_temp_password_api_v1_crm_customers__customer_id__send_temp_password_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/crm/dashboard": {
         parameters: {
             query?: never;
@@ -1654,6 +1677,8 @@ export interface components {
             email: string;
             /** Gold Grams */
             gold_grams: string;
+            /** Has Password */
+            has_password: boolean;
             /**
              * Id
              * Format: uuid
@@ -3136,6 +3161,11 @@ export interface components {
             name?: string | null;
             /** Phone */
             phone?: string | null;
+        };
+        /** TempPasswordOut */
+        TempPasswordOut: {
+            /** Sent To */
+            sent_to: string;
         };
         /** TenantCreate */
         TenantCreate: {
@@ -5119,6 +5149,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CustomerDetailOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    send_temp_password_api_v1_crm_customers__customer_id__send_temp_password_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                customer_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TempPasswordOut"];
                 };
             };
             /** @description Validation Error */

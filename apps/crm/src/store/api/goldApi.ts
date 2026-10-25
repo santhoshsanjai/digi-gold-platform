@@ -54,6 +54,11 @@ export const goldApi = apiSlice.injectEndpoints({
       query: (id) => `/crm/customers/${id}`,
       providesTags: (_r, _e, id) => [{ type: 'Customer', id }],
     }),
+    /** Emails the customer a temporary app password; staff never see it. */
+    sendCustomerTempPassword: build.mutation<{ sent_to: string }, string>({
+      query: (id) => ({ url: `/crm/customers/${id}/send-temp-password`, method: 'POST' }),
+      invalidatesTags: (_r, _e, id) => [{ type: 'Customer', id }],
+    }),
     payments: build.query<
       Page<Payment>,
       PageParams & { status?: PaymentStatus; customer_id?: string }
@@ -122,6 +127,7 @@ export const {
   useSetBuyingPausedMutation,
   useCustomersQuery,
   useCustomerQuery,
+  useSendCustomerTempPasswordMutation,
   usePaymentsQuery,
   useRedeemMutation,
   useRedemptionsQuery,

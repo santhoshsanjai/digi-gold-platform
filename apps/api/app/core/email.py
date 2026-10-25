@@ -66,14 +66,20 @@ def temp_password_email(to: str, name: str, org: str, password: str, hours: int,
 
 
 def customer_temp_password_email(
-    to: str, name: str, org: str, password: str, minutes: int
+    to: str, name: str, org: str, password: str, minutes: int, by_store: bool = False
 ) -> Email:
+    reason = (
+        f"{org} has sent you a temporary password for the {org} app."
+        if by_store
+        else f"We received a request to reset the password for your {org} app account."
+    )
     return Email(
         to=to,
         subject=f"Your {org} temporary password",
         body=(
             f"Hello {name or 'there'},\n\n"
-            f"We received a request to reset the password for your {org} app account.\n\n"
+            f"{reason}\n\n"
+            f"Email: {to}\n"
             f"Temporary password: {password}\n\n"
             f"Sign in to the app with it within {minutes} minutes. You will be asked to choose "
             "a new password straight away, and the temporary one stops working after that.\n\n"

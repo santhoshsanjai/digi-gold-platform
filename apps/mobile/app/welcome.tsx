@@ -126,12 +126,27 @@ export default function Welcome() {
             {brand.logo_url ? (
               <View style={{ width: size, height: size, borderRadius: size / 2, overflow: 'hidden', alignItems: 'center', justifyContent: 'center' }}>
                 <GoldCoinFace size={size} initial="" />
-                <Image
-                  source={{ uri: brand.logo_url }}
-                  accessibilityIgnoresInvertColors
-                  style={{ position: 'absolute', width: size * 0.5, height: size * 0.5 }}
-                  resizeMode="contain"
-                />
+                {/* The logo is set into the coin as a round inlay, so a square image with its
+                    own background still sits cleanly on the gold. */}
+                <View
+                  style={{
+                    position: 'absolute',
+                    width: size * 0.7,
+                    height: size * 0.7,
+                    borderRadius: size * 0.35,
+                    overflow: 'hidden',
+                    borderWidth: 2,
+                    borderColor: '#8d661f',
+                    backgroundColor: '#0d0b08',
+                  }}
+                >
+                  <Image
+                    source={{ uri: brand.logo_url }}
+                    accessibilityIgnoresInvertColors
+                    style={{ width: '100%', height: '100%' }}
+                    resizeMode="cover"
+                  />
+                </View>
               </View>
             ) : (
               <GoldCoinFace size={size} initial={name.slice(0, 1).toUpperCase()} />

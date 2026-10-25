@@ -54,7 +54,7 @@ export default function Verify() {
   }
 
   return (
-    <AuthScreen title="Enter the code" subtitle={`Sent to +91 ${phone}`}>
+    <AuthScreen title="Enter the code" subtitle={`Sent by SMS to +91 ${phone}, and to your email if your account has one.`}>
       <AuthField
         ref={input}
         label="6-digit code"

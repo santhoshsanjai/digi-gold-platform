@@ -91,7 +91,7 @@ export default function SignUp() {
         textContentType="telephoneNumber"
         maxLength={10}
         placeholder="98765 43210"
-        hint="We text a code to confirm it. The store uses it to find your account."
+        hint="We send a code by SMS and email to confirm it. The store uses it to find your account."
         error={show('phone')}
       />
       <AuthField
