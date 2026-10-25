@@ -6,6 +6,7 @@ import { useCreateOrder, useMe, useRate } from '../src/api/hooks'
 import { formatGrams, formatInr, formatInrWhole } from '../src/format'
 import { useTheme } from '../src/theme/ThemeProvider'
 import { Button, Card, ErrorNote, Field, Screen, Spinner, Text } from '../src/ui'
+import { IconBadge } from '../src/ui/Icon'
 import { useToast } from '../src/ui/toast'
 
 const QUICK = [500, 1000, 2000, 5000]
@@ -72,10 +73,15 @@ export default function Buy() {
       }
     >
       <Card>
-        <Text tone="muted" size="small">
-          Today&apos;s {r.purity} rate
-        </Text>
-        <Text size="title">{r.rate_per_gram ? `${formatInr(r.rate_per_gram)} / g` : 'Not published'}</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+          <IconBadge name="trend" />
+          <View style={{ flex: 1 }}>
+            <Text tone="muted" size="small">
+              Today&apos;s {r.purity} rate
+            </Text>
+            <Text size="heading">{r.rate_per_gram ? `${formatInr(r.rate_per_gram)} / g` : 'Not published'}</Text>
+          </View>
+        </View>
         {!r.buying_open && <Text tone="warning">{r.reason}</Text>}
       </Card>
 
@@ -113,10 +119,15 @@ export default function Buy() {
 
       {estimate !== null && !outOfRange && (
         <Card tone="success">
-          <Text tone="muted" size="small">
-            You will get about
-          </Text>
-          <Text size="title">{formatGrams(estimate)}</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+            <IconBadge name="coins" tint="success" />
+            <View>
+              <Text tone="muted" size="small">
+                You will get about
+              </Text>
+              <Text size="title">{formatGrams(estimate)}</Text>
+            </View>
+          </View>
           <Text size="small" tone="muted">
             The exact grams are confirmed when you pay, at the rate held for you.
           </Text>

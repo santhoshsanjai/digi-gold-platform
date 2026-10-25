@@ -49,8 +49,8 @@ export default function Redeem() {
             <Text tone={left > 0 ? 'muted' : 'danger'}>{left > 0 ? `Expires in ${clock(left)}` : 'This code has expired'}</Text>
           </Card>
           <Card>
-            <Row label="Mobile number" value={`+91 ${phone}`} />
-            <Row label="Gold to redeem" value={formatGrams(code.grams)} />
+            <Row icon="phone" label="Mobile number" value={`+91 ${phone}`} />
+            <Row icon="coins" label="Gold to redeem" value={formatGrams(code.grams)} />
             <Text size="small" tone="muted">
               Give the staff your mobile number and this code. Once redeemed, the whole balance is closed.
             </Text>

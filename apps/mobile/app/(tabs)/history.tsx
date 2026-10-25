@@ -1,14 +1,16 @@
-import { RefreshControl, View } from 'react-native'
+import { RefreshControl, StyleSheet, View } from 'react-native'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { fetchLedger, LEDGER_PAGE } from '../../src/api/hooks'
 import type { LedgerEntry } from '../../src/api/types'
 import { formatDateTime, formatGrams, formatInr } from '../../src/format'
-import { Button, Card, Screen, Spinner, Text } from '../../src/ui'
+import { useTheme } from '../../src/theme/ThemeProvider'
+import { Button, EmptyState, List, Screen, Spinner, Text } from '../../src/ui'
+import { IconBadge, type IconName } from '../../src/ui/Icon'
 
-const KIND: Record<string, string> = {
-  credit: 'Bought gold',
-  redeem: 'Redeemed in store',
-  refund: 'Refunded',
+const KIND: Record<string, { label: string; icon: IconName; tint: 'success' | 'primary' | 'warning' }> = {
+  credit: { label: 'Bought gold', icon: 'plus', tint: 'success' },
+  redeem: { label: 'Redeemed in store', icon: 'store', tint: 'primary' },
+  refund: { label: 'Refunded', icon: 'refund', tint: 'warning' },
 }
 
 export default function History() {
@@ -26,14 +28,14 @@ export default function History() {
       {q.isPending ? (
         <Spinner />
       ) : entries.length === 0 ? (
-        <Card>
-          <Text tone="muted">Your purchases and redemptions will be listed here.</Text>
-        </Card>
+        <EmptyState icon="receipt" title="No transactions yet" text="Your purchases, redemptions and refunds will be listed here." />
       ) : (
         <>
-          {entries.map((e) => (
-            <Entry key={e.id} entry={e} />
-          ))}
+          <List>
+            {entries.map((e, i) => (
+              <Entry key={e.id} entry={e} last={i === entries.length - 1} />
+            ))}
+          </List>
           {q.hasNextPage && <Button variant="secondary" label="Show more" onPress={() => q.fetchNextPage()} loading={q.isFetchingNextPage} />}
         </>
       )}
@@ -41,31 +43,45 @@ export default function History() {
   )
 }
 
-function Entry({ entry }: { entry: LedgerEntry }) {
+function Entry({ entry, last }: { entry: LedgerEntry; last: boolean }) {
+  const { colors } = useTheme()
   const grams = Number(entry.grams)
   const gain = grams >= 0
+  const kind = KIND[entry.kind] ?? { label: entry.kind, icon: 'receipt' as IconName, tint: 'primary' as const }
   return (
-    <Card>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 12 }}>
-        <View style={{ flexShrink: 1 }}>
-          <Text size="heading">{KIND[entry.kind] ?? entry.kind}</Text>
-          <Text size="small" tone="muted">
-            {formatDateTime(entry.created_at)}
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 14,
+        paddingVertical: 12,
+        borderBottomWidth: last ? 0 : StyleSheet.hairlineWidth,
+        borderBottomColor: colors.line,
+      }}
+    >
+      <IconBadge name={kind.icon} tint={kind.tint} />
+      <View style={{ flex: 1 }}>
+        <Text style={{ fontWeight: '500' }}>{kind.label}</Text>
+        <Text size="small" tone="muted">
+          {formatDateTime(entry.created_at)}
+        </Text>
+        {entry.note ? (
+          <Text size="small" tone="muted" numberOfLines={2}>
+            {entry.note}
           </Text>
-        </View>
-        <View style={{ alignItems: 'flex-end' }}>
-          <Text size="heading" tone={gain ? 'success' : 'normal'}>
-            {gain ? '+' : '−'}
-            {formatGrams(Math.abs(grams))}
-          </Text>
-          {Number(entry.amount_inr) !== 0 && (
-            <Text size="small" tone="muted">
-              {formatInr(Math.abs(Number(entry.amount_inr)))}
-            </Text>
-          )}
-        </View>
+        ) : null}
       </View>
-      {entry.note ? <Text size="small" tone="muted">{entry.note}</Text> : null}
-    </Card>
+      <View style={{ alignItems: 'flex-end' }}>
+        <Text style={{ fontWeight: '600', fontVariant: ['tabular-nums'], color: gain ? colors.success : colors.text }}>
+          {gain ? '+' : '−'}
+          {formatGrams(Math.abs(grams))}
+        </Text>
+        {Number(entry.amount_inr) !== 0 && (
+          <Text size="small" tone="muted">
+            {formatInr(Math.abs(Number(entry.amount_inr)))}
+          </Text>
+        )}
+      </View>
+    </View>
   )
 }

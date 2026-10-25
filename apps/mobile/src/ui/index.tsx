@@ -17,6 +17,7 @@ import {
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTheme } from '../theme/ThemeProvider'
+import { Icon, IconBadge, type IconName } from './Icon'
 import { KeyboardScroll, useKeyboardHeight, useRevealOnFocus } from './keyboard'
 
 type Tone = 'normal' | 'muted' | 'success' | 'warning' | 'danger'
@@ -220,7 +221,7 @@ export const Field = forwardRef<TextInput, FieldProps>(function Field(
           style={[
             { flex: 1, minHeight: 50, fontSize: 16, color: colors.text },
             // The field's own border shows focus, so hide the browser's outline in the web preview.
-            Platform.OS === 'web' ? ({ outlineStyle: 'none' } as TextStyle) : null,
+            Platform.OS === 'web' ? ({ outlineStyle: 'none' } as unknown as TextStyle) : null,
             style,
           ]}
         />
@@ -271,14 +272,108 @@ export function ErrorNote({ message }: { message: string | null | undefined }) {
   )
 }
 
-export function Row({ label, value, tone }: { label: string; value: string; tone?: Tone }) {
+/** A label and value on one line, with an optional small icon before the label. */
+export function Row({ label, value, tone, icon }: { label: string; value: string; tone?: Tone; icon?: IconName }) {
+  const { colors } = useTheme()
   return (
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 12, paddingVertical: 2 }}>
-      <Text tone="muted">{label}</Text>
+    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, paddingVertical: 2 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+        {icon && <Icon name={icon} color={colors.muted} size={17} />}
+        <Text tone="muted">{label}</Text>
+      </View>
       <Text tone={tone} style={{ fontWeight: '600', flexShrink: 1, textAlign: 'right' }}>
         {value}
       </Text>
     </View>
+  )
+}
+
+/** A group of list rows on one card, separated by thin lines. */
+export function List({ children, style }: { children: ReactNode; style?: StyleProp<ViewStyle> }) {
+  return <Card style={[{ paddingVertical: 4, paddingHorizontal: 16, gap: 0 }, style]}>{children}</Card>
+}
+
+/** A settings-style row: icon, title (and a line under it), a value or a chevron. */
+export function ListItem({
+  icon,
+  tint,
+  title,
+  subtitle,
+  value,
+  onPress,
+  last,
+  destructive,
+}: {
+  icon: IconName
+  tint?: 'primary' | 'success' | 'warning' | 'danger' | 'muted'
+  title: string
+  subtitle?: string
+  value?: string
+  onPress?: () => void
+  last?: boolean
+  destructive?: boolean
+}) {
+  const { colors } = useTheme()
+  const body = (pressed: boolean) => (
+    <View
+      style={{
+        minHeight: 60,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 14,
+        paddingVertical: 10,
+        borderBottomWidth: last ? 0 : StyleSheet.hairlineWidth,
+        borderBottomColor: colors.line,
+        opacity: pressed ? 0.6 : 1,
+      }}
+    >
+      <IconBadge name={icon} tint={destructive ? 'danger' : tint} />
+      <View style={{ flex: 1, gap: 1 }}>
+        <Text style={{ fontWeight: '500', color: destructive ? colors.danger : colors.text }}>{title}</Text>
+        {subtitle ? (
+          <Text size="small" tone="muted" numberOfLines={1}>
+            {subtitle}
+          </Text>
+        ) : null}
+      </View>
+      {value ? (
+        <Text tone="muted" style={{ fontSize: 15, flexShrink: 1, textAlign: 'right' }} numberOfLines={1}>
+          {value}
+        </Text>
+      ) : null}
+      {onPress && !destructive ? <Icon name="chevron" color={colors.muted} size={18} /> : null}
+    </View>
+  )
+  if (!onPress) return body(false)
+  return (
+    <Pressable accessibilityRole="button" accessibilityLabel={title} onPress={onPress}>
+      {({ pressed }) => body(pressed)}
+    </Pressable>
+  )
+}
+
+/** A small grey heading above a group of rows. */
+export function SectionTitle({ children }: { children: string }) {
+  return (
+    <Text tone="muted" style={{ fontSize: 14, fontWeight: '600', marginTop: 8, marginBottom: -6, marginLeft: 4 }}>
+      {children}
+    </Text>
+  )
+}
+
+/** An empty list: an icon, a line of text and an optional action. */
+export function EmptyState({ icon, title, text, action }: { icon: IconName; title: string; text: string; action?: ReactNode }) {
+  return (
+    <Card style={{ alignItems: 'center', paddingVertical: 32, gap: 8 }}>
+      <IconBadge name={icon} size={52} />
+      <Text size="heading" style={{ marginTop: 6 }}>
+        {title}
+      </Text>
+      <Text tone="muted" style={{ textAlign: 'center', maxWidth: 280 }}>
+        {text}
+      </Text>
+      {action}
+    </Card>
   )
 }
 

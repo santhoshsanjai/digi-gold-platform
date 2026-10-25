@@ -4,9 +4,10 @@ import Svg, { Path } from 'react-native-svg'
 import { useMe } from '../../src/api/hooks'
 import type { Me } from '../../src/api/types'
 import { useAuth } from '../../src/auth/AuthProvider'
-import { formatDate } from '../../src/format'
+import { formatDate, formatGrams, formatInr } from '../../src/format'
 import { useTheme } from '../../src/theme/ThemeProvider'
-import { Button, Card, ErrorNote, Pill, Row, Screen, Spinner, Text } from '../../src/ui'
+import { Card, ErrorNote, List, ListItem, Pill, Screen, SectionTitle, Spinner, Text } from '../../src/ui'
+import { IconBadge, type IconName } from '../../src/ui/Icon'
 import { confirmAction } from '../../src/ui/confirm'
 import { FadeIn } from '../../src/ui/gold'
 
@@ -83,7 +84,7 @@ export default function Profile() {
 }
 
 function ProfileView({ m, refreshing, onRefresh }: { m: Me; refreshing: boolean; onRefresh: () => void }) {
-  const { brand, name, colors } = useTheme()
+  const { brand, name } = useTheme()
   const { signOut } = useAuth()
 
   const logOut = () =>
@@ -102,82 +103,86 @@ function ProfileView({ m, refreshing, onRefresh }: { m: Me; refreshing: boolean;
         </View>
       </FadeIn>
 
-      <FadeIn delay={80}>
-        <Card>
-          <Text size="heading">Account</Text>
-          <Row label="Mobile" value={`+91 ${m.phone.replace(/^\+?91/, '')}`} />
-          <Row label="Email" value={m.email || 'Not added'} tone={m.email ? undefined : 'muted'} />
-          <Row label="Member since" value={formatDate(m.member_since)} />
-          <Row label="Customer ID" value={m.id.slice(0, 8).toUpperCase()} />
-          <Row label="PAN" value={m.pan_provided ? 'Added' : 'Not added'} tone={m.pan_provided ? undefined : 'muted'} />
-        </Card>
+      <FadeIn delay={60} style={{ flexDirection: 'row', gap: 12 }}>
+        <Stat icon="coins" label="Gold balance" value={formatGrams(m.gold_grams)} />
+        <Stat icon="wallet" label="Total paid" value={formatInr(m.total_paid_inr)} />
       </FadeIn>
 
-      <FadeIn delay={160}>
-        <Card style={{ paddingVertical: 4, gap: 0 }}>
-          <ActionRow label="Edit profile" onPress={() => router.push('/edit-profile')} />
-          <ActionRow
-            label={m.has_password ? 'Change password' : 'Set a password'}
-            detail={m.has_password ? undefined : 'Sign in with your email'}
-            onPress={() => router.push('/account-password')}
-            last={m.pan_provided}
+      <FadeIn delay={120} style={{ gap: 16 }}>
+        <SectionTitle>Account information</SectionTitle>
+        <List>
+          <ListItem icon="phone" title="Mobile number" subtitle={`+91 ${m.phone.replace(/^\+?91/, '')}`} />
+          <ListItem icon="mail" title="Email" subtitle={m.email || 'Not added'} />
+          <ListItem icon="calendar" title="Member since" subtitle={formatDate(m.member_since)} />
+          <ListItem icon="badge" title="Customer ID" subtitle={m.id.slice(0, 8).toUpperCase()} />
+          <ListItem
+            icon="card"
+            title="PAN"
+            subtitle={m.pan_provided ? 'Added' : 'Not added'}
+            onPress={m.pan_provided ? undefined : () => router.push('/pan')}
+            last
           />
-          {!m.pan_provided && <ActionRow label="Add PAN" onPress={() => router.push('/pan')} last />}
-        </Card>
-      </FadeIn>
+        </List>
 
-      {!!(brand.support_phone || brand.support_email) && (
-        <FadeIn delay={240}>
-          <Card>
-            <Text size="heading">Need help with {name}?</Text>
-            {brand.support_phone ? (
-              <Button variant="secondary" label={`Call ${brand.support_phone}`} onPress={() => Linking.openURL(`tel:${brand.support_phone}`)} />
-            ) : null}
-            {brand.support_email ? (
-              <Button variant="secondary" label={`Email ${brand.support_email}`} onPress={() => Linking.openURL(`mailto:${brand.support_email}`)} />
-            ) : null}
-          </Card>
-        </FadeIn>
-      )}
+        <SectionTitle>Settings</SectionTitle>
+        <List>
+          <ListItem icon="user" title="Edit profile" subtitle="Name and email" onPress={() => router.push('/edit-profile')} />
+          <ListItem
+            icon="lock"
+            title={m.has_password ? 'Change password' : 'Set a password'}
+            subtitle={m.has_password ? 'Update your sign-in password' : 'Sign in with your email'}
+            onPress={() => router.push('/account-password')}
+            last
+          />
+        </List>
 
-      <FadeIn delay={300}>
-        <Button variant="danger" label="Log out" onPress={logOut} />
-        <Text size="small" tone="muted" style={{ textAlign: 'center', marginTop: 12, color: colors.muted }}>
-          Logging out ends the session on this phone only.
-        </Text>
+        {!!(brand.support_phone || brand.support_email) && (
+          <>
+            <SectionTitle>{`Help from ${name}`}</SectionTitle>
+            <List>
+              {brand.support_phone ? (
+                <ListItem
+                  icon="call"
+                  title="Call the store"
+                  subtitle={brand.support_phone}
+                  onPress={() => Linking.openURL(`tel:${brand.support_phone}`)}
+                  last={!brand.support_email}
+                />
+              ) : null}
+              {brand.support_email ? (
+                <ListItem
+                  icon="help"
+                  title="Email support"
+                  subtitle={brand.support_email}
+                  onPress={() => Linking.openURL(`mailto:${brand.support_email}`)}
+                  last
+                />
+              ) : null}
+            </List>
+          </>
+        )}
+
+        <List>
+          <ListItem icon="logout" title="Log out" subtitle="Ends the session on this phone only" onPress={logOut} destructive last />
+        </List>
       </FadeIn>
     </Screen>
   )
 }
 
-function ActionRow({ label, detail, onPress, last }: { label: string; detail?: string; onPress: () => void; last?: boolean }) {
-  const { colors } = useTheme()
+/** A small figure with its icon, shown side by side under the avatar. */
+function Stat({ icon, label, value }: { icon: IconName; label: string; value: string }) {
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      onPress={onPress}
-      style={({ pressed }) => ({
-        minHeight: 52,
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 12,
-        borderBottomWidth: last ? 0 : 1,
-        borderBottomColor: colors.line,
-        opacity: pressed ? 0.6 : 1,
-      })}
-    >
-      <View style={{ flex: 1 }}>
-        <Text style={{ fontWeight: '600' }}>{label}</Text>
-        {detail ? (
-          <Text size="small" tone="muted">
-            {detail}
-          </Text>
-        ) : null}
+    <Card style={{ flex: 1, gap: 8 }}>
+      <IconBadge name={icon} size={32} />
+      <View>
+        <Text size="small" tone="muted">
+          {label}
+        </Text>
+        <Text size="heading" numberOfLines={1} adjustsFontSizeToFit>
+          {value}
+        </Text>
       </View>
-      <Svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={colors.muted} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-        <Path d="M9 5l7 7-7 7" />
-      </Svg>
-    </Pressable>
+    </Card>
   )
 }
