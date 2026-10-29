@@ -10,5 +10,6 @@ COPY . .
 RUN useradd --system --uid 1001 api && chown -R api /app
 USER api
 EXPOSE 8000
-# One worker keeps memory low; scale by running more containers.
-CMD ["/app/.venv/bin/uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers"]
+# Migrations run on start, so a fresh database (Render, Docker) is ready on first boot.
+# One worker keeps memory low; scale by running more containers. Hosts may set PORT.
+CMD ["sh", "-c", "/app/.venv/bin/alembic upgrade head && exec /app/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --proxy-headers --forwarded-allow-ips '*'"]

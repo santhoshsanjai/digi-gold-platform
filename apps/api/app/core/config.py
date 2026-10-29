@@ -1,7 +1,7 @@
 from functools import lru_cache
 from typing import Literal
 
-from pydantic import model_validator
+from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 _DEFAULT_JWT_SECRET = "change-me-in-production-at-least-32-bytes"
@@ -73,6 +73,15 @@ class Settings(BaseSettings):
         "http://localhost:8081",  # mobile app in the browser preview
     ]
     config_cache_seconds: int = 300
+
+    @field_validator("database_url")
+    @classmethod
+    def _use_asyncpg(cls, url: str) -> str:
+        # Hosts such as Render hand out plain postgres:// URLs; the API needs the asyncpg driver.
+        for prefix in ("postgres://", "postgresql://"):
+            if url.startswith(prefix):
+                return "postgresql+asyncpg://" + url[len(prefix) :]
+        return url
 
     @model_validator(mode="after")
     def _production_needs_real_secrets(self):

@@ -1,0 +1,35 @@
+﻿# Render Blueprint for a client-review deployment: the API and its database on free plans.
+# In Render: New > Blueprint, pick this repository and branch. See docs/deploy-render.md.
+databases:
+  - name: digigold-db
+    plan: free
+    region: singapore
+    postgresMajorVersion: "18"
+    databaseName: digigold
+    user: digigold
+
+services:
+  - type: web
+    name: sivashree-digigold-api
+    runtime: docker
+    plan: free
+    region: singapore
+    rootDir: apps/api
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: DG_DATABASE_URL
+        fromDatabase:
+          name: digigold-db
+          property: connectionString
+      - key: DG_JWT_SECRET
+        generateValue: true
+      # "dev" writes sign-in codes and temporary passwords to the Render log, because no
+      # SMS provider or mail server is set up yet. Use "prod" once both are configured.
+      - key: DG_ENV
+        value: dev
+      - key: DG_EMAIL_BACKEND
+        value: console
+      - key: DG_DB_POOL_SIZE
+        value: "3"
