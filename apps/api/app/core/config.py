@@ -28,14 +28,17 @@ class Settings(BaseSettings):
     max_failed_logins: int = 5
     lockout_minutes: int = 15
 
-    # Email: "console" logs messages (dev and tests); "smtp" sends them (Mailpit, Amazon SES).
-    email_backend: Literal["console", "smtp"] = "console"
+    # Email: "console" logs messages (dev and tests); "smtp" sends them (Mailpit, Amazon SES);
+    # "brevo" sends over Brevo's HTTPS API, for hosts that block SMTP ports (Render free plan).
+    email_backend: Literal["console", "smtp", "brevo"] = "console"
     smtp_host: str = "localhost"
     smtp_port: int = 1025
     smtp_username: str = ""
     smtp_password: str = ""
     smtp_use_tls: bool = False
     email_from: str = "no-reply@digigold.local"
+    email_from_name: str = "Digi Gold"
+    brevo_api_key: str = ""
 
     # Base URLs used in emails (password reset links).
     crm_base_url: str = "http://localhost:5173"

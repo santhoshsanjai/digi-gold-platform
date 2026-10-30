@@ -29,7 +29,16 @@ services:
       # SMS provider or mail server is set up yet. Use "prod" once both are configured.
       - key: DG_ENV
         value: dev
+      # Render's free plan blocks SMTP ports, so email goes out over Brevo's HTTPS API.
+      # Fill the two "sync: false" values in the dashboard (Environment tab); until the key
+      # is set, emails are written to the log instead. See docs/email-setup.md.
       - key: DG_EMAIL_BACKEND
-        value: console
+        value: brevo
+      - key: DG_BREVO_API_KEY
+        sync: false
+      - key: DG_EMAIL_FROM
+        sync: false
+      - key: DG_EMAIL_FROM_NAME
+        value: Sivashree Jewellers
       - key: DG_DB_POOL_SIZE
         value: "3"
