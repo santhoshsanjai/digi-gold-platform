@@ -10,8 +10,10 @@ free plans, in Singapore (closest to India).
 - The free database expires 30 days after it is created. Upgrade it, or move to another
   host, before then.
 - Uploaded images live on the container's disk and are lost on every deploy or restart.
-- `DG_ENV=dev`: with no SMS provider or mail server yet, sign-in codes and temporary
-  passwords appear in the service's **Logs** tab instead of being sent.
+- `DG_ENV=dev`: with no SMS provider yet, SMS codes appear in the service's **Logs** tab.
+- Free services cannot use SMTP ports, so email is sent through Brevo's HTTPS API. Set
+  `DG_BREVO_API_KEY` and `DG_EMAIL_FROM` as described in [email-setup.md](email-setup.md);
+  until then, emails also go to the **Logs** tab.
 
 ## First deploy
 
